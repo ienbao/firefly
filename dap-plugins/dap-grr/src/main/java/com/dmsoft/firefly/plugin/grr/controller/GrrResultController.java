@@ -892,9 +892,8 @@ public class GrrResultController implements Initializable {
     }
 
     private void initComponentsRender() {
-        final double inputWidth = 200;
+        summaryItemTf.getTextField().getStyleClass().add("grr-summary-item-tf");
 
-        summaryItemTf.getTextField().setPrefWidth(inputWidth);
         summaryItemTf.getTextField().setFocusTraversable(false);
         String testItemText = GrrFxmlAndLanguageUtils.getString("GRR_SUMMARY_TEST_ITEM");
         summaryItemTf.getTextField().setPromptText(testItemText);

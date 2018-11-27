@@ -199,11 +199,9 @@ public class GrrItemController implements Initializable {
         is.getStyleClass().addAll("filter-normal","grr-is");
         item.setText(GrrFxmlAndLanguageUtils.getString(ResourceMassages.TEST_ITEM));
         item.setGraphic(is);
-        item.getStyleClass().add("filter-header");
+        item.getStyleClass().addAll("filter-header","grr-item");
         item.setCellValueFactory(cellData -> cellData.getValue().itemDtoProperty());
         initItemData();
-        item.setPrefWidth(148);
-
         item.widthProperty().addListener((ov, w1, w2) -> {
             Platform.runLater(() -> {
                 is.relocate(w2.doubleValue() - 21, 0);
@@ -428,7 +426,7 @@ public class GrrItemController implements Initializable {
                 } else {
                     HBox cell;
                     CheckBox checkBox = new CheckBox();
-                    checkBox.setPrefSize(12, 12);
+                    checkBox.getStyleClass().add("grr-check-box");
                     if (item.isIsChecked()) {
                         checkBox.setSelected(true);
                     } else {

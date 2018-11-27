@@ -638,7 +638,7 @@ public class GrrExportController {
                 } else {
                     HBox cell;
                     CheckBox checkBox = new CheckBox();
-                    checkBox.setPrefSize(12, 12);
+                    checkBox.getStyleClass().add("grr-check-box");
                     if (item.isIsChecked()) {
                         checkBox.setSelected(true);
                     } else {

@@ -337,7 +337,13 @@ table
     -fx-padding: 0 26 0 0;
 }
 
-
+.grr-check-box{
+    -fx-pref-width: 12;
+    -fx-pref-height: 12;
+}
+.grr-item{
+    -fx-pref-width: 148;
+}
 /*******************************************************************************
  *                                                                             *
  *grr export/item page css                                                     *
@@ -584,7 +590,8 @@ table
     -fx-padding: 8 0 0 0;
     -fx-alignment: center_left;
 }
-.grr-text-center{
+.grr-result-btn-h-box .grr-text-center{
+    -fx-opacity: 1;
     -fx-text-alignment: center;
 }
 .grr-result-data-sheet-h-box{
@@ -654,4 +661,7 @@ table
     -fx-background-position: center;
     -fx-background-repeat: no-repeat;
     -fx-background-image: url("/images/choose-lines.svg");
+}
+.grr-summary-item-tf{
+    -fx-pref-width: 200;
 }
