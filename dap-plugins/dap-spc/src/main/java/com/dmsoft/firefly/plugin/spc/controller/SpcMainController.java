@@ -90,7 +90,7 @@ public class SpcMainController implements Initializable {
         if (disable) {
             chooseBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/check-gray.svg")));
         } else {
-            chooseBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/check-white.svg")));
+            chooseBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/check-`white.svg")));
         }
     }
 

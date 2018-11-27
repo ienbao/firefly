@@ -197,9 +197,6 @@ public class GrrItemController implements Initializable {
         Button is = new Button();
         is.setOnMousePressed(event -> createPopMenu(is, event));
         is.getStyleClass().addAll("filter-normal","grr-is");
-
-//        is.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/analysis-white.svg")));
-
         item.setText(GrrFxmlAndLanguageUtils.getString(ResourceMassages.TEST_ITEM));
         item.setGraphic(is);
         item.getStyleClass().add("filter-header");
