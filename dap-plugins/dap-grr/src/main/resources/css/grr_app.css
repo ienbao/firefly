@@ -523,6 +523,16 @@ table
 .grr-export-grid-pane{
     -fx-padding: 0 0 10 40;
 }
+.grr-setting-export-btn{
+    -fx-pref-width: 22.0;
+    -fx-max-width: 22.0;
+    -fx-min-width: 22.0;
+    -fx-background-size: 16;
+    -fx-background-position: center;
+    -fx-background-repeat: no-repeat;
+    -fx-background-image: url("/images/setting.svg");
+}
+
 /*******************************************************************************
  *                                                                             *
  *grr  view data page css                                                      *
