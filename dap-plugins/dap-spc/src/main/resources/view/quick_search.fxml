@@ -1,15 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ToggleGroup?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.RowConstraints?>
 
 <?import javafx.scene.layout.VBox?>
 <VBox styleClass="sm-pop-window" xmlns="http://javafx.com/javafx/8.0.76-ea" xmlns:fx="http://javafx.com/fxml/1">
@@ -25,8 +20,8 @@
       <VBox alignment="BOTTOM_RIGHT">
          <HBox styleClass="spacing-lg">
             <VBox styleClass="spacing-lg">
-               <TextField fx:id="withinLowerTf" prefWidth="120" disable="true" promptText="%LOWER_LIMIT_PROMPT_TEXT" ></TextField>
-               <TextField fx:id="withoutLowerTf" prefWidth="120" disable="true" promptText="%LOWER_LIMIT_PROMPT_TEXT" ></TextField>
+               <TextField fx:id="withinLowerTf" prefWidth="120" disable="true" promptText="%LOWER_LIMIT_PROMPT_TEXT" />
+               <TextField fx:id="withoutLowerTf" prefWidth="120" disable="true" promptText="%LOWER_LIMIT_PROMPT_TEXT" />
             </VBox>
             <VBox styleClass="spacing-lg">
                <TextField fx:id="withinUpperTf" prefWidth="120" disable="true" promptText="%UPPER_LIMIT_PROMPT_TEXT"  />
