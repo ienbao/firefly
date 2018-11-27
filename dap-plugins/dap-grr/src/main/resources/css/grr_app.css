@@ -29,7 +29,7 @@
 }
 
 #viewDataTable .column-header.filter-header .filter-active {
-    -fx-background-image: url('/images/btn_filter_normal.png');
+    -fx-background-image: url('/images/filter-selected.svg');
     -fx-background-size: 16;
     -fx-background-repeat: no-repeat;
     -fx-background-position: 2 2;
@@ -71,7 +71,7 @@
 }
 
 .column-header.filter-header .filter-active {
-    -fx-background-image: url('/images/btn_filter_normal.png');
+    -fx-background-image: url('/images/filter-selected.svg');
     -fx-background-size: 16;
     -fx-background-repeat: no-repeat;
     -fx-background-position: 2 2;
@@ -325,6 +325,19 @@ table
     -fx-background-repeat: no-repeat;
     -fx-background-image: url('/images/check-gray.svg');
 }
+.grr-is{
+    -fx-pref-height: 22;
+    -fx-max-height: 22;
+    -fx-min-height: 22;
+    -fx-pref-width: 22;
+    -fx-max-width: 22;
+    -fx-min-width: 22;
+}
+.grr-config-warn{
+    -fx-padding: 0 26 0 0;
+}
+
+
 /*******************************************************************************
  *                                                                             *
  *grr export/item page css                                                     *
@@ -359,9 +372,21 @@ table
 .grr-config-btn{
     -fx-image: url('/images/config.svg');
 }
+
+.grr-save-btn{
+    -fx-image: url("/images/save.svg");
+}
+.grr-analysis-btn{
+    -fx-image: url("/images/analysis-white.svg");
+}
+
 .grr-item-tab{
-    -fx-tab-min-width:45;
-    -fx-tab-max-width: 45;
+    -fx-pref-width: 45;
+    -fx-min-width:45;
+    -fx-max-width: 45;
+    -fx-padding: 0 5 0 5
+}
+.grr-item-tabs{
     -fx-pref-width: 180.0;
     -fx-min-width: 180.0;
     -fx-pref-height: 270.0;
@@ -394,6 +419,17 @@ table
     -fx-padding: 0 20;
     -fx-border-color:COLOR_GRAY_DC;
     -fx-border-width: 1 0 0 0;
+}
+
+.grr-item-background1{
+    -fx-text-fill: COLORFUL_ATRRIBUTE_BLUE;
+    -fx-background-color: COLORFUL_LIGHT_GREEN
+}
+.grr-item-background2{
+    -fx-text-fill: COLORFUL_ATRRIBUTE_BLUE;
+}
+.grr-item-background3{
+    -fx-background-color: COLORFUL_LIGHT_GREEN
 }
 
 /*******************************************************************************
@@ -487,6 +523,16 @@ table
 .grr-export-grid-pane{
     -fx-padding: 0 0 10 40;
 }
+.grr-setting-export-btn{
+    -fx-pref-width: 22.0;
+    -fx-max-width: 22.0;
+    -fx-min-width: 22.0;
+    -fx-background-size: 16;
+    -fx-background-position: center;
+    -fx-background-repeat: no-repeat;
+    -fx-background-image: url("/images/setting.svg");
+}
+
 /*******************************************************************************
  *                                                                             *
  *grr  view data page css                                                      *
