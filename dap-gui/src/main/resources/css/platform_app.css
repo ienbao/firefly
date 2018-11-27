@@ -25,6 +25,10 @@
     -fx-background-color: COLORFUL_AUXILIARY_BLUE;
 }
 
+.alignment-right{
+    -fx-alignment: center_right;
+}
+
 /*******************************************************************************
  *                                                                             *
  * ProgressBar                                                  *

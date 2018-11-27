@@ -7,9 +7,9 @@
         <MenuBar fx:id="menuSystem" />
     </left>
     <right>
-        <StackPane>
-            <MenuButton fx:id="menuBtn" styleClass="btn-txt" />
-            <Button fx:id="loginMenuBtn" styleClass="btn-txt" />
+        <StackPane styleClass="alignment-right">
+            <MenuButton fx:id="menuBtn" styleClass="btn-txt" prefWidth="70" maxWidth="70" minWidth="70"/>
+            <Button fx:id="loginMenuBtn" styleClass="btn-txt" prefWidth="88" maxWidth="88" minWidth="88" />
         </StackPane>
     </right>
 </BorderPane>
