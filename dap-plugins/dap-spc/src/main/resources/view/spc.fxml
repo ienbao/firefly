@@ -18,7 +18,7 @@
                     </HBox>
                 </left>
                 <right>
-                    <HBox spacing="5" alignment="CENTER">
+                    <HBox styleClass="spc-btn-h-box">
                         <Button fx:id="resetBtn" styleClass="btn-icon,spc-btn-size,spc-reset-btn" />
                         <Button fx:id="printBtn" styleClass="btn-icon,spc-btn-size,spc-print-btn" />
                         <Button fx:id="exportBtn" styleClass="btn-icon,spc-btn-size,spc-export-btn"/>
