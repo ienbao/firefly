@@ -15,16 +15,13 @@
         fill: none;
       }
 
-      .cls-4 {
-      fill:#fff;
-      }
     </style>
   </defs>
-  <g id="analsis" transform="translate(-743 -764)">
+  <g fill="#fff" id="analsis" transform="translate(-743 -764)">
     <g id="矩形_525" data-name="矩形 525" class="cls-1" transform="translate(743 764)">
       <rect class="cls-2" width="16" height="16"/>
       <rect class="cls-3" x="0.5" y="0.5" width="15" height="15"/>
     </g>
-    <path id="联合_53" data-name="联合 53" class="cls-4" d="M-5400,3007v-1h11v1Zm9-2v-3h1v3Zm-2,0v-5h1v5Zm-2,0v-10h1v10Zm-2,0v-7h1v7Zm-2,0v-4h1v4Z" transform="translate(6145 -2229)"/>
+    <path id="联合_53" data-name="联合 53" d="M-5400,3007v-1h11v1Zm9-2v-3h1v3Zm-2,0v-5h1v5Zm-2,0v-10h1v10Zm-2,0v-7h1v7Zm-2,0v-4h1v4Z" transform="translate(6145 -2229)"/>
   </g>
 </svg>
