@@ -4,11 +4,13 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
+<?import javafx.scene.image.ImageView?>
 <VBox xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.plugin.grr.controller.GrrItemController">
    <SplitPane fx:id="split" orientation="VERTICAL" styleClass="grr-item-split" VBox.vgrow="ALWAYS">
-      <TabPane fx:id="rightTabPane" styleClass="grr-item-tab" tabClosingPolicy="UNAVAILABLE">
+      <TabPane fx:id="rightTabPane" styleClass="grr-item-tabs" tabClosingPolicy="UNAVAILABLE">
          <tabs>
-            <Tab fx:id="itemTab" >
+            <Tab fx:id="itemTab" styleClass="grr-item-tab" >
+               <graphic><ImageView fitWidth="16" fitHeight="16" styleClass="grr-datasource-btn"/></graphic>
                <VBox  minWidth="180.0" prefWidth="180.0">
                   <HBox styleClass="padding-lg">
                      <TextFieldFilter fx:id="itemFilter"/>
@@ -24,7 +26,8 @@
                   </TableView>
                </VBox>
             </Tab>
-            <Tab fx:id="configTab" >
+            <Tab fx:id="configTab" styleClass="grr-item-tab" >
+               <graphic><ImageView fitWidth="16" fitHeight="16" styleClass="grr-config-btn"/></graphic>
                <ScrollPane fitToHeight="true" fitToWidth="true" maxHeight="445.0">
                   <GridPane fx:id="grrConfigPane" styleClass="grr-config" >
                      <columnConstraints>
@@ -73,12 +76,18 @@
    </SplitPane>
     <BorderPane styleClass="grr-item-btn">
       <left>
-         <Button fx:id="analysisBtn"  maxWidth="30.0" minWidth="30.0" prefWidth="30.0" styleClass="btn-primary"  />
+         <Button fx:id="analysisBtn"  maxWidth="30.0" minWidth="30.0" prefWidth="30.0" styleClass="btn-primary" >
+            <graphic><ImageView fitWidth="16" fitHeight="16" styleClass="grr-analysis-btn"/></graphic>
+         </Button>
       </left>
       <right>
          <HBox >
-            <Button fx:id="importBtn"  maxWidth="30.0" minWidth="30.0" prefWidth="30.0" styleClass="btn-txt"  />
-            <Button fx:id="exportBtn"  maxWidth="30.0" minWidth="30.0" prefWidth="30.0" styleClass="btn-txt" />
+            <Button fx:id="importBtn"  maxWidth="30.0" minWidth="30.0" prefWidth="30.0" styleClass="btn-txt" >
+               <graphic><ImageView fitWidth="16" fitHeight="16" styleClass="grr-import-config-btn"/></graphic>
+            </Button>
+            <Button fx:id="exportBtn"  maxWidth="30.0" minWidth="30.0" prefWidth="30.0" styleClass="btn-txt" >
+               <graphic><ImageView fitWidth="16" fitHeight="16" styleClass="grr-save-btn"/></graphic>
+            </Button>
          </HBox>
       </right>
    </BorderPane>

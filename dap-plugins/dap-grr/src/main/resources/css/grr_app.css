@@ -325,6 +325,19 @@ table
     -fx-background-repeat: no-repeat;
     -fx-background-image: url('/images/check-gray.svg');
 }
+.grr-is{
+    -fx-pref-height: 22;
+    -fx-max-height: 22;
+    -fx-min-height: 22;
+    -fx-pref-width: 22;
+    -fx-max-width: 22;
+    -fx-min-width: 22;
+}
+.grr-config-warn{
+    -fx-padding: 0 26 0 0;
+}
+
+
 /*******************************************************************************
  *                                                                             *
  *grr export/item page css                                                     *
@@ -359,18 +372,32 @@ table
 .grr-config-btn{
     -fx-image: url('/images/config.svg');
 }
+
+.grr-save-btn{
+    -fx-image: url("/images/save.svg");
+}
+.grr-analysis-btn{
+    -fx-image: url("/images/analysis-white.svg");
+}
+
 .grr-item-tab{
-    -fx-tab-min-width:45;
-    -fx-tab-max-width: 45;
+    -fx-pref-width: 45;
+    -fx-min-width:45;
+    -fx-max-width: 45;
+    -fx-padding: 0 5 0 5
+}
+.grr-item-tabs{
     -fx-pref-width: 180.0;
     -fx-min-width: 180.0;
     -fx-pref-height: 270.0;
     -fx-min-height: 270.0;
     -fx-border-width: 0 0 0 0;
 }
-.grr-item-table{
+.grr-item-table,
+.grr-item-table:focused{
     -fx-border-width: 1 0 0 0;
 }
+
 .grr-config{
     -fx-padding: 10 10 0 10;
     -fx-min-width: 160.0;
@@ -392,6 +419,17 @@ table
     -fx-padding: 0 20;
     -fx-border-color:COLOR_GRAY_DC;
     -fx-border-width: 1 0 0 0;
+}
+
+.grr-item-background1{
+    -fx-text-fill: COLORFUL_ATRRIBUTE_BLUE;
+    -fx-background-color: COLORFUL_LIGHT_GREEN
+}
+.grr-item-background2{
+    -fx-text-fill: COLORFUL_ATRRIBUTE_BLUE;
+}
+.grr-item-background3{
+    -fx-background-color: COLORFUL_LIGHT_GREEN
 }
 
 /*******************************************************************************
@@ -513,5 +551,93 @@ table
     -fx-alignment: center_left;
 }
 .grr-choose-item-btn{
-    -fx-image: url('images/choose-test-items.svg');
+    -fx-image: url("/images/choose-test-items.svg");
 }
+/*******************************************************************************
+ *                                                                             *
+ *grr  result page css                                                         *
+ *                                                                             *
+ ******************************************************************************/
+.grr-result-based{
+    -fx-alignment: center_left;
+    -fx-spacing: 10;
+    -fx-padding: 3 0 3 10;
+}
+.grr-result-summaryTb,
+.grr-result-summaryTb:focused{
+    -fx-pref-height: 200;
+    -fx-min-height: 50;
+    -fx-border-width: 1 0 0 0;
+}
+.grr-result-btn-h-box{
+    -fx-max-height: 30;
+    -fx-min-height: 30;
+    -fx-pref-height: 30;
+    -fx-padding: 8 0 0 0;
+    -fx-alignment: center_left;
+}
+.grr-text-center{
+    -fx-text-alignment: center;
+}
+.grr-result-data-sheet-h-box{
+    -fx-pref-height: 30;
+    -fx-spacing: 5;
+    -fx-padding:6 0 6 10;
+    -fx-border-width: 1 1 0 1;
+    -fx-border-color: COLOR_GRAY_DC;
+    -fx-background-color: COLOR_GRAY_F8;
+}
+.grr-result-chart-v-box{
+    -fx-pref-height: 235;
+    -fx-border-width: 1px;
+    -fx-border-color: COLOR_GRAY_DC;
+}
+.grr-result-chart-h-box{
+    -fx-pref-height: 30;
+    -fx-padding:6 0 6 10;
+    -fx-border-width:  0 0 1 0;
+    -fx-border-color: COLOR_GRAY_DC;
+    -fx-background-color: COLOR_GRAY_F8;
+}
+.grr-result-border-pane{
+    -fx-max-height: 29.0;
+    -fx-min-height: 29.0;
+    -fx-pref-height: 29.0;
+    -fx-padding: 3 0 2 0;
+    -fx-border-width: 0 0 1 0;
+    -fx-border-color: COLOR_GRAY_F8;
+}
+
+.grr-result-h-box{
+    -fx-max-height: 32;
+    -fx-min-height: 30;
+    -fx-pref-height: 30;
+    -fx-padding:6 0 6 10;
+    -fx-border-width: 1 1 0 1;
+    -fx-border-color: COLOR_GRAY_DC;
+    -fx-background-color: COLOR_GRAY_F8;
+}
+.grr-result-h-box-bottom{
+    -fx-max-height: 30;
+    -fx-min-height: 30;
+    -fx-pref-height: 30;
+    -fx-alignment: center_left;
+    -fx-padding:6 0 6 10;
+    -fx-border-width: 0 1 1 1;
+    -fx-border-color: COLOR_GRAY_DC;
+    -fx-background-color: COLOR_GRAY_F8;
+}
+.grr-result-btn,
+.grr-result-btn:hover,
+.grr-result-btn:focused,
+.grr-result-btn:pressed,
+.grr-result-btn:pressed:hover{
+    -fx-max-width: 22;
+    -fx-min-width: 22;
+    -fx-pref-width: 22;
+    -fx-padding: 0;
+    -fx-background-color: COLORFUL_PRIMARY_RED;
+    -fx-text-fill: COLOR_LIGHT_FF;
+    -fx-border-width: 0px;
+}
+

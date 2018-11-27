@@ -210,6 +210,11 @@ table
     -fx-pref-width: 190.0;
 }
 
+.spc-additem-table-second-column{
+    -fx-pref-width: 160;
+}
+
+
 /*******************************************************************************
  *                                                                             *
  * spc choose page css                                                              *
@@ -701,4 +706,13 @@ table
 .spc-border{
     -fx-padding: 0 5 0 10;
     -fx-pref-height: 28.0;
+}
+
+.btn-size{
+    -fx-pref-height: 22;
+    -fx-pref-width: 22;
+    -fx-max-width: 22;
+    -fx-max-height: 22;
+    -fx-min-width: 22;
+    -fx-min-height: 22;
 }
