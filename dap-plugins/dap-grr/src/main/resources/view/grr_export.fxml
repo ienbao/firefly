@@ -38,7 +38,7 @@
         <VBox>
             <SplitPane fx:id="split" orientation="VERTICAL" VBox.vgrow="ALWAYS" styleClass="grr-export-split">
                 <TabPane styleClass="grr-item-tabs" tabClosingPolicy="UNAVAILABLE">
-                    <Tab fx:id="itemTab" styleClass="grr-item-tab" >
+                    <Tab fx:id="itemTab" >
                         <graphic><ImageView fitWidth="16" fitHeight="16" styleClass="grr-datasource-btn"/></graphic>
                         <VBox >
                             <HBox styleClass="padding-lg">
@@ -55,7 +55,7 @@
                             </TableView>
                         </VBox>
                     </Tab>
-                    <Tab fx:id="configTab" styleClass="grr-item-tab">
+                    <Tab fx:id="configTab">
                         <graphic><ImageView fitWidth="16" fitHeight="16" styleClass="grr-config-btn"/></graphic>
                         <ScrollPane fitToHeight="true" fitToWidth="true" maxHeight="330.0">
                             <GridPane fx:id="grrConfigPane" minWidth="160.0" prefHeight="350.0" prefWidth="160.0" styleClass="grr-config">
