@@ -388,7 +388,6 @@ public class SpcExportController {
                 filteredList.setPredicate(this::isFilterAndHasUslOrLsl);
                 is.getStyleClass().remove("filter-normal");
                 is.getStyleClass().add("filter-active");
-//                is.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_filter_normal.png")));
                 isFilterUslOrLsl = true;
             });
             all.setSelected(true);
