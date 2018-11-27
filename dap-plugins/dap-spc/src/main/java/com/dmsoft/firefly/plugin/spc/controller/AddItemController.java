@@ -77,7 +77,7 @@ public class AddItemController implements Initializable {
     public void setFilterTFPrompt(String promptText){
         filterTf.getTextField().setPromptText(promptText);
     }
-    //TODO td 表格列宽度
+
     private void initComponent() {
         addItemTableModel = new AddItemTableModel();
         TableViewWrapper.decorate(testItemTable, addItemTableModel);
