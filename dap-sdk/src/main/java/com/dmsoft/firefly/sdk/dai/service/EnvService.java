@@ -43,6 +43,15 @@ public interface EnvService {
      */
     TemplateSettingDto findActivatedTemplate();
 
+
+    /**
+     * 获取当前活跃模板名称
+     *
+     * @return
+     */
+    String findActivatedTemplateName();
+
+
     /**
      * find list of activated project names
      *
@@ -114,4 +123,6 @@ public interface EnvService {
      * @param languageType language type
      */
     void setLanguageType(LanguageType languageType);
+
+    void initTestItem(String activeTemplateName);
 }

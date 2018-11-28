@@ -1,11 +1,14 @@
 package com.dmsoft.firefly.core.sdkimpl.dai;
 
 import com.dmsoft.bamboo.common.utils.mapper.JsonMapper;
+import com.dmsoft.firefly.gui.utils.GuiConst;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.TemplateSettingDto;
+import com.dmsoft.firefly.sdk.dai.dto.TestItemDto;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
 import com.dmsoft.firefly.sdk.dai.dto.UserPreferenceDto;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
+import com.dmsoft.firefly.sdk.dai.service.SourceDataService;
 import com.dmsoft.firefly.sdk.dai.service.TemplateService;
 import com.dmsoft.firefly.sdk.dai.service.UserPreferenceService;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
@@ -52,6 +55,23 @@ public class EnvServiceImpl implements EnvService {
     public TemplateSettingDto findActivatedTemplate() {
         return templateName != null ? getTemplateService().findAnalysisTemplate(templateName) : getTemplateService().findAnalysisTemplate(findPreference("activeTemplate"));
 
+    }
+
+    /**
+     * 获取当前活跃模板名称
+     */
+    @Override
+    public String findActivatedTemplateName() {
+        TemplateSettingDto templateSettingDto = this.findActivatedTemplate();
+        String activeTemplateName;
+        if (templateSettingDto == null || DAPStringUtils.isBlank(templateSettingDto.getName())) {
+            this.setActivatedTemplate(GuiConst.DEFAULT_TEMPLATE_NAME);
+            activeTemplateName = GuiConst.DEFAULT_TEMPLATE_NAME;
+        } else {
+            activeTemplateName = templateSettingDto.getName();
+        }
+
+        return activeTemplateName;
     }
 
     @Override
@@ -110,7 +130,8 @@ public class EnvServiceImpl implements EnvService {
     public LanguageType getLanguageType() {
         String languageType = RuntimeContext.getBean(UserPreferenceService.class).findPreferenceByUserId("languageType", userName);
         if (DAPStringUtils.isBlank(languageType)) {
-            return null;
+            this.setLanguageType(LanguageType.EN);
+            languageType = LanguageType.EN.toString();
         }
         return LanguageType.valueOf(languageType);
 
@@ -123,6 +144,20 @@ public class EnvServiceImpl implements EnvService {
         userPreferenceDto.setUserName(userName);
         userPreferenceDto.setValue(languageType);
         getUserPreferenceService().updatePreference(userPreferenceDto);
+    }
+
+    @Override
+    public void initTestItem(String activeTemplateName) {
+        SourceDataService sourceDataService = RuntimeContext.getBean(SourceDataService.class);
+        TemplateService templateService = RuntimeContext.getBean(TemplateService.class);
+
+        List<String> projectName = this.findActivatedProjectName();
+        if (projectName != null && !projectName.isEmpty()) {
+            Map<String, TestItemDto> testItemDtoMap = sourceDataService.findAllTestItem(projectName);
+            LinkedHashMap<String, TestItemWithTypeDto> itemWithTypeDtoMap = templateService.assembleTemplate(testItemDtoMap, activeTemplateName);
+            this.setTestItems(itemWithTypeDtoMap);
+            this.setActivatedProjectName(projectName);
+        }
     }
 
     private UserPreferenceService getUserPreferenceService() {

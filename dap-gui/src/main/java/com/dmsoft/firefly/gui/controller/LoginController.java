@@ -1,34 +1,22 @@
 package com.dmsoft.firefly.gui.controller;
 
+import com.dmsoft.firefly.core.utils.DapThreadPoolExecutor;
 import com.dmsoft.firefly.gui.LodingButton;
 import com.dmsoft.firefly.gui.components.utils.DecoratorTextFiledUtils;
-import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.utils.TextFieldPassword;
 import com.dmsoft.firefly.gui.components.utils.TextFieldUser;
 import com.dmsoft.firefly.gui.model.UserModel;
-import com.dmsoft.firefly.gui.utils.GuiConst;
 import com.dmsoft.firefly.gui.utils.GuiFxmlAndLanguageUtils;
-import com.dmsoft.firefly.gui.utils.MenuFactory;
 import com.dmsoft.firefly.sdk.RuntimeContext;
-import com.dmsoft.firefly.sdk.dai.dto.TemplateSettingDto;
-import com.dmsoft.firefly.sdk.dai.dto.TestItemDto;
-import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
 import com.dmsoft.firefly.sdk.dai.dto.UserDto;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
-import com.dmsoft.firefly.sdk.dai.service.SourceDataService;
-import com.dmsoft.firefly.sdk.dai.service.TemplateService;
 import com.dmsoft.firefly.sdk.dai.service.UserService;
-import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
-import com.dmsoft.firefly.sdk.utils.enums.LanguageType;
-import javafx.application.Platform;
+import com.dmsoft.firefly.sdk.event.EventContext;
+import com.dmsoft.firefly.sdk.event.EventType;
+import com.dmsoft.firefly.sdk.event.PlatformEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
-
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
 
 
 /**
@@ -45,9 +33,6 @@ public class LoginController {
     private Label loginFailLbl;
 
     @FXML
-    private ImageView loginingImageView;
-
-    @FXML
     private TextFieldUser userNameTxt;
 
     @FXML
@@ -56,10 +41,7 @@ public class LoginController {
     @FXML
     private LodingButton loginBtn;
 
-
     private EnvService envService = RuntimeContext.getBean(EnvService.class);
-    private TemplateService templateService = RuntimeContext.getBean(TemplateService.class);
-    private SourceDataService sourceDataService = RuntimeContext.getBean(SourceDataService.class);
     private UserService userService = RuntimeContext.getBean(UserService.class);
 
 
@@ -68,16 +50,59 @@ public class LoginController {
         DecoratorTextFiledUtils.decoratorFixedLengthTextFiled(userNameTxt.getTextField(), 20);
         DecoratorTextFiledUtils.decoratorFixedLengthTextFiled(passwordField.getTextField(), 20);
         resetLoginBtn();
-        initLoginEvent();
+        registEvent();
     }
 
-    private void initLoginEvent(){
+    /**
+     * 注册监听事件
+     */
+    private void registEvent(){
         loginBtn.setOnAction(event -> {
-            loginingBtn();
             loginFailLbl.setVisible(false);
             this.doLogin();
         });
+
+        EventContext eventContext = RuntimeContext.getBean(EventContext.class);
+        eventContext.addEventListener(EventType.SYSTEM_LOGIN_FAIL_ACITON, event -> {
+            resetLoginBtn();
+            loginFailLbl.setVisible(true);
+        });
+
+
+        eventContext.addEventListener(EventType.SYSTEM_LOGIN_SUCCESS_ACTION, event -> {
+            UserDto userDto = (UserDto) event.getMsg();
+            this.initEnvData(userDto);
+            resetLoginBtn();
+        });
     }
+
+
+    private void doLogin() {
+        DapThreadPoolExecutor.execute(() -> {
+            String username = userNameTxt.getTextField().getText();
+            String password = passwordField.getTextField().getText();
+            UserDto userDto = userService.validateUser(username, password);
+
+            EventContext eventContext = RuntimeContext.getBean(EventContext.class);
+            if (userDto != null) {
+                //发送登陆成功消息
+                eventContext.pushEvent(new PlatformEvent(EventType.SYSTEM_LOGIN_SUCCESS_ACTION, userDto));
+            } else {
+                //发送登陆失败消息
+                eventContext.pushEvent(new PlatformEvent(EventType.SYSTEM_LOGIN_FAIL_ACITON, null));
+            }
+        });
+    }
+
+
+    private void initEnvData(UserDto userDto) {
+        UserModel userModel = UserModel.getInstance();
+        userModel.setUser(userDto);
+        this.envService.setUserName(userDto.getUserName());
+        String activeTemplateName = this.envService.findActivatedTemplateName();
+        this.envService.initTestItem(activeTemplateName);
+    }
+
 
     private void resetLoginBtn() {
         loginBtn.change(false);
@@ -87,64 +112,6 @@ public class LoginController {
     private void loginingBtn() {
         loginBtn.change(true);
         loginBtn.setText(GuiFxmlAndLanguageUtils.getString("LOGINING_BTN"));
-    }
-
-    private void doLogin() {
-        // TODO: 2018/11/6 使用线程池
-        Thread thread = new Thread(() -> {
-            UserDto userDto = userService.validateUser(userNameTxt.getTextField().getText(), passwordField.getTextField().getText());
-            if (userDto != null) {
-                this.initEnvData(userDto);
-                Platform.runLater(() -> {
-                    // TODO: 2018/11/5 事件解耦 
-                    MenuFactory.getAppController().resetMenu();
-                    MenuFactory.getMainController().resetMain();
-                    StageMap.getStage(GuiConst.PLARTFORM_STAGE_LOGIN).close();
-                });
-            } else {
-                Platform.runLater(() -> {
-                    resetLoginBtn();
-                    addErrorTip();
-                });
-            }
-        });
-        thread.start();
-    }
-
-    private void initEnvData(UserDto userDto) {
-        UserModel userModel = UserModel.getInstance();
-        userModel.setUser(userDto);
-        envService.setUserName(userDto.getUserName());
-
-        // TODO: 2018/11/6
-        LanguageType languageType = RuntimeContext.getBean(EnvService.class).getLanguageType();
-        if (languageType == null) {
-            envService.setLanguageType(LanguageType.EN);
-        }
-
-        // TODO: 2018/11/5 业务代码分层不清晰
-        TemplateSettingDto templateSettingDto = envService.findActivatedTemplate();
-        String activeTemplateName;
-        if (templateSettingDto == null || DAPStringUtils.isBlank(templateSettingDto.getName())) {
-            envService.setActivatedTemplate(GuiConst.DEFAULT_TEMPLATE_NAME);
-            activeTemplateName = GuiConst.DEFAULT_TEMPLATE_NAME;
-        } else {
-            activeTemplateName = templateSettingDto.getName();
-        }
-
-        // TODO: 2018/11/5 业务代码分层不清晰
-        List<String> projectName = envService.findActivatedProjectName();
-        if (projectName != null && !projectName.isEmpty()) {
-            Map<String, TestItemDto> testItemDtoMap = sourceDataService.findAllTestItem(projectName);
-            LinkedHashMap<String, TestItemWithTypeDto> itemWithTypeDtoMap = templateService.assembleTemplate(testItemDtoMap, activeTemplateName);
-            envService.setTestItems(itemWithTypeDtoMap);
-            envService.setActivatedProjectName(projectName);
-        }
-    }
-
-
-    private void addErrorTip() {
-        loginFailLbl.setVisible(true);
     }
 
 }

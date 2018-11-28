@@ -7,32 +7,32 @@ package com.dmsoft.firefly.sdk.event;
  */
 public class PlatformEvent {
     private EventType eventType;
-    private String message;
+    private Object msg;
 
     /**
      * constructor
      *
      * @param eventType event type
-     * @param message   message
+     * @param msg   msg
      */
-    public PlatformEvent(EventType eventType, String message) {
+    public PlatformEvent(EventType eventType, Object msg) {
         this.eventType = eventType;
-        this.message = message;
+        this.msg = msg;
     }
 
     public void setEventType(EventType eventType) {
         this.eventType = eventType;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
+    public void setMsg(String msg) {
+        this.msg = msg;
     }
 
     public EventType getEventType() {
         return eventType;
     }
 
-    public String getMessage() {
-        return message;
+    public Object getMsg() {
+        return msg;
     }
 }

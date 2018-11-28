@@ -16,6 +16,7 @@ import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.dai.service.UserService;
 import com.dmsoft.firefly.sdk.event.EventContext;
+import com.dmsoft.firefly.sdk.event.EventType;
 import com.dmsoft.firefly.sdk.job.core.JobManager;
 import com.dmsoft.firefly.sdk.message.IMessageManager;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
@@ -127,13 +128,12 @@ public class GuiApplication extends Application {
                 getClass().getClassLoader().getResource("css/platform_app.css").toExternalForm()));
         NodeMap.addNode(GuiConst.PLARTFORM_NODE_MAIN, main);
 
-        RuntimeContext.getBean(EventContext.class).addEventListener(event -> {
-            if (event.getMessage().equals("Template_Show")) {
-                GuiFxmlAndLanguageUtils.buildTemplateDialog();
-            }
-        });
+        RuntimeContext.getBean(EventContext.class).addEventListener(
+            EventType.PLATFORM_TEMPLATE_SHOW,
+            event -> { GuiFxmlAndLanguageUtils.buildTemplateDialog(); });
 
         Runtime.getRuntime().addShutdownHook(new Thread() {
+            @Override
             public void run() {
                 CloseMongoDBUtil.closeMongoDB();
             }

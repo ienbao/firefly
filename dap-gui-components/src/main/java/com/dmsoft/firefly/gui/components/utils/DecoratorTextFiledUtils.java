@@ -23,6 +23,7 @@ public class DecoratorTextFiledUtils {
         return decoratorFixedLengthTextFiled(textField, DEFAULT_TEXT_LENGTH);
     }
 
+    //TODO YUANWEN 这个代码需要封装到组件中
     public static TextField decoratorFixedLengthTextFiled(TextField textField, int length) {
 
         if (length < 1) {

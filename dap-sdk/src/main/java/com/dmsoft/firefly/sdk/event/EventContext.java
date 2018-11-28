@@ -3,36 +3,48 @@ package com.dmsoft.firefly.sdk.event;
 import java.util.List;
 
 /**
- * interface for event context
+ * 修改监听事件总线，处理新事件模型
  *
  * @author Can Guan
+ * @author yuanwen
  */
 public interface EventContext {
     /**
-     * method to push event.
+     * 发布事件
      *
-     * @param event platform event
+     * @param event 事件
      */
     void pushEvent(PlatformEvent event);
 
     /**
-     * method to add event listener.
+     * 添加事件监听器
      *
-     * @param eventListener event listener
+     * @param eventType 事件类型
+     * @param eventListener 事件处理器
+     *
      */
-    void addEventListener(EventListener eventListener);
+    void addEventListener(EventType eventType, EventListener eventListener);
 
     /**
-     * method to remove event listener.
+     * 移除单个事件处理器
      *
-     * @param eventListener event listener
+     * @param eventType 事件
+     * @param eventListener 事件处理器
      */
-    void removeEventListener(EventListener eventListener);
+    void removeEventListener(EventType eventType, EventListener eventListener);
+
 
     /**
-     * method to get all listeners.
+     * 移除所有事件处理器
      *
-     * @return list of event listeners
+     * @param eventType 事件
      */
-    List<EventListener> getAllListeners();
+    void removeEventListener(EventType eventType);
+
+//    /**
+//     * method to get all listeners.
+//     *
+//     * @return list of event listeners
+//     */
+//    List<EventListener> getAllListeners();
 }

@@ -78,6 +78,14 @@
             <artifactId>junit</artifactId>
             <scope>test</scope>
         </dependency>
+      <dependency>
+        <groupId>com.dmsoft</groupId>
+        <artifactId>dap-gui</artifactId>
+      </dependency>
+        <dependency>
+            <groupId>com.dmsoft</groupId>
+            <artifactId>dap-gui</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

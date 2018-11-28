@@ -11,6 +11,8 @@ import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.dai.service.SourceDataService;
 import com.dmsoft.firefly.sdk.dai.service.TemplateService;
+import com.dmsoft.firefly.sdk.event.EventContext;
+import com.dmsoft.firefly.sdk.event.EventType;
 import com.dmsoft.firefly.sdk.plugin.PluginClass;
 import com.dmsoft.firefly.sdk.plugin.PluginClassType;
 import com.dmsoft.firefly.sdk.plugin.PluginImageContext;
@@ -19,6 +21,7 @@ import com.dmsoft.firefly.sdk.ui.IMenu;
 import com.dmsoft.firefly.sdk.ui.PluginUIContext;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Lists;
+import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -58,6 +61,21 @@ public class AppController {
         menuSystem.getMenus().clear();
         updateMenuSystem();
         initMenuBar();
+        registEvent();
+    }
+
+    /**
+     * 注册监听事件
+     */
+    private void registEvent() {
+
+        EventContext eventContext = RuntimeContext.getBean(EventContext.class);
+        eventContext.addEventListener(EventType.SYSTEM_LOGIN_SUCCESS_ACTION, event -> {
+            Platform.runLater(() -> {
+                resetMenu();
+            });
+        });
+
     }
 
     private void initMainMenuButton() {
@@ -70,7 +88,7 @@ public class AppController {
             menuLoginOut = new MenuItem(GuiFxmlAndLanguageUtils.getString("MENU_LOGIN_OUT"));
             menuChangePassword = new MenuItem(GuiFxmlAndLanguageUtils.getString("MENU_CHANGE_PASSWORD"));
             menuBtn.getItems().addAll(menuChangePassword, menuLoginOut);
-            initEvent();
+            
         }
     }
 

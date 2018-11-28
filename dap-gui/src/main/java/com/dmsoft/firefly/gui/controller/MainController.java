@@ -4,6 +4,7 @@ import com.dmsoft.firefly.gui.component.ContentStackPane;
 import com.dmsoft.firefly.gui.component.CustomerTooltip;
 import com.dmsoft.firefly.gui.components.utils.CommonResourceMassages;
 import com.dmsoft.firefly.gui.components.utils.ControlMap;
+import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.utils.TooltipUtil;
 import com.dmsoft.firefly.gui.components.window.WindowCustomListener;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
@@ -12,6 +13,7 @@ import com.dmsoft.firefly.gui.components.window.WindowMessageFactory;
 import com.dmsoft.firefly.gui.controller.template.DataSourceController;
 import com.dmsoft.firefly.gui.model.StateBarTemplateModel;
 import com.dmsoft.firefly.gui.model.UserModel;
+import com.dmsoft.firefly.gui.utils.GuiConst;
 import com.dmsoft.firefly.gui.utils.GuiFxmlAndLanguageUtils;
 import com.dmsoft.firefly.gui.utils.ResourceMassages;
 import com.dmsoft.firefly.gui.utils.TabUtils;
@@ -22,6 +24,8 @@ import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.dai.service.SourceDataService;
 import com.dmsoft.firefly.sdk.dai.service.TemplateService;
+import com.dmsoft.firefly.sdk.event.EventContext;
+import com.dmsoft.firefly.sdk.event.EventType;
 import com.dmsoft.firefly.sdk.ui.PluginUIContext;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.dmsoft.firefly.sdk.utils.enums.LanguageType;
@@ -105,6 +109,18 @@ public class MainController {
             this.setActiveFirstTab(pc);
             this.initComponentEvent();
         }
+
+        registEvent();
+    }
+
+    private void registEvent() {
+        EventContext eventContext = RuntimeContext.getBean(EventContext.class);
+        eventContext.addEventListener(EventType.SYSTEM_LOGIN_SUCCESS_ACTION, event -> {
+            Platform.runLater(() ->{
+                resetMain();
+                StageMap.getStage(GuiConst.PLARTFORM_STAGE_LOGIN).close();
+            });
+        });
     }
 
     private void initToolBar() {
