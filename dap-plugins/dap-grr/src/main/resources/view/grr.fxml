@@ -18,10 +18,10 @@
                 </left>
                 <right>
                     <HBox styleClass="grr-btn-h-box">
-                        <Button fx:id="resetBtn" maxWidth="22.0" minWidth="22.0" prefWidth="22.0" styleClass="btn-icon" />
-                        <Button fx:id="printBtn" maxWidth="22.0" minWidth="22.0" prefWidth="22.0" styleClass="btn-icon" />
-                        <Button fx:id="exportBtn" maxWidth="22.0" minWidth="22.0" prefWidth="22.0" styleClass="btn-icon" />
-                        <Button fx:id="refreshBtn" maxWidth="22.0" minWidth="22.0" prefWidth="22.0" styleClass="btn-primary" />
+                        <Button fx:id="resetBtn" styleClass="btn-icon,grr-reset-btn" />
+                        <Button fx:id="printBtn" styleClass="btn-icon,grr-print-btn" />
+                        <Button fx:id="exportBtn" styleClass="btn-icon,grr-export-btn" />
+                        <Button fx:id="refreshBtn" styleClass="btn-primary,grr-refresh-btn" />
                     </HBox>
                 </right>
             </BorderPane>

@@ -195,7 +195,7 @@ public class SpcExportController {
                         if (!isEmpty()) {
                             if (getTableRow() != null && getIndex() > -1) {
                                 if (getTableView().getItems().get(getIndex()).getOnTop()) {
-                                    this.setStyle("-fx-background-color: #dff0cf");
+                                    this.getStyleClass().add("spc-item-top");
                                 }
                             }
                         }
@@ -209,9 +209,7 @@ public class SpcExportController {
             }
         });
         Button is = new Button();
-        is.setPrefSize(22, 22);
-        is.setMinSize(22, 22);
-        is.setMaxSize(22, 22);
+        is.getStyleClass().add("btn-size");
         is.setOnMousePressed(event -> createPopMenu(is, event));
         is.getStyleClass().add("filter-normal");
 
@@ -229,11 +227,11 @@ public class SpcExportController {
                         if (!isEmpty()) {
                             if (getTableRow() != null && getIndex() > -1) {
                                 if (item.getTestItemType().equals(TestItemType.ATTRIBUTE) && getTableView().getItems().get(getIndex()).getOnTop()) {
-                                    this.setStyle("-fx-text-fill: #009bff; -fx-background-color: #dff0cf");
+                                    this.getStyleClass().add("spc-item-attribute-top");
                                 } else if (item.getTestItemType().equals(TestItemType.ATTRIBUTE)) {
-                                    this.setStyle("-fx-text-fill: #009bff");
+                                    this.getStyleClass().add("spc-item-attribute");
                                 } else if (getTableView().getItems().get(getIndex()).getOnTop()) {
-                                    this.setStyle("-fx-background-color: #dff0cf");
+                                    this.getStyleClass().add("spc-item-top");
                                 }
                             }
                             setText(item.getTestItemName());
@@ -305,12 +303,7 @@ public class SpcExportController {
     }
 
     private void initBtnIcon() {
-        importBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/load-script.svg")));
         TooltipUtil.installNormalTooltip(importBtn, SpcFxmlAndLanguageUtils.getString(ResourceMassages.IMPORT_CONFIG));
-        itemTab.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/datasource.svg")));
-        itemTab.setStyle("-fx-padding: 0 5 0 5");
-        configTab.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/config.svg")));
-        configTab.setStyle("-fx-padding: 0 5 0 5");
     }
 
 
@@ -393,7 +386,6 @@ public class SpcExportController {
                 filteredList.setPredicate(this::isFilterAndHasUslOrLsl);
                 is.getStyleClass().remove("filter-normal");
                 is.getStyleClass().add("filter-active");
-//                is.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_filter_normal.png")));
                 isFilterUslOrLsl = true;
             });
             all.setSelected(true);

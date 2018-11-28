@@ -892,9 +892,8 @@ public class GrrResultController implements Initializable {
     }
 
     private void initComponentsRender() {
-        final double inputWidth = 200;
+        summaryItemTf.getTextField().getStyleClass().add("grr-summary-item-tf");
 
-        summaryItemTf.getTextField().setPrefWidth(inputWidth);
         summaryItemTf.getTextField().setFocusTraversable(false);
         String testItemText = GrrFxmlAndLanguageUtils.getString("GRR_SUMMARY_TEST_ITEM");
         summaryItemTf.getTextField().setPromptText(testItemText);
@@ -936,8 +935,8 @@ public class GrrResultController implements Initializable {
         summaryTbColumns.get(5).prefWidthProperty().bind(summaryTb.widthProperty().divide(7));
         summaryTbColumns.get(6).prefWidthProperty().bind(summaryTb.widthProperty().divide(7));
         summaryTbColumns.get(7).prefWidthProperty().bind(summaryTb.widthProperty().divide(7));
-        xBarAppraiserChartBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/choose-lines.svg")));
-        rangeAppraiserChartBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/choose-lines.svg")));
+        xBarAppraiserChartBtn.getStyleClass().add("grr-xBarAppraiserChartBtn");
+        rangeAppraiserChartBtn.getStyleClass().add("grr-xBarAppraiserChartBtn");
         xBarAppraiserChartBtn.setListViewSize(80, 80);
         rangeAppraiserChartBtn.setListViewSize(80, 80);
         xBarAppraiserChartBtn.getStyleClass().add("btn-icon-b");

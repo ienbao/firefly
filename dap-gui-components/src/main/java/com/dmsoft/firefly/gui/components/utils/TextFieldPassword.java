@@ -16,7 +16,7 @@ import javafx.scene.layout.Priority;
 public class TextFieldPassword extends HBox {
     private PasswordField textField;
     private Label label;
-    private ImageView searchIcon = ImageUtils.getImageView(getClass().getResourceAsStream("/images/icon_password.png"));
+    private ImageView searchIcon = ImageUtils.getImageView(getClass().getResourceAsStream("/images/password.svg"));
 
     /**
      * constructor

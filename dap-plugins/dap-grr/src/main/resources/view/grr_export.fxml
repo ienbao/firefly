@@ -18,6 +18,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.image.ImageView?>
 <VBox styleClass="lg-window-size" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.dmsoft.firefly.plugin.grr.controller.GrrExportController">
     <HBox styleClass="grr-export-h-box" VBox.vgrow="ALWAYS">
         <VBox styleClass="grr-export-v-box-left" HBox.hgrow="ALWAYS">
@@ -35,9 +36,10 @@
             </VBox>
         </VBox>
         <VBox>
-            <SplitPane fx:id="split" orientation="VERTICAL" VBox.vgrow="ALWAYS" styleClass="grr-item-split">
-                <TabPane styleClass="grr-item-tab" tabClosingPolicy="UNAVAILABLE">
+            <SplitPane fx:id="split" orientation="VERTICAL" VBox.vgrow="ALWAYS" styleClass="grr-export-split">
+                <TabPane styleClass="grr-item-tabs" tabClosingPolicy="UNAVAILABLE">
                     <Tab fx:id="itemTab" >
+                        <graphic><ImageView fitWidth="16" fitHeight="16" styleClass="grr-datasource-btn"/></graphic>
                         <VBox >
                             <HBox styleClass="padding-lg">
                                 <TextFieldFilter fx:id="itemFilter"/>
@@ -53,7 +55,8 @@
                             </TableView>
                         </VBox>
                     </Tab>
-                    <Tab fx:id="configTab" >
+                    <Tab fx:id="configTab">
+                        <graphic><ImageView fitWidth="16" fitHeight="16" styleClass="grr-config-btn"/></graphic>
                         <ScrollPane fitToHeight="true" fitToWidth="true" maxHeight="330.0">
                             <GridPane fx:id="grrConfigPane" minWidth="160.0" prefHeight="350.0" prefWidth="160.0" styleClass="grr-config">
                                 <columnConstraints>
@@ -100,7 +103,9 @@
                 </TabPane>
             </SplitPane>
             <HBox styleClass="grr-import-btn">
-                <Button fx:id="importBtn" minWidth="30" maxWidth="30.0"  prefWidth="30.0" styleClass="btn-txt"/>
+                <Button fx:id="importBtn" minWidth="30" maxWidth="30.0"  prefWidth="30.0" styleClass="btn-txt">
+                    <graphic><ImageView fitWidth="16" fitHeight="16" styleClass="grr-import-config-btn"/></graphic>
+                </Button>
             </HBox>
         </VBox>
     </HBox>

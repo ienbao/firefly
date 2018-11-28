@@ -25,6 +25,10 @@
     -fx-background-color: COLORFUL_AUXILIARY_BLUE;
 }
 
+.alignment-right{
+    -fx-alignment: center_right;
+}
+
 /*******************************************************************************
  *                                                                             *
  * ProgressBar                                                  *
@@ -222,13 +226,11 @@
 }
 
 .gui-datasource-rename-btn{
-    -fx-background-image: url('/images/rename.svg');
-    -fx-background-size: 16;
+    -fx-image: url('/images/rename.svg');
 }
 
 .gui-datasource-delete-one-btn{
-    -fx-background-image: url('/images/del.svg');
-    -fx-background-size: 16;
+    -fx-image: url('/images/del.svg');
 }
 
 /*******************************************************************************
@@ -676,17 +678,15 @@
 -fx-background-color: COLORFUL_PRIMARY_RED_DARK;
 }
 
-.main-dataSourceBtn{
+.main-dataSource-template-Btn{
+    -fx-border-width: 1;
     -fx-content-display: right;
     -fx-padding: 0 3 0 5;
 }
 .main-dataSourceBtn-image{
     -fx-image: url("/images/DS-files.svg");
 }
-.main-templateBtn{
-    -fx-content-display: right;
-    -fx-padding: 0 3 0 5;
-}
+
 .main-templateBtn-image{
     -fx-image: url("/images/template.svg");
 }

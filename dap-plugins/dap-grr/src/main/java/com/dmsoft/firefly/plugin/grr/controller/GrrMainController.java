@@ -1,6 +1,5 @@
 package com.dmsoft.firefly.plugin.grr.controller;
 
-import com.dmsoft.firefly.gui.components.utils.ImageUtils;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.utils.TooltipUtil;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
@@ -28,9 +27,7 @@ import java.util.ResourceBundle;
  * Created by cherry on 2018/3/11.
  */
 public class GrrMainController implements Initializable {
-
     private Logger logger = LoggerFactory.getLogger(GrrMainController.class);
-
     private GrrDataFrameDto grrDataFrame;
     private GrrDataFrameDto backGrrDataFrame;
     private List<GrrSummaryDto> summaryDtos;
@@ -46,8 +43,6 @@ public class GrrMainController implements Initializable {
     private GrrViewDataController grrViewDataController;
     @FXML
     private Tab grrResultTab;
-
-
     @FXML
     private Button exportBtn;
     @FXML
@@ -79,10 +74,6 @@ public class GrrMainController implements Initializable {
     }
 
     private void initBtnIcon() {
-        exportBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/export.svg")));
-        resetBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/reset.svg")));
-        printBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/print.svg")));
-        refreshBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/check-white.svg")));
         TooltipUtil.installNormalTooltip(resetBtn, GrrFxmlAndLanguageUtils.getString("GRR_RESET_BTN_TOOLTIP"));
         TooltipUtil.installNormalTooltip(printBtn, GrrFxmlAndLanguageUtils.getString("GRR_PRINT_BTN_TOOLTIP"));
         TooltipUtil.installNormalTooltip(exportBtn, GrrFxmlAndLanguageUtils.getString("GRR_EXPORT_BTN_TOOLTIP"));
@@ -158,9 +149,9 @@ public class GrrMainController implements Initializable {
         resetBtn.setDisable(disable);
         refreshBtn.setDisable(disable);
         if (disable) {
-            refreshBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/check-gray.svg")));
+            refreshBtn.getStyleClass().setAll("btn-primary","grr-refresh-disable-btn");
         } else {
-            refreshBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/check-white.svg")));
+            refreshBtn.getStyleClass().setAll("btn-primary","grr-refresh-able-btn");
         }
     }
 

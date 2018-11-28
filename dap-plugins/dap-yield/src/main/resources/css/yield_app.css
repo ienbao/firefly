@@ -18,12 +18,12 @@
 
 #viewDataTable .column-header.filter-header:hover .filter-normal,
 #overViewResultTb .column-header.filter-header:hover .filter-normal {
-    -fx-background-image: url('/images/btn_arrow_down.png');
+    -fx-background-image: url('/images/arrow-down-small.svg');
 }
 
 #viewDataTable .column-header.filter-header .filter-active,
 #overViewResultTb .column-header.filter-header .filter-active {
-    -fx-background-image: url('/images/btn_filter_normal.png');
+    -fx-background-image: url('/images/filter-selected.svg');
     -fx-background-size: 16;
     -fx-background-repeat: no-repeat;
     -fx-background-position: 2 2;
@@ -65,11 +65,11 @@
 }
 
 .column-header.filter-header:hover .filter-normal {
-    -fx-background-image: url('/images/btn_arrow_down.png');
+    -fx-background-image: url('/images/arrow-down-small.svg');
 }
 
 .column-header.filter-header .filter-active {
-    -fx-background-image: url('/images/btn_filter_normal.png');
+    -fx-background-image: url('/images/filter-selected.svg');
     -fx-background-size: 16;
     -fx-background-repeat: no-repeat;
     -fx-background-position: 2 2;
@@ -752,7 +752,7 @@ add all charts.css into yield_app.css
     -fx-max-height: 22.0;
     -fx-min-height: 22.0;
     -fx-pref-height: 22.0;
-    -fx-background-image: url('images/btn_choose_test_items_normal.png');
+    -fx-background-image: url('/images/choose-test-items.svg');
     -fx-background-size: 16;
 
 }

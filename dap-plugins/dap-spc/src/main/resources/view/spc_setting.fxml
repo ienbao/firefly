@@ -69,15 +69,15 @@
                                         <Label text="PPK" GridPane.rowIndex="6" />
                                         <Label text="PPL" GridPane.rowIndex="7" />
                                         <Label text="PPU" GridPane.rowIndex="8" />
-                                        <Label styleClass="alarm-excellent" text="A" GridPane.columnIndex="1" />
-                                        <Label styleClass="alarm-excellent" text="A+" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                        <Label styleClass="alarm-excellent" text="A+" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                                        <Label styleClass="alarm-excellent" text="A+" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                                        <Label styleClass="alarm-excellent" text="A+" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                                        <Label styleClass="alarm-excellent" text="A+" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-                                        <Label styleClass="alarm-excellent" text="A+" GridPane.columnIndex="1" GridPane.rowIndex="6" />
-                                        <Label styleClass="alarm-excellent" text="A+" GridPane.columnIndex="1" GridPane.rowIndex="7" />
-                                        <Label styleClass="alarm-excellent" text="A+" GridPane.columnIndex="1" GridPane.rowIndex="8" />
+                                        <Label styleClass="alarm-root,alarm-excellent" text="A" GridPane.columnIndex="1" />
+                                        <Label styleClass="alarm-root,alarm-excellent" text="A+" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                        <Label styleClass="alarm-root,alarm-excellent" text="A+" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                        <Label styleClass="alarm-root,alarm-excellent" text="A+" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                                        <Label styleClass="alarm-root,alarm-excellent" text="A+" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                                        <Label styleClass="alarm-root,alarm-excellent" text="A+" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                                        <Label styleClass="alarm-root,alarm-excellent" text="A+" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                                        <Label styleClass="alarm-root,alarm-excellent" text="A+" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+                                        <Label styleClass="alarm-root,alarm-excellent" text="A+" GridPane.columnIndex="1" GridPane.rowIndex="8" />
                                         <Label text="&lt;" GridPane.columnIndex="2" />
                                         <Label text="≥" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                                         <Label text="≥" GridPane.columnIndex="2" GridPane.rowIndex="2" />
@@ -105,15 +105,15 @@
                                         <Label text="&gt;" GridPane.columnIndex="4" GridPane.rowIndex="6" />
                                         <Label text="&gt;" GridPane.columnIndex="4" GridPane.rowIndex="7" />
                                         <Label text="&gt;" GridPane.columnIndex="4" GridPane.rowIndex="8" />
-                                        <Label styleClass="alarm-acceptable" text="B" GridPane.columnIndex="5" />
-                                        <Label styleClass="alarm-good" text="A" GridPane.columnIndex="5" GridPane.rowIndex="1" />
-                                        <Label styleClass="alarm-good" text="A" GridPane.columnIndex="5" GridPane.rowIndex="2" />
-                                        <Label styleClass="alarm-good" text="A" GridPane.columnIndex="5" GridPane.rowIndex="3" />
-                                        <Label styleClass="alarm-good" text="A" GridPane.columnIndex="5" GridPane.rowIndex="4" />
-                                        <Label styleClass="alarm-good" text="A" GridPane.columnIndex="5" GridPane.rowIndex="5" />
-                                        <Label styleClass="alarm-good" text="A" GridPane.columnIndex="5" GridPane.rowIndex="6" />
-                                        <Label styleClass="alarm-good" text="A" GridPane.columnIndex="5" GridPane.rowIndex="7" />
-                                        <Label styleClass="alarm-good" text="A" GridPane.columnIndex="5" GridPane.rowIndex="8" />
+                                        <Label styleClass="alarm-root,alarm-acceptable" text="B" GridPane.columnIndex="5" />
+                                        <Label styleClass="alarm-root,alarm-good" text="A" GridPane.columnIndex="5" GridPane.rowIndex="1" />
+                                        <Label styleClass="alarm-root,alarm-good" text="A" GridPane.columnIndex="5" GridPane.rowIndex="2" />
+                                        <Label styleClass="alarm-root,alarm-good" text="A" GridPane.columnIndex="5" GridPane.rowIndex="3" />
+                                        <Label styleClass="alarm-root,alarm-good" text="A" GridPane.columnIndex="5" GridPane.rowIndex="4" />
+                                        <Label styleClass="alarm-root,alarm-good" text="A" GridPane.columnIndex="5" GridPane.rowIndex="5" />
+                                        <Label styleClass="alarm-root,alarm-good" text="A" GridPane.columnIndex="5" GridPane.rowIndex="6" />
+                                        <Label styleClass="alarm-root,alarm-good" text="A" GridPane.columnIndex="5" GridPane.rowIndex="7" />
+                                        <Label styleClass="alarm-root,alarm-good" text="A" GridPane.columnIndex="5" GridPane.rowIndex="8" />
                                         <Label text="&lt;" GridPane.columnIndex="6" />
                                         <Label text="≥" GridPane.columnIndex="6" GridPane.rowIndex="1" />
                                         <Label text="≥" GridPane.columnIndex="6" GridPane.rowIndex="2" />
@@ -141,15 +141,15 @@
                                         <Label text="&gt;" GridPane.columnIndex="8" GridPane.rowIndex="6" />
                                         <Label text="&gt;" GridPane.columnIndex="8" GridPane.rowIndex="7" />
                                         <Label text="&gt;" GridPane.columnIndex="8" GridPane.rowIndex="8" />
-                                        <Label styleClass="alarm-rectification" text="C" GridPane.columnIndex="9" />
-                                        <Label styleClass="alarm-acceptable" text="B" GridPane.columnIndex="9" GridPane.rowIndex="1" />
-                                        <Label styleClass="alarm-acceptable" text="B" GridPane.columnIndex="9" GridPane.rowIndex="2" />
-                                        <Label styleClass="alarm-acceptable" text="B" GridPane.columnIndex="9" GridPane.rowIndex="3" />
-                                        <Label styleClass="alarm-acceptable" text="B" GridPane.columnIndex="9" GridPane.rowIndex="4" />
-                                        <Label styleClass="alarm-acceptable" text="B" GridPane.columnIndex="9" GridPane.rowIndex="5" />
-                                        <Label styleClass="alarm-acceptable" text="B" GridPane.columnIndex="9" GridPane.rowIndex="6" />
-                                        <Label styleClass="alarm-acceptable" text="B" GridPane.columnIndex="9" GridPane.rowIndex="7" />
-                                        <Label styleClass="alarm-acceptable" text="B" GridPane.columnIndex="9" GridPane.rowIndex="8" />
+                                        <Label styleClass="alarm-root,alarm-rectification" text="C" GridPane.columnIndex="9" />
+                                        <Label styleClass="alarm-root,alarm-acceptable" text="B" GridPane.columnIndex="9" GridPane.rowIndex="1" />
+                                        <Label styleClass="alarm-root,alarm-acceptable" text="B" GridPane.columnIndex="9" GridPane.rowIndex="2" />
+                                        <Label styleClass="alarm-root,alarm-acceptable" text="B" GridPane.columnIndex="9" GridPane.rowIndex="3" />
+                                        <Label styleClass="alarm-root,alarm-acceptable" text="B" GridPane.columnIndex="9" GridPane.rowIndex="4" />
+                                        <Label styleClass="alarm-root,alarm-acceptable" text="B" GridPane.columnIndex="9" GridPane.rowIndex="5" />
+                                        <Label styleClass="alarm-root,alarm-acceptable" text="B" GridPane.columnIndex="9" GridPane.rowIndex="6" />
+                                        <Label styleClass="alarm-root,alarm-acceptable" text="B" GridPane.columnIndex="9" GridPane.rowIndex="7" />
+                                        <Label styleClass="alarm-root,alarm-acceptable" text="B" GridPane.columnIndex="9" GridPane.rowIndex="8" />
                                         <Label text="&lt;" GridPane.columnIndex="10" />
                                         <Label text="≥" GridPane.columnIndex="10" GridPane.rowIndex="1" />
                                         <Label text="≥" GridPane.columnIndex="10" GridPane.rowIndex="2" />
@@ -177,15 +177,15 @@
                                         <Label text="&gt;" GridPane.columnIndex="12" GridPane.rowIndex="6" />
                                         <Label text="&gt;" GridPane.columnIndex="12" GridPane.rowIndex="7" />
                                         <Label text="&gt;" GridPane.columnIndex="12" GridPane.rowIndex="8" />
-                                        <Label styleClass="alarm-bad" text="D" GridPane.columnIndex="13" />
-                                        <Label styleClass="alarm-rectification" text="C" GridPane.columnIndex="13" GridPane.rowIndex="1" />
-                                        <Label styleClass="alarm-rectification" text="C" GridPane.columnIndex="13" GridPane.rowIndex="2" />
-                                        <Label styleClass="alarm-rectification" text="C" GridPane.columnIndex="13" GridPane.rowIndex="3" />
-                                        <Label styleClass="alarm-rectification" text="C" GridPane.columnIndex="13" GridPane.rowIndex="4" />
-                                        <Label styleClass="alarm-rectification" text="C" GridPane.columnIndex="13" GridPane.rowIndex="5" />
-                                        <Label styleClass="alarm-rectification" text="C" GridPane.columnIndex="13" GridPane.rowIndex="6" />
-                                        <Label styleClass="alarm-rectification" text="C" GridPane.columnIndex="13" GridPane.rowIndex="7" />
-                                        <Label styleClass="alarm-rectification" text="C" GridPane.columnIndex="13" GridPane.rowIndex="8" />
+                                        <Label styleClass="alarm-root,alarm-bad" text="D" GridPane.columnIndex="13" />
+                                        <Label styleClass="alarm-root,alarm-rectification" text="C" GridPane.columnIndex="13" GridPane.rowIndex="1" />
+                                        <Label styleClass="alarm-root,alarm-rectification" text="C" GridPane.columnIndex="13" GridPane.rowIndex="2" />
+                                        <Label styleClass="alarm-root,alarm-rectification" text="C" GridPane.columnIndex="13" GridPane.rowIndex="3" />
+                                        <Label styleClass="alarm-root,alarm-rectification" text="C" GridPane.columnIndex="13" GridPane.rowIndex="4" />
+                                        <Label styleClass="alarm-root,alarm-rectification" text="C" GridPane.columnIndex="13" GridPane.rowIndex="5" />
+                                        <Label styleClass="alarm-root,alarm-rectification" text="C" GridPane.columnIndex="13" GridPane.rowIndex="6" />
+                                        <Label styleClass="alarm-root,alarm-rectification" text="C" GridPane.columnIndex="13" GridPane.rowIndex="7" />
+                                        <Label styleClass="alarm-root,alarm-rectification" text="C" GridPane.columnIndex="13" GridPane.rowIndex="8" />
                                         <Label text="≥" GridPane.columnIndex="14" GridPane.rowIndex="1" />
                                         <Label text="≥" GridPane.columnIndex="14" GridPane.rowIndex="2" />
                                         <Label text="≥" GridPane.columnIndex="14" GridPane.rowIndex="3" />
@@ -210,21 +210,21 @@
                                         <Label text="&gt;" GridPane.columnIndex="16" GridPane.rowIndex="6" />
                                         <Label text="&gt;" GridPane.columnIndex="16" GridPane.rowIndex="7" />
                                         <Label text="&gt;" GridPane.columnIndex="16" GridPane.rowIndex="8" />
-                                        <Label styleClass="alarm-bad" text="D" GridPane.columnIndex="17" GridPane.rowIndex="1" />
-                                        <Label styleClass="alarm-bad" text="D" GridPane.columnIndex="17" GridPane.rowIndex="2" />
-                                        <Label styleClass="alarm-bad" text="D" GridPane.columnIndex="17" GridPane.rowIndex="3" />
-                                        <Label styleClass="alarm-bad" text="D" GridPane.columnIndex="17" GridPane.rowIndex="4" />
-                                        <Label styleClass="alarm-bad" text="D" GridPane.columnIndex="17" GridPane.rowIndex="5" />
-                                        <Label styleClass="alarm-bad" text="D" GridPane.columnIndex="17" GridPane.rowIndex="6" />
-                                        <Label styleClass="alarm-bad" text="D" GridPane.columnIndex="17" GridPane.rowIndex="7" />
-                                        <Label styleClass="alarm-bad" text="D" GridPane.columnIndex="17" GridPane.rowIndex="8" />
+                                        <Label styleClass="alarm-root,alarm-bad" text="D" GridPane.columnIndex="17" GridPane.rowIndex="1" />
+                                        <Label styleClass="alarm-root,alarm-bad" text="D" GridPane.columnIndex="17" GridPane.rowIndex="2" />
+                                        <Label styleClass="alarm-root,alarm-bad" text="D" GridPane.columnIndex="17" GridPane.rowIndex="3" />
+                                        <Label styleClass="alarm-root,alarm-bad" text="D" GridPane.columnIndex="17" GridPane.rowIndex="4" />
+                                        <Label styleClass="alarm-root,alarm-bad" text="D" GridPane.columnIndex="17" GridPane.rowIndex="5" />
+                                        <Label styleClass="alarm-root,alarm-bad" text="D" GridPane.columnIndex="17" GridPane.rowIndex="6" />
+                                        <Label styleClass="alarm-root,alarm-bad" text="D" GridPane.columnIndex="17" GridPane.rowIndex="7" />
+                                        <Label styleClass="alarm-root,alarm-bad" text="D" GridPane.columnIndex="17" GridPane.rowIndex="8" />
                                 </GridPane>
                                 <Label text="%CUSTOM_STATISTICAL_ALARM_SETTING" styleClass="spc-setting-custom-label"/>
                                 <HBox alignment="CENTER_RIGHT" prefHeight="240.0" prefWidth="200.0">
                                     <VBox HBox.hgrow="ALWAYS">
                                             <HBox styleClass="spc-setting-custom-hbox-left">
                                                 <TextFieldFilter fx:id="searchTestItemTf" prefHeight="22.0" prefWidth="200.0"/>
-                                                <Button fx:id="addTestItemBtn" mnemonicParsing="false" styleClass="btn-icon,spc-setting-add-btn"/>
+                                                <Button fx:id="addTestItemBtn"   styleClass="btn-icon,spc-setting-add-btn"/>
                                             </HBox>
                                             <TableView fx:id="customAlarmTable" styleClass="spc-setting-table-border">
                                                 <columns>
@@ -277,7 +277,7 @@
                                 <HBox alignment="CENTER_LEFT" styleClass="spacing-lg">
                                     <Label text="%ACTIVE_TEMPLATE" />
                                     <ComboBox fx:id="exportTemplateCb" prefWidth="150.0" prefHeight="22.0" minHeight="22.0" maxHeight="22.0"/>
-                                    <Button fx:id="exportTemplateSettingBtn" mnemonicParsing="false" styleClass="spc-setting-export-btn" />
+                                    <Button fx:id="exportTemplateSettingBtn"   styleClass="spc-setting-export-btn" />
                                 </HBox>
                             </VBox>
                     </VBox>
@@ -285,8 +285,8 @@
             </ScrollPane>
     </HBox>
     <HBox styleClass="spc-setting-box-right">
-        <Button fx:id="apply" mnemonicParsing="false" prefWidth="80.0" text="%APPLY" />
-        <Button fx:id="cancel" mnemonicParsing="false" prefWidth="80.0" text="%CANCEL" />
-        <Button fx:id="ok" mnemonicParsing="false" prefWidth="80.0" text="%OK" />
+        <Button fx:id="apply"   prefWidth="80.0" text="%APPLY" />
+        <Button fx:id="cancel"   prefWidth="80.0" text="%CANCEL" />
+        <Button fx:id="ok"   prefWidth="80.0" text="%OK" />
     </HBox>
 </VBox>

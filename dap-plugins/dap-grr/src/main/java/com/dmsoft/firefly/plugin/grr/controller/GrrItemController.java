@@ -195,21 +195,13 @@ public class GrrItemController implements Initializable {
         select.setGraphic(box);
         select.setCellValueFactory(cellData -> cellData.getValue().getSelector().getCheckBox());
         Button is = new Button();
-        is.setPrefSize(22, 22);
-        is.setMinSize(22, 22);
-        is.setMaxSize(22, 22);
         is.setOnMousePressed(event -> createPopMenu(is, event));
-        is.getStyleClass().add("filter-normal");
-
-//        is.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/analysis-white.svg")));
-
+        is.getStyleClass().addAll("filter-normal","grr-is");
         item.setText(GrrFxmlAndLanguageUtils.getString(ResourceMassages.TEST_ITEM));
         item.setGraphic(is);
-        item.getStyleClass().add("filter-header");
+        item.getStyleClass().addAll("filter-header","grr-item");
         item.setCellValueFactory(cellData -> cellData.getValue().itemDtoProperty());
         initItemData();
-        item.setPrefWidth(148);
-
         item.widthProperty().addListener((ov, w1, w2) -> {
             Platform.runLater(() -> {
                 is.relocate(w2.doubleValue() - 21, 0);
@@ -434,7 +426,7 @@ public class GrrItemController implements Initializable {
                 } else {
                     HBox cell;
                     CheckBox checkBox = new CheckBox();
-                    checkBox.setPrefSize(12, 12);
+                    checkBox.getStyleClass().add("grr-check-box");
                     if (item.isIsChecked()) {
                         checkBox.setSelected(true);
                     } else {
@@ -489,7 +481,7 @@ public class GrrItemController implements Initializable {
         partLbl.setVisible(true);
         partLbl.setContentDisplay(ContentDisplay.LEFT);
         partLbl.setGraphic(warnIconLbl);
-        partLbl.setStyle("-fx-text-fill: red");
+        partLbl.getStyleClass().add("text-fill-red");
         int count = (int) partListView.getItems().stream().filter(ListViewModel::isIsChecked).count();
         if (StringUtils.isBlank(partTxt.getText())) {
             if (count != 0) {
@@ -522,7 +514,7 @@ public class GrrItemController implements Initializable {
         appraiserLbl.setVisible(true);
         appraiserLbl.setContentDisplay(ContentDisplay.LEFT);
         appraiserLbl.setGraphic(warnIconLbl1);
-        appraiserLbl.setStyle("-fx-text-fill: red");
+        appraiserLbl.getStyleClass().add("text-fill-red");
         int count = (int) appraiserListView.getItems().stream().filter(ListViewModel::isIsChecked).count();
         if (StringUtils.isBlank(appraiserTxt.getText())) {
             if (count != 0) {
@@ -552,11 +544,9 @@ public class GrrItemController implements Initializable {
 
     private void getWarnLblIcon() {
         warnIconLbl = new Label();
-        warnIconLbl.getStyleClass().add("message-tip-warn-mark");
-        warnIconLbl.setStyle("-fx-padding: 0 26 0 0;");
+        warnIconLbl.getStyleClass().addAll("message-tip-warn-mark","grr-config-warn");
         warnIconLbl1 = new Label();
-        warnIconLbl1.getStyleClass().add("message-tip-warn-mark");
-        warnIconLbl1.setStyle("-fx-padding: 0 26 0 0;");
+        warnIconLbl1.getStyleClass().addAll("message-tip-warn-mark","grr-config-warn");
     }
 
     private void clearLbl(Label label) {
@@ -568,17 +558,10 @@ public class GrrItemController implements Initializable {
     }
 
     private void initBtnIcon() {
-        analysisBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/analysis-white.svg")));
         TooltipUtil.installNormalTooltip(analysisBtn, GrrFxmlAndLanguageUtils.getString(ResourceMassages.ANALYSIS));
-        importBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/load-script.svg")));
         TooltipUtil.installNormalTooltip(importBtn, GrrFxmlAndLanguageUtils.getString(ResourceMassages.IMPORT_CONFIG));
-        exportBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/save.svg")));
         TooltipUtil.installNormalTooltip(exportBtn, GrrFxmlAndLanguageUtils.getString(ResourceMassages.EXPORT_CONFIG));
-        itemTab.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/datasource.svg")));
-        itemTab.setStyle("-fx-padding: 0 5 0 5");
         itemTab.setTooltip(new Tooltip(GrrFxmlAndLanguageUtils.getString("GRR_TEST_ITEM")));
-        configTab.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/config.svg")));
-        configTab.setStyle("-fx-padding: 0 5 0 5");
         configTab.setTooltip(new Tooltip(GrrFxmlAndLanguageUtils.getString("GRR_CONFIG")));
     }
 
@@ -598,7 +581,6 @@ public class GrrItemController implements Initializable {
                 filteredList.setPredicate(p -> this.isFilterAndHasUslOrLsl(p));
                 is.getStyleClass().remove("filter-normal");
                 is.getStyleClass().add("filter-active");
-//                is.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_filter_normal.png")));
                 isFilterUslOrLsl = true;
             });
             all.setSelected(true);
@@ -667,11 +649,11 @@ public class GrrItemController implements Initializable {
                         if (!isEmpty()) {
                             if (getTableRow() != null && getIndex() > -1) {
                                 if (item.getTestItemType().equals(TestItemType.ATTRIBUTE) && getTableView().getItems().get(getIndex()).getOnTop()) {
-                                    this.setStyle("-fx-text-fill: #009bff; -fx-background-color: #dff0cf");
+                                    this.getStyleClass().add("grr-item-background1");
                                 } else if (item.getTestItemType().equals(TestItemType.ATTRIBUTE)) {
-                                    this.setStyle("-fx-text-fill: #009bff");
+                                    this.getStyleClass().add("grr-item-background2");
                                 } else if (getTableView().getItems().get(getIndex()).getOnTop()) {
-                                    this.setStyle("-fx-background-color: #dff0cf");
+                                    this.getStyleClass().add("grr-item-background3");
                                 }
                             }
                             setText(item.getTestItemName());
@@ -693,7 +675,7 @@ public class GrrItemController implements Initializable {
                         if (!isEmpty()) {
                             if (getTableRow() != null && getIndex() > -1) {
                                 if (getTableView().getItems().get(getIndex()).getOnTop()) {
-                                    this.setStyle("-fx-background-color: #dff0cf");
+                                    this.getStyleClass().add("grr-item-background3");
                                 }
                             }
                         }

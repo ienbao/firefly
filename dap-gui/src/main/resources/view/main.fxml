@@ -36,13 +36,13 @@
             <RowConstraints maxHeight="20.0" minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
             </rowConstraints>
             <Label styleClass="padding-left" text="%STATE_BAR_FILE"/>
-            <Button  fx:id="dataSourceBtn" text="--" styleClass="btn-icon-b,main-dataSourceBtn" GridPane.columnIndex="1">
+            <Button  fx:id="dataSourceBtn" text="--" styleClass="btn-icon-b,main-dataSource-template-Btn" GridPane.columnIndex="1">
                 <graphic>
                     <ImageView fitHeight="16" fitWidth="16" styleClass="main-dataSourceBtn-image" />
                 </graphic>
             </Button>
             <Label styleClass="padding-left" text="%STATE_BAR_ANALYZE" GridPane.columnIndex="2"/>
-            <Button  fx:id="templateBtn" text="--" styleClass="btn-icon-b,main-templateBtn" GridPane.columnIndex="3">
+            <Button  fx:id="templateBtn" text="--" styleClass="btn-icon-b,main-dataSource-template-Btn" GridPane.columnIndex="3">
                 <graphic>
                     <ImageView fitHeight="16" fitWidth="16" styleClass="main-templateBtn-image" />
                 </graphic>

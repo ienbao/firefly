@@ -51,6 +51,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.swing.text.html.ImageView;
 import java.io.File;
 import java.net.URL;
 import java.util.*;
@@ -224,11 +225,11 @@ public class SpcItemController implements Initializable {
                         if (!isEmpty()) {
                             if (getTableRow() != null && getIndex() > -1) {
                                 if (item.getTestItemType().equals(TestItemType.ATTRIBUTE) && getTableView().getItems().get(getIndex()).getOnTop()) {
-                                    this.setStyle("-fx-text-fill: #009bff; -fx-background-color: #dff0cf");
+                                    this.getStyleClass().add("spc-item-attribute-top");
                                 } else if (item.getTestItemType().equals(TestItemType.ATTRIBUTE)) {
-                                    this.setStyle("-fx-text-fill: #009bff");
+                                    this.getStyleClass().add("spc-item-attribute");
                                 } else if (getTableView().getItems().get(getIndex()).getOnTop()) {
-                                    this.setStyle("-fx-background-color: #dff0cf");
+                                    this.getStyleClass().add("spc-item-top");
                                 }
                             }
                             setText(item.getTestItemName());
@@ -332,26 +333,12 @@ public class SpcItemController implements Initializable {
     }
 
     private void initBtnIcon() {
-        analysisBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/analysis-white.svg")));
         TooltipUtil.installNormalTooltip(analysisBtn, SpcFxmlAndLanguageUtils.getString(ResourceMassages.ANALYSIS));
-        importBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/load-script.svg")));
         TooltipUtil.installNormalTooltip(importBtn, SpcFxmlAndLanguageUtils.getString(ResourceMassages.IMPORT_CONFIG));
-        exportBtn.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/save.svg")));
         TooltipUtil.installNormalTooltip(exportBtn, SpcFxmlAndLanguageUtils.getString(ResourceMassages.EXPORT_CONFIG));
-        itemTab.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/datasource.svg")));
-        itemTab.setStyle("-fx-padding: 0 5 0 5");
         itemTab.setTooltip(new Tooltip(SpcFxmlAndLanguageUtils.getString("SPC_TEST_ITEM")));
-
-        configTab.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/config.svg")));
-        configTab.setStyle("-fx-padding: 0 5 0 5");
         configTab.setTooltip(new Tooltip(SpcFxmlAndLanguageUtils.getString("SPC_CONFIG")));
-
-        timeTab.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/timer.svg")));
-        timeTab.setStyle("-fx-padding: 0 5 0 5");
         timeTab.setTooltip(new Tooltip(SpcFxmlAndLanguageUtils.getString("SPC_TIMER_SETTING")));
-
-        helpLabel.getStyleClass().add("message-tip-question");
-        helpLabel.setStyle("-fx-background-color: #0096ff");
         helpLabel.setTooltip(new Tooltip(SpcFxmlAndLanguageUtils.getString("SUBGROUP_SIZE_TIP")));
 
     }
@@ -372,7 +359,6 @@ public class SpcItemController implements Initializable {
                 filteredList.setPredicate(this::isFilterAndHasUslOrLsl);
                 is.getStyleClass().remove("filter-normal");
                 is.getStyleClass().add("filter-active");
-//                is.setGraphic(ImageUtils.getImageView(getClass().getResourceAsStream("/images/btn_filter_normal.png")));
                 isFilterUslOrLsl = true;
             });
             all.setSelected(true);
