@@ -238,6 +238,9 @@
  * gui about Change Password page css                                           *
  *                                                                              *
  *******************************************************************************/
+.change-password-b-box-padding{
+    -fx-padding: 10;
+}
 .gui-chang-password-root{
     -fx-max-height: 160;
     -fx-min-height: 160;
@@ -295,6 +298,7 @@
     -fx-pref-width: 330;
     -fx-padding: 0 0 10 30;
     -fx-alignment: center;
+    -fx-padding: 10;
 
 }
 .gui-change-password-back-iconlb{
