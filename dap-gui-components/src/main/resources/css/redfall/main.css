@@ -938,6 +938,10 @@
     -fx-pref-height: 22.0;
     -fx-pref-width: 80.0;
 }
+.change-password-h-box-alignment{
+    -fx-alignment: CENTER_RIGHT;
+    -fx-padding: 10 0 0 0;
+}
 
 /*******************************************************************************
  *                                                                             *
