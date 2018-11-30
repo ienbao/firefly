@@ -89,6 +89,7 @@ public class MainController {
     private ObservableList<StateBarTemplateModel> templateList = FXCollections.observableArrayList();
     private AtomicBoolean isShow = new AtomicBoolean(false);
     private Map<String, TabPane> tabPaneMap = new LinkedHashMap<>();
+    private PluginUIContext pluginUIContext;
 
     @Autowired
     private EnvService envService;
@@ -97,6 +98,7 @@ public class MainController {
     @Autowired
     private SourceDataService sourceDataService;
 
+
     @FXML
     private void initialize() {
         scrollPaneTooltip = new ScrollPane();
@@ -104,6 +106,8 @@ public class MainController {
         contentStackPane = new ContentStackPane();
         grpContent.add(contentStackPane, 0, 1);
         grpContent.setDisable(true);
+        this.pluginUIContext = RuntimeContext.getBean(PluginUIContext.class);
+
         this.initToolBar();
         this.initStateBar();
         this.updateMemoryState();
@@ -113,7 +117,7 @@ public class MainController {
             this.initTemplatePopup();
             this.initDataSource();
             this.initDataSourceTooltip();
-//            this.setActiveFirstTab(pc);
+            this.setActiveFirstTab(this.pluginUIContext);
             this.initComponentEvent();
         }
 
@@ -131,28 +135,28 @@ public class MainController {
     }
 
     private void initToolBar() {
-//        Set<String> names = pc.getAllMainBodyNames();
-//        names.forEach(name -> {
-//            Button btn = new Button(name);
-//            btn.setId(name);
-//            btn.setFocusTraversable(true);
-//            btn.setOnAction(event -> {
-//                if (!tabPaneMap.containsKey(name)) {
-//                    Pane pane = pc.getMainBodyPane(name).getNewPane();
-//                    pane.setId(name);
-//                    initMutilyTab(name, pane);
-//                } else {
-//                    contentStackPane.getChildren().forEach(node -> {
-//                        node.setVisible(false);
-//                        if (node.getId().equals(name)) {
-//                            node.setVisible(true);
-//                        }
-//                    });
-//                }
-//                setActiveBtnStyle(btn);
-//            });
-//            tbaSystem.getItems().add(btn);
-//        });
+        Set<String> names = this.pluginUIContext.getAllMainBodyNames();
+        names.forEach(name -> {
+            Button btn = new Button(name);
+            btn.setId(name);
+            btn.setFocusTraversable(true);
+            btn.setOnAction(event -> {
+                if (!tabPaneMap.containsKey(name)) {
+                    Pane pane = this.pluginUIContext.getMainBodyPane(name).getNewPane();
+                    pane.setId(name);
+                    initMutilyTab(name, pane);
+                } else {
+                    contentStackPane.getChildren().forEach(node -> {
+                        node.setVisible(false);
+                        if (node.getId().equals(name)) {
+                            node.setVisible(true);
+                        }
+                    });
+                }
+                setActiveBtnStyle(btn);
+            });
+            tbaSystem.getItems().add(btn);
+        });
     }
 
     private void setActiveBtnStyle(Button btn) {
@@ -189,12 +193,12 @@ public class MainController {
      * method to reset main
      */
     public void resetMain() {
-//        grpContent.getChildren().remove(contentStackPane);
+        grpContent.getChildren().remove(contentStackPane);
         contentStackPane.getChildren().clear();
         tabPaneMap.clear();
         tbaSystem.getItems().clear();
-//        stateBar.getChildren().clear();
-//        initialize();
+        stateBar.getChildren().clear();
+        initialize();
     }
 
     private void initSinglelTab(String name, Pane pane) {
