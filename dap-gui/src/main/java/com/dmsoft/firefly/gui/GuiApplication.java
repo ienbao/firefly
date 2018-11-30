@@ -88,10 +88,6 @@ public class GuiApplication extends Application {
             RuntimeContext.getBean(EnvService.class).setLanguageType(RuntimeContext.getBean(EnvService.class).getLanguageType());
         }
 
-        //set initStyle
-        primaryStage.initStyle(StageStyle.TRANSPARENT);
-        primaryStage.getScene().getStylesheets().add(getClass().getClassLoader().getResource("css/platform_app.css").toExternalForm());
-
 
 
         Pane root = DapUtils.loadFxml("/view/app_menu.fxml");
