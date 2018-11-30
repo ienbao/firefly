@@ -17,5 +17,7 @@ public enum EventType {
     PLATFORM_SHOW_MAIN,//显示平台
     PLATFORM_PROCESS_CLOSE,//关闭加载进度
 
+    UPDATA_PROGRESS,//更新进度条
+
 
 }
