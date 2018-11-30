@@ -36,17 +36,14 @@
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi-ooxml</artifactId>
-            <version>3.15</version>
         </dependency>
         <dependency>
             <groupId>org.apache.pdfbox</groupId>
             <artifactId>pdfbox</artifactId>
-            <version>2.0.6</version>
         </dependency>
         <dependency>
             <groupId>fakepath</groupId>
             <artifactId>aspose-cells</artifactId>
-            <version>8.6.2</version>
         </dependency>
         <dependency>
             <groupId>com.dmsoft</groupId>
@@ -61,14 +58,12 @@
         <dependency>
             <groupId>com.github.lucarosellini.rJava</groupId>
             <artifactId>REngine</artifactId>
-            <version>0.9-7</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>com.github.lucarosellini.rJava</groupId>
             <artifactId>JRI</artifactId>
-            <version>0.9-7</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
@@ -80,44 +75,7 @@
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
         </dependency>
-        <!--<dependency>-->
-            <!--<groupId>com.dmsoft</groupId>-->
-            <!--<artifactId>dap-spc</artifactId>-->
-            <!--<version>2.5.0-SNAPSHOT</version>-->
-            <!--<scope>compile</scope>-->
-        <!--</dependency>-->
     </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.2</version>
-                <configuration>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
-                    <showWarnings>true</showWarnings>
-                    <encoding>${project.build.sourceEncoding}</encoding>
-                    <compilerArguments>
-                        <verbose/>
-                        <bootclasspath>${java.home}/lib/rt.jar</bootclasspath>
-                    </compilerArguments>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>2.4</version>
-                <configuration>
-                    <excludes>
-                        <exclude>config/</exclude>
-                        <exclude>default/</exclude>
-                    </excludes>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
 
 
 </project>

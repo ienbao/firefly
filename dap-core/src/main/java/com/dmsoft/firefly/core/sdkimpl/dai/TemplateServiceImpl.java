@@ -19,10 +19,12 @@ import org.springframework.beans.BeanUtils;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import org.springframework.stereotype.Service;
 
 /**
  * Created by Lucien.Chen on 2018/2/9.
  */
+@Service
 public class TemplateServiceImpl implements TemplateService {
     private final String parentPath = ApplicationPathUtil.getPath("config");
     private final String defaultParentPath = ApplicationPathUtil.getPath("default");

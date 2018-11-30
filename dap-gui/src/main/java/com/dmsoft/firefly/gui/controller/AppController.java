@@ -34,6 +34,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import static com.dmsoft.firefly.sdk.ui.MenuBuilder.MenuType;
 
 /**
@@ -41,11 +44,14 @@ import static com.dmsoft.firefly.sdk.ui.MenuBuilder.MenuType;
  *
  * @author Julia
  */
+@Component
 public class AppController {
     private final Logger logger = LoggerFactory.getLogger(AppController.class);
     private TemplateService templateService = RuntimeContext.getBean(TemplateService.class);
-    private SourceDataService sourceDataService = RuntimeContext.getBean(SourceDataService.class);
-    private EnvService envService = RuntimeContext.getBean(EnvService.class);
+    @Autowired
+    private SourceDataService sourceDataService ;
+    @Autowired
+    private EnvService envService;
 
     @FXML
     private MenuBar menuSystem;
@@ -68,13 +74,13 @@ public class AppController {
      * 注册监听事件
      */
     private void registEvent() {
-
-        EventContext eventContext = RuntimeContext.getBean(EventContext.class);
-        eventContext.addEventListener(EventType.SYSTEM_LOGIN_SUCCESS_ACTION, event -> {
-            Platform.runLater(() -> {
-                resetMenu();
-            });
-        });
+//
+//        EventContext eventContext = RuntimeContext.getBean(EventContext.class);
+//        eventContext.addEventListener(EventType.SYSTEM_LOGIN_SUCCESS_ACTION, event -> {
+//            Platform.runLater(() -> {
+//
+//            });
+//        });
 
     }
 
@@ -102,12 +108,6 @@ public class AppController {
         });
     }
 
-    /**
-     * method to reset menu
-     */
-    public void resetMenu() {
-        initialize();
-    }
 
     /**
      * method to update menu system
@@ -130,7 +130,7 @@ public class AppController {
         menuLoginOut.setOnAction(event -> {
             UserModel.getInstance().setUser(null);
             StageMap.unloadStage(GuiConst.PLARTFORM_STAGE_LOGIN);
-            resetMenu();
+//            resetMenu();
             MenuFactory.getMainController().resetMain();
             GuiFxmlAndLanguageUtils.buildLoginDialog();
         });

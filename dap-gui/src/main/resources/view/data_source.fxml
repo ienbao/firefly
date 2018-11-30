@@ -20,7 +20,9 @@
     <TableView fx:id="dataSourceTable" VBox.vgrow="ALWAYS" >
         <columns>
             <TableColumn fx:id="chooseCheckBoxColumn" styleClass="gui-datasource-table-check-box-column" resizable="false" text="C1" />
-            <TableColumn fx:id="chooseValueColumn" styleClass="gui-datasource-table-value-column" resizable="false" text="%DATA_SOURCE_NAME" />
+            <TableColumn fx:id="chooseValueColumn" styleClass="gui-datasource-table-value-column" resizable="false" text="%DATA_SOURCE_NAME" >
+
+            </TableColumn>
         </columns>
         <columnResizePolicy>
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />

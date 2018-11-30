@@ -38,6 +38,7 @@ import org.springframework.data.mongodb.core.query.Update;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import org.springframework.stereotype.Service;
 
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 
@@ -46,6 +47,7 @@ import static org.springframework.data.mongodb.core.query.Criteria.where;
  *
  * @author Can Guan
  */
+@Service
 public class SourceDataServiceImpl implements SourceDataService {
     private static final String PROJECT_COLLECTION_NAME = "project";
     private static final String PROJECT_NAME_FIELD = "projectName";
