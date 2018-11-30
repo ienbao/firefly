@@ -12,10 +12,12 @@ import org.slf4j.LoggerFactory;
 
 import java.nio.charset.Charset;
 import java.util.List;
+import org.springframework.stereotype.Service;
 
 /**
  * Created by Lucien.Chen on 2018/2/9.
  */
+@Service
 public class UserServiceImpl implements UserService {
     private final String parentPath = ApplicationPathUtil.getPath("security");
     private final String fileName = "user";

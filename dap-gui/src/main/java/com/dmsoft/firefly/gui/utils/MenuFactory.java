@@ -117,7 +117,7 @@ public class MenuFactory {
                         envService.setLanguageType(LanguageType.EN);
                         Runtime.getRuntime().gc();
                         initMenu();
-                        appController.resetMenu();
+//                        appController.resetMenu();
                         mainController.resetMain();
                     });
                     return false;
@@ -204,7 +204,7 @@ public class MenuFactory {
                             isChangeEnLanguage = true;
                             envService.setLanguageType(LanguageType.EN);
                             initMenu();
-                            appController.resetMenu();
+//                            appController.resetMenu();
                             mainController.resetMain();
                             StageMap.setPrimaryStage(GuiConst.PLARTFORM_STAGE_MAIN, mainStage);
                         });
@@ -239,7 +239,7 @@ public class MenuFactory {
                             isChangeZhLanguage = true;
                             envService.setLanguageType(LanguageType.ZH);
                             initMenu();
-                            appController.resetMenu();
+//                            appController.resetMenu();
                             mainController.resetMain();
                             StageMap.setPrimaryStage(GuiConst.PLARTFORM_STAGE_MAIN, mainStage);
                         });

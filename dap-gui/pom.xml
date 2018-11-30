@@ -19,7 +19,6 @@
         <dependency>
             <groupId>com.dmsoft</groupId>
             <artifactId>bamboo</artifactId>
-            <version>${bamboo.version}</version>
         </dependency>
 
         <dependency>
@@ -55,18 +54,15 @@
         <dependency>
             <groupId>com.github.lucarosellini.rJava</groupId>
             <artifactId>REngine</artifactId>
-            <version>0.9-7</version>
         </dependency>
         <dependency>
             <groupId>com.github.lucarosellini.rJava</groupId>
             <artifactId>JRI</artifactId>
-            <version>0.9-7</version>
         </dependency>
 
         <dependency>
             <groupId>de.codecentric.centerdevice</groupId>
             <artifactId>centerdevice-nsmenufx</artifactId>
-            <version>2.1.5</version>
         </dependency>
 
         <dependency>
@@ -81,43 +77,23 @@
             <groupId>de.codecentric.centerdevice</groupId>
             <artifactId>javafxsvg</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-beans</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-aop</artifactId>
+        </dependency>
+
     </dependencies>
 
     <build>
-        <resources>
-            <resource>
-                <directory>${project.basedir}/src/main/resources</directory>
-                <excludes>
-                    <exclude>assembly</exclude>
-                    <exclude>test/*</exclude>
-                    <exclude>pro/*</exclude>
-                    <exclude>dev/*</exclude>
-                </excludes>
-            </resource>
-            <resource>
-                <directory>src/main/resources/${profiles.active}</directory>
-            </resource>
-            <resource>
-                <directory>../dap-plugins/distribution/target/dap-plugin-bin</directory>
-                <includes>
-                    <include>**/</include>
-                </includes>
-            </resource>
-        </resources>
-
         <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.2</version>
-                <configuration>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
-                    <showWarnings>true</showWarnings>
-                    <compilerArgument>-parameters</compilerArgument>
-                    <testCompilerArgument>-parameters</testCompilerArgument>
-                </configuration>
-            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
@@ -142,6 +118,45 @@
                     </excludes>
                 </configuration>
             </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <finalName>dap-all</finalName>
+                            <shadedArtifactAttached>true</shadedArtifactAttached>
+                            <shadedClassifierName>jar-with-dependencies</shadedClassifierName>
+                            <transformers>
+                                <transformer
+                                  implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <mainClass>com.mishi.cmc.appclient.AppClientServiceStart</mainClass>
+                                </transformer>
+                                <transformer
+                                  implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                                    <resource>META-INF/spring.handlers</resource>
+                                </transformer>
+                                <transformer
+                                  implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                                    <resource>META-INF/spring.schemas</resource>
+                                </transformer>
+                                <transformer
+                                  implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                                    <resource>META-INF/spring.tooling</resource>
+                                </transformer>
+                            </transformers>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
         </plugins>
+
     </build>
+
 </project>

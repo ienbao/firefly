@@ -1,10 +1,6 @@
 package com.dmsoft.firefly.gui;
 
-import com.dmsoft.bamboo.common.utils.mapper.JsonMapper;
 import com.dmsoft.firefly.core.DAPApplication;
-import com.dmsoft.firefly.core.utils.ApplicationPathUtil;
-import com.dmsoft.firefly.core.utils.JsonFileUtil;
-import com.dmsoft.firefly.core.utils.ResourceFinder;
 import com.dmsoft.firefly.gui.components.utils.NodeMap;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
@@ -17,17 +13,15 @@ import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.dai.service.UserService;
 import com.dmsoft.firefly.sdk.event.EventContext;
 import com.dmsoft.firefly.sdk.event.EventType;
+import com.dmsoft.firefly.sdk.event.PlatformEvent;
 import com.dmsoft.firefly.sdk.job.core.JobManager;
 import com.dmsoft.firefly.sdk.message.IMessageManager;
-import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.dmsoft.firefly.sdk.utils.enums.LanguageType;
-import com.google.common.collect.Lists;
 import de.codecentric.centerdevice.javafxsvg.SvgImageLoaderFactory;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.effect.BlurType;
 import javafx.scene.effect.DropShadow;
@@ -37,12 +31,10 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
-import javax.swing.*;
-import java.awt.*;
 import java.lang.management.ClassLoadingMXBean;
 import java.lang.management.ManagementFactory;
-import java.lang.reflect.Method;
-import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static com.google.common.io.Resources.getResource;
 
@@ -51,16 +43,14 @@ import static com.google.common.io.Resources.getResource;
  */
 public class GuiApplication extends Application {
 
+    private Logger logger = LoggerFactory.getLogger(GuiApplication.class);
     public static final int TOTAL_LOAD_CLASS = 4800;
 
     static {
         System.getProperties().put("javafx.pseudoClassOverrideEnabled", "true");
     }
 
-    private final String parentPath = ApplicationPathUtil.getPath(GuiConst.CONFIG_PATH);
     private UserService userService;
-    private SystemProcessorController systemProcessorController;
-    private JsonMapper mapper = JsonMapper.defaultMapper();
 
     /**
      * main method
@@ -74,34 +64,17 @@ public class GuiApplication extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         SvgImageLoaderFactory.install();
-        String os = System.getProperty("os.name");
-        if (!os.toLowerCase().startsWith("win")) {
-            Class cla = Class.forName("com.apple.eawt.Application");
-            Method method1 = cla.getMethod("getApplication");
-            Object o = method1.invoke(cla);
-            Method method = cla.getMethod("setDockIconImage", Image.class);
-            ResourceFinder finder = new ResourceFinder();
-            method.invoke(o, new ImageIcon(finder.findResource("images/desktop_mac_logo.png")).getImage());
-        }
-        String json = JsonFileUtil.readJsonFile(parentPath, GuiConst.ACTIVE_PLUGIN);
-        List<KeyValueDto> activePlugin = Lists.newArrayList();
-        if (DAPStringUtils.isNotBlank(json)) {
-            activePlugin = mapper.fromJson(json, mapper.buildCollectionType(List.class, KeyValueDto.class));
-        }
-        List<String> plugins = Lists.newArrayList();
-        if (activePlugin != null) {
-            activePlugin.forEach(v -> {
-                if ((boolean) v.getValue()) {
-                    plugins.add(v.getKey());
-                }
-            });
-        }
+        DapUtils.registDockIcon();
+
+        this.userService = DapApplictionContext.getInstance().getBean(UserService.class);
         DAPApplication.initEnv();
+        registEvent();
+
         BasicJobManager jobManager1 = new BasicJobManager();
         BasicJobFactory jobFactory = new BasicJobFactory();
-        RuntimeContext.registerBean(JobManager.class, jobManager1);
         RuntimeContext.registerBean(BasicJobFactory.class, jobFactory);
-        userService = RuntimeContext.getBean(UserService.class);
+        RuntimeContext.registerBean(JobManager.class, jobManager1);
+
         buildProcessorBarDialog();
         if (StageMap.getStage(GuiConst.PLARTFORM_STAGE_PROCESS).isShowing()) {
             updateProcessorBar();
@@ -109,20 +82,16 @@ public class GuiApplication extends Application {
 
         MenuFactory.initMenu();
 
-        DAPApplication.startPlugin(Lists.newArrayList(plugins));
         RuntimeContext.registerBean(IMessageManager.class, new MessageManagerFactory());
         LanguageType languageType = RuntimeContext.getBean(EnvService.class).getLanguageType();
         if (languageType != null) {
             RuntimeContext.getBean(EnvService.class).setLanguageType(RuntimeContext.getBean(EnvService.class).getLanguageType());
         }
 
-        FXMLLoader fxmlLoader = GuiFxmlAndLanguageUtils.getLoaderFXML("view/app_menu.fxml");
-        FXMLLoader fxmlLoader1 = GuiFxmlAndLanguageUtils.getLoaderFXML("view/main.fxml");
 
-        Pane root = fxmlLoader.load();
-        Pane main = fxmlLoader1.load();
-        MenuFactory.setMainController(fxmlLoader1.getController());
-        MenuFactory.setAppController(fxmlLoader.getController());
+
+        Pane root = DapUtils.loadFxml("/view/app_menu.fxml");
+        Pane main = DapUtils.loadFxml("/view/main.fxml");
 
         StageMap.setPrimaryStage(GuiConst.PLARTFORM_STAGE_MAIN, WindowFactory.createFullWindow(GuiConst.PLARTFORM_STAGE_MAIN, root, main,
                 getClass().getClassLoader().getResource("css/platform_app.css").toExternalForm()));
@@ -140,6 +109,32 @@ public class GuiApplication extends Application {
         });
     }
 
+    private void registEvent() {
+
+        EventContext eventContext = RuntimeContext.getBean(EventContext.class);
+        eventContext.addEventListener(EventType.PLATFORM_PROCESS_CLOSE, event -> {
+            Platform.runLater(() -> {
+                StageMap.getStage(GuiConst.PLARTFORM_STAGE_PROCESS).close();
+                showMain();
+            });
+        });
+    }
+
+
+    private void showMain(){
+        if (!userService.findLegal()) {
+            GuiFxmlAndLanguageUtils.buildLegalDialog();
+        } else {
+            Stage stage = StageMap.getPrimaryStage(GuiConst.PLARTFORM_STAGE_MAIN);
+            stage.show();
+            if (stage.getScene().getRoot() instanceof WindowPane) {
+                WindowPane windowPane = (WindowPane) stage.getScene().getRoot();
+                windowPane.getController().maximizePropertyProperty().set(true);
+            }
+            GuiFxmlAndLanguageUtils.buildLoginDialog();
+        }
+    }
+
     /**
      * method to update process bar
      */
@@ -153,26 +148,16 @@ public class GuiApplication extends Application {
                         while (true) {
                             ClassLoadingMXBean classLoadingMXBean = ManagementFactory.getClassLoadingMXBean();
                             int process = (int) (classLoadingMXBean.getLoadedClassCount() * 1.0 / TOTAL_LOAD_CLASS * 100);
-                            System.out.println("count: " + classLoadingMXBean.getLoadedClassCount());
+                            logger.info("count: " + classLoadingMXBean.getLoadedClassCount());
                             if (process >= 100) {
                                 for (int i = 10; i <= 100; i++) {
                                     Thread.sleep(20);
                                     updateProgress(i, 100);
                                 }
-                                Platform.runLater(() -> {
-                                    StageMap.getStage(GuiConst.PLARTFORM_STAGE_PROCESS).close();
-                                    if (!userService.findLegal()) {
-                                        GuiFxmlAndLanguageUtils.buildLegalDialog();
-                                    } else {
-                                        Stage stage = StageMap.getPrimaryStage(GuiConst.PLARTFORM_STAGE_MAIN);
-                                        stage.show();
-                                        if (stage.getScene().getRoot() instanceof WindowPane) {
-                                            WindowPane windowPane = (WindowPane) stage.getScene().getRoot();
-                                            windowPane.getController().maximizePropertyProperty().set(true);
-                                        }
-                                        GuiFxmlAndLanguageUtils.buildLoginDialog();
-                                    }
-                                });
+
+                                EventContext eventContext = RuntimeContext.getBean(EventContext.class);
+                                eventContext.pushEvent(new PlatformEvent(EventType.PLATFORM_PROCESS_CLOSE, null));
+
                                 break;
                             }
                         }
@@ -183,34 +168,17 @@ public class GuiApplication extends Application {
 
         };
 
-        systemProcessorController.getProgressBar().progressProperty().bind(service.progressProperty());
+//        systemProcessorController.getProgressBar().progressProperty().bind(service.progressProperty());
         service.start();
     }
 
     private void buildProcessorBarDialog() {
-        Pane root = null;
-        final Double d02 = 0.2d;
-        try {
-            FXMLLoader fxmlLoader = GuiFxmlAndLanguageUtils.getLoaderFXML("view/system_processor_bar.fxml");
-            root = fxmlLoader.load();
-            systemProcessorController = fxmlLoader.getController();
-            Effect shadowEffect = new DropShadow(BlurType.TWO_PASS_BOX, new Color(0, 0, 0, d02),
-                    10, 0, 0, 0);
-            root.setEffect(shadowEffect);
-            Scene tempScene = new Scene(root);
-            tempScene.getStylesheets().addAll(getResource("css/platform_app.css").toExternalForm(),getResource("css/redfall/main.css").toExternalForm());
-            tempScene.setFill(Color.TRANSPARENT);
-            Stage stage = new Stage();
-            javafx.scene.image.Image image = new javafx.scene.image.Image("/images/desktop_mac_logo.png");
-            stage.getIcons().addAll(image);
-            stage.initStyle(StageStyle.TRANSPARENT);
-            stage.setScene(tempScene);
-            stage.setResizable(false);
-            stage.toFront();
-            stage.show();
-            StageMap.addStage(GuiConst.PLARTFORM_STAGE_PROCESS, stage);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
+        Pane root = DapUtils.loadFxml("/view/system_processor_bar.fxml");
+        Stage stage = new Stage();
+        Scene tempScene = new Scene(root);
+        tempScene.getStylesheets().addAll(getResource("css/platform_app.css").toExternalForm(),getResource("css/redfall/main.css").toExternalForm());
+        stage.setScene(tempScene);
+        stage.show();
+        StageMap.addStage(GuiConst.PLARTFORM_STAGE_PROCESS, stage);
     }
 }

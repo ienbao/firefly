@@ -6,6 +6,7 @@ package com.dmsoft.firefly.gui.controller;
 import com.dmsoft.firefly.gui.viewmodel.AboutVm;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import org.springframework.stereotype.Component;
 
 
 /**
@@ -13,6 +14,7 @@ import javafx.scene.control.Label;
  * @author Ethan.Yang
  * @date 2018/4/11
  */
+@Component
 public class AboutController {
 
     @FXML

@@ -1,7 +1,6 @@
 package com.dmsoft.firefly.core.sdkimpl.dai;
 
 import com.dmsoft.bamboo.common.utils.mapper.JsonMapper;
-import com.dmsoft.firefly.gui.utils.GuiConst;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.TemplateSettingDto;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemDto;
@@ -19,11 +18,15 @@ import com.google.common.collect.Maps;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import org.springframework.stereotype.Service;
 
 /**
  * Created by Lucien.Chen on 2018/2/10.
  */
+@Service
 public class EnvServiceImpl implements EnvService {
+    public static final String DEFAULT_TEMPLATE_NAME = "Default";
+
     private String userName;
     private String templateName;
     private LinkedHashMap<String, TestItemWithTypeDto> testItemDtos;
@@ -65,8 +68,8 @@ public class EnvServiceImpl implements EnvService {
         TemplateSettingDto templateSettingDto = this.findActivatedTemplate();
         String activeTemplateName;
         if (templateSettingDto == null || DAPStringUtils.isBlank(templateSettingDto.getName())) {
-            this.setActivatedTemplate(GuiConst.DEFAULT_TEMPLATE_NAME);
-            activeTemplateName = GuiConst.DEFAULT_TEMPLATE_NAME;
+            this.setActivatedTemplate(DEFAULT_TEMPLATE_NAME);
+            activeTemplateName = DEFAULT_TEMPLATE_NAME;
         } else {
             activeTemplateName = templateSettingDto.getName();
         }
