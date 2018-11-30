@@ -199,7 +199,7 @@ public class GrrItemController implements Initializable {
         is.getStyleClass().addAll("filter-normal","grr-is");
         item.setText(GrrFxmlAndLanguageUtils.getString(ResourceMassages.TEST_ITEM));
         item.setGraphic(is);
-        item.getStyleClass().addAll("filter-header","grr-item");
+        item.getStyleClass().addAll("filter-header");
         item.setCellValueFactory(cellData -> cellData.getValue().itemDtoProperty());
         initItemData();
         item.widthProperty().addListener((ov, w1, w2) -> {
