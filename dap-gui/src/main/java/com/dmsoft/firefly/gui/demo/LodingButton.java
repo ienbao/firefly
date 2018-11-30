@@ -1,5 +1,6 @@
-package com.dmsoft.firefly.gui;
+package com.dmsoft.firefly.gui.demo;
 
+import com.dmsoft.firefly.gui.RotatePic;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;

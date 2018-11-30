@@ -1,3 +1,5 @@
+package com.dmsoft.firefly.gui.demo;
+
 import de.codecentric.centerdevice.javafxsvg.SvgImageLoaderFactory;
 import java.io.IOException;
 import javafx.application.Application;

@@ -1,4 +1,6 @@
-import com.dmsoft.firefly.gui.LodingButton;
+package com.dmsoft.firefly.gui.demo;
+
+import com.dmsoft.firefly.gui.demo.LodingButton;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
