@@ -28,41 +28,25 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.2</version>
-                <configuration>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
-                    <showWarnings>true</showWarnings>
-                    <encoding>${project.build.sourceEncoding}</encoding>
-                    <compilerArguments>
-                        <verbose/>
-                        <bootclasspath>${java.home}/lib/rt.jar</bootclasspath>
-                    </compilerArguments>
-                </configuration>
-            </plugin>
-
-            <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
-                <configuration>
-                    <finalName>dap</finalName>
-                    <descriptors>
-                        <!--<descriptor>${project.basedir}/src/main/resources/assembly.xml</descriptor>-->
-                        <descriptor>bin.xml</descriptor>
-                    </descriptors>
-                </configuration>
+                <version>3.1.0</version>
                 <executions>
                     <execution>
-                        <id>make-assembly</id>
+                        <id>distro-assembly</id>
                         <phase>package</phase>
                         <goals>
                             <goal>single</goal>
                         </goals>
+                        <configuration>
+                            <descriptors>
+                                <descriptor>${project.basedir}/src/main/resources/assembly/bin.xml</descriptor>
+                            </descriptors>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
-
         </plugins>
+
     </build>
+
 </project>

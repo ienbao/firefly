@@ -6,6 +6,7 @@ package com.dmsoft.firefly.gui.utils;
 import com.dmsoft.firefly.gui.components.utils.ModuleType;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
+import com.dmsoft.firefly.gui.controller.SpringFxmlLoader;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.utils.enums.LanguageType;
@@ -25,7 +26,7 @@ import static com.google.common.io.Resources.getResource;
  */
 public class GuiFxmlAndLanguageUtils {
 
-    private static ResourceBundle getResourceBundle() {
+    public static ResourceBundle getResourceBundle() {
         LanguageType languageType = RuntimeContext.getBean(EnvService.class).getLanguageType();
         if (languageType == null) {
             languageType = LanguageType.EN;
@@ -98,8 +99,8 @@ public class GuiFxmlAndLanguageUtils {
     public static void buildLoginDialog() {
         Pane root = null;
         try {
-            FXMLLoader fxmlLoader = GuiFxmlAndLanguageUtils.getLoaderFXML("view/login.fxml");
-            root = fxmlLoader.load();
+//            FXMLLoader fxmlLoader = GuiFxmlAndLanguageUtils.getLoaderFXML("view/login.fxml");
+            root = new SpringFxmlLoader().load("/view/login.fxml");
             Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel(GuiConst.PLARTFORM_STAGE_LOGIN, "", root, getResource("css/platform_app.css").toExternalForm());
             stage.setResizable(false);
             stage.toFront();

@@ -14,34 +14,26 @@
     <packaging>jar</packaging>
     <name>Firefly-DAP :: Soft Development Kit (SDK)</name>
 
-    <properties>
-        <mongodb-driver.version>3.6.1</mongodb-driver.version>
-        <antlr.version>4.5.3</antlr.version>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>com.dmsoft</groupId>
             <artifactId>bamboo</artifactId>
-            <version>${bamboo.version}</version>
             <optional>true</optional>
         </dependency>
+
         <dependency>
             <groupId>org.mongodb</groupId>
             <artifactId>mongodb-driver</artifactId>
-            <version>${mongodb-driver.version}</version>
         </dependency>
-        <!--language recognizer for parser expression in this project-->
+
         <dependency>
             <groupId>org.antlr</groupId>
             <artifactId>antlr4-runtime</artifactId>
-            <version>${antlr.version}</version>
         </dependency>
 
         <dependency>
             <groupId>io.netty</groupId>
             <artifactId>netty-all</artifactId>
-            <version>4.0.35.Final</version>
         </dependency>
 
         <dependency>
@@ -50,45 +42,16 @@
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
 
-            <dependency>
-                <groupId>org.slf4j</groupId>
-                <artifactId>slf4j-api</artifactId>
-            </dependency>
-
-            <dependency>
-                <groupId>ch.qos.logback</groupId>
-                <artifactId>logback-classic</artifactId>
-            </dependency>
-
-        
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+        </dependency>
 
     </dependencies>
 
-    <build>
-        <pluginManagement>
-            <plugins>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <version>3.2</version>
-                    <configuration>
-                        <source>${java.version}</source>
-                        <target>${java.version}</target>
-                        <showWarnings>true</showWarnings>
-                        <encoding>${project.build.sourceEncoding}</encoding>
-                        <compilerArguments>
-                            <verbose/>
-                            <bootclasspath>${java.home}/lib/rt.jar</bootclasspath>
-                        </compilerArguments>
-                    </configuration>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-jar-plugin</artifactId>
-                    <version>2.4</version>
-                </plugin>
-            </plugins>
-        </pluginManagement>
-    </build>
 </project>

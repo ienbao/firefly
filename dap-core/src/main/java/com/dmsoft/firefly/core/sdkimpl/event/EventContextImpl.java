@@ -39,6 +39,7 @@ public class EventContextImpl implements EventContext {
     @Override
     public void addEventListener(EventType eventType, EventListener eventListener) {
         List<EventListener> targetList = this.map.get(eventType);
+
         if(targetList == null){
             targetList = new ArrayList<EventListener>();
             this.map.put(eventType, targetList);

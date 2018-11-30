@@ -34,6 +34,7 @@ public class PluginContextImpl implements PluginContext, PluginContextListener {
         this.pluginInfoMap = Maps.newHashMap();
         this.pluginContextListeners = Lists.newArrayList();
         this.parentClassLoader = PluginContextImpl.class.getClassLoader();
+
         this.pluginClassLoaderMap = new ConcurrentHashMap<String, PluginClassLoader>() {
             @Override
             public PluginClassLoader put(String key, PluginClassLoader value) {

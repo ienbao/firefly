@@ -17,6 +17,8 @@ import com.dmsoft.firefly.sdk.event.PlatformEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 
 /**
@@ -24,6 +26,7 @@ import javafx.scene.layout.VBox;
  *
  * @author Julia
  */
+@Component
 public class LoginController {
 
     @FXML
@@ -41,8 +44,10 @@ public class LoginController {
     @FXML
     private LodingButton loginBtn;
 
-    private EnvService envService = RuntimeContext.getBean(EnvService.class);
-    private UserService userService = RuntimeContext.getBean(UserService.class);
+    @Autowired
+    private EnvService envService ;
+    @Autowired
+    private UserService userService ;
 
 
     @FXML

@@ -51,6 +51,9 @@ import java.lang.management.MemoryMXBean;
 import java.lang.management.MemoryUsage;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import static com.google.common.io.Resources.getResource;
 
 /**
@@ -58,6 +61,7 @@ import static com.google.common.io.Resources.getResource;
  *
  * @author Julia
  */
+@Component
 public class MainController {
     public static final Double MAX_HEIGHT = 250.0;
     public static final Double MAX_WIDTH = 250.0;
@@ -85,10 +89,13 @@ public class MainController {
     private ObservableList<StateBarTemplateModel> templateList = FXCollections.observableArrayList();
     private AtomicBoolean isShow = new AtomicBoolean(false);
     private Map<String, TabPane> tabPaneMap = new LinkedHashMap<>();
-    private EnvService envService = RuntimeContext.getBean(EnvService.class);
-    private TemplateService templateService = RuntimeContext.getBean(TemplateService.class);
-    private SourceDataService sourceDataService = RuntimeContext.getBean(SourceDataService.class);
-    private PluginUIContext pc = RuntimeContext.getBean(PluginUIContext.class);
+
+    @Autowired
+    private EnvService envService;
+    @Autowired
+    private TemplateService templateService;
+    @Autowired
+    private SourceDataService sourceDataService;
 
     @FXML
     private void initialize() {
@@ -106,7 +113,7 @@ public class MainController {
             this.initTemplatePopup();
             this.initDataSource();
             this.initDataSourceTooltip();
-            this.setActiveFirstTab(pc);
+//            this.setActiveFirstTab(pc);
             this.initComponentEvent();
         }
 
@@ -124,28 +131,28 @@ public class MainController {
     }
 
     private void initToolBar() {
-        Set<String> names = pc.getAllMainBodyNames();
-        names.forEach(name -> {
-            Button btn = new Button(name);
-            btn.setId(name);
-            btn.setFocusTraversable(true);
-            btn.setOnAction(event -> {
-                if (!tabPaneMap.containsKey(name)) {
-                    Pane pane = pc.getMainBodyPane(name).getNewPane();
-                    pane.setId(name);
-                    initMutilyTab(name, pane);
-                } else {
-                    contentStackPane.getChildren().forEach(node -> {
-                        node.setVisible(false);
-                        if (node.getId().equals(name)) {
-                            node.setVisible(true);
-                        }
-                    });
-                }
-                setActiveBtnStyle(btn);
-            });
-            tbaSystem.getItems().add(btn);
-        });
+//        Set<String> names = pc.getAllMainBodyNames();
+//        names.forEach(name -> {
+//            Button btn = new Button(name);
+//            btn.setId(name);
+//            btn.setFocusTraversable(true);
+//            btn.setOnAction(event -> {
+//                if (!tabPaneMap.containsKey(name)) {
+//                    Pane pane = pc.getMainBodyPane(name).getNewPane();
+//                    pane.setId(name);
+//                    initMutilyTab(name, pane);
+//                } else {
+//                    contentStackPane.getChildren().forEach(node -> {
+//                        node.setVisible(false);
+//                        if (node.getId().equals(name)) {
+//                            node.setVisible(true);
+//                        }
+//                    });
+//                }
+//                setActiveBtnStyle(btn);
+//            });
+//            tbaSystem.getItems().add(btn);
+//        });
     }
 
     private void setActiveBtnStyle(Button btn) {
@@ -187,7 +194,7 @@ public class MainController {
         tabPaneMap.clear();
         tbaSystem.getItems().clear();
 //        stateBar.getChildren().clear();
-        initialize();
+//        initialize();
     }
 
     private void initSinglelTab(String name, Pane pane) {
