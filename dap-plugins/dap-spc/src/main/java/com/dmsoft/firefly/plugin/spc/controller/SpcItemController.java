@@ -189,7 +189,7 @@ public class SpcItemController implements Initializable {
                         if (!isEmpty()) {
                             if (getTableRow() != null && getIndex() > -1) {
                                 if (getTableView().getItems().get(getIndex()).getOnTop()) {
-                                    this.setStyle("-fx-background-color: #dff0cf");
+                                    this.getStyleClass().add("spc-item-top");
                                 }
                             }
                         }
@@ -205,9 +205,7 @@ public class SpcItemController implements Initializable {
 
         // test item column in test item table
         Button is = new Button();
-        is.setPrefSize(22, 22);
-        is.setMinSize(22, 22);
-        is.setMaxSize(22, 22);
+        is.getStyleClass().add("btn-size");
         is.setOnMousePressed(event -> createPopMenu(is, event));
         is.getStyleClass().add("filter-normal");
 
