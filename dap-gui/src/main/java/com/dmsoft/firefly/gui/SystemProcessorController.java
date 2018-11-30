@@ -3,8 +3,17 @@ package com.dmsoft.firefly.gui;
 import static com.google.common.io.Resources.getResource;
 
 import com.dmsoft.firefly.gui.components.utils.StageMap;
+import com.dmsoft.firefly.gui.components.window.WindowPane;
 import com.dmsoft.firefly.gui.utils.DapUtils;
 import com.dmsoft.firefly.gui.utils.GuiConst;
+import com.dmsoft.firefly.gui.utils.GuiFxmlAndLanguageUtils;
+import com.dmsoft.firefly.sdk.RuntimeContext;
+import com.dmsoft.firefly.sdk.event.EventContext;
+import com.dmsoft.firefly.sdk.event.EventType;
+import com.dmsoft.firefly.sdk.event.PlatformEvent;
+import javafx.application.Platform;
+import javafx.concurrent.Service;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
 import javafx.scene.control.ProgressBar;
@@ -21,6 +30,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import java.lang.management.ClassLoadingMXBean;
+import java.lang.management.ManagementFactory;
+
 
 /**
  * Created by QiangChen on 2017/4/8.
@@ -28,38 +40,58 @@ import org.springframework.stereotype.Component;
 @Component
 public class SystemProcessorController {
     private static final Logger LOGGER = LoggerFactory.getLogger(SystemProcessorController.class);
+    public static final int TOTAL_LOAD_CLASS = 4800;
     @FXML
     private ProgressBar progressBar;
 
     @FXML
     private void initialize() {
         LOGGER.debug("The processor bar is start.");
-
-        final Double d02 = 0.2d;
-        try {
-
-//            Effect shadowEffect = new DropShadow(BlurType.TWO_PASS_BOX, new Color(0, 0, 0, d02),
-//                10, 0, 0, 0);
-//            setEffect(shadowEffect);
-//            Scene tempScene = new Scene(root);
-//            tempScene.getStylesheets().addAll(getResource("css/platform_app.css").toExternalForm(),getResource("css/redfall/main.css").toExternalForm());
-//            tempScene.setFill(Color.TRANSPARENT);
-//            Stage stage = new Stage();
-//            javafx.scene.image.Image image = new javafx.scene.image.Image("/images/desktop_mac_logo.png");
-//            stage.getIcons().addAll(image);
-//            stage.initStyle(StageStyle.TRANSPARENT);
-//            stage.setScene(tempScene);
-//            stage.setResizable(false);
-//            stage.toFront();
-//            stage.show();
-
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
         progressBar.setProgress(0);
+
+        EventContext eventContext = RuntimeContext.getBean(EventContext.class);
+        eventContext.addEventListener(EventType.UPDATA_PROGRESS, event -> {
+            Platform.runLater(() -> {
+                updateProcessorBar();
+            });
+        });
     }
 
     public ProgressBar getProgressBar() {
         return progressBar;
+    }
+
+
+    public void updateProcessorBar() {
+        Service<Integer> service = new Service<Integer>() {
+            @Override
+            protected Task<Integer> createTask() {
+                return new Task<Integer>() {
+                    @Override
+                    protected Integer call() throws Exception {
+                        while (true) {
+                            ClassLoadingMXBean classLoadingMXBean = ManagementFactory.getClassLoadingMXBean();
+                            int process = (int) (classLoadingMXBean.getLoadedClassCount() * 1.0 / TOTAL_LOAD_CLASS * 100);
+                            LOGGER.info("count: " + classLoadingMXBean.getLoadedClassCount());
+                            if (process >= 100) {
+                                for (int i = 10; i <= 100; i++) {
+                                    Thread.sleep(20);
+                                    updateProgress(i, 100);
+                                }
+                                EventContext eventContext = RuntimeContext.getBean(EventContext.class);
+                                eventContext.pushEvent(new PlatformEvent(EventType.PLATFORM_PROCESS_CLOSE, null));
+
+                                break;
+                            }
+                        }
+                        return null;
+                    }
+                };
+            }
+
+        };
+
+        getProgressBar().progressProperty().bind(service.progressProperty());
+        service.start();
     }
 }
