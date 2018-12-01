@@ -1,6 +1,9 @@
 package com.dmsoft.firefly.gui;
 
+import com.dmsoft.bamboo.common.utils.mapper.JsonMapper;
 import com.dmsoft.firefly.core.DAPApplication;
+import com.dmsoft.firefly.core.utils.ApplicationPathUtil;
+import com.dmsoft.firefly.core.utils.JsonFileUtil;
 import com.dmsoft.firefly.gui.components.utils.NodeMap;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
@@ -16,7 +19,9 @@ import com.dmsoft.firefly.sdk.event.EventType;
 import com.dmsoft.firefly.sdk.event.PlatformEvent;
 import com.dmsoft.firefly.sdk.job.core.JobManager;
 import com.dmsoft.firefly.sdk.message.IMessageManager;
+import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.dmsoft.firefly.sdk.utils.enums.LanguageType;
+import com.google.common.collect.Lists;
 import de.codecentric.centerdevice.javafxsvg.SvgImageLoaderFactory;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -24,6 +29,8 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.List;
 
 /**
  * GUI Application
@@ -35,7 +42,10 @@ public class GuiApplication extends Application {
         System.getProperties().put("javafx.pseudoClassOverrideEnabled", "true");
     }
 
+    private final String parentPath = ApplicationPathUtil.getPath(GuiConst.CONFIG_PATH);/* 路径：gui-resource-config */
     private UserService userService;
+    private SystemProcessorController systemProcessorController;
+    private JsonMapper mapper = JsonMapper.defaultMapper();
 
     /**
      * main method
@@ -52,6 +62,21 @@ public class GuiApplication extends Application {
         DapUtils.registDockIcon();
 
         this.userService = DapApplictionContext.getInstance().getBean(UserService.class);
+
+        String json = JsonFileUtil.readJsonFile(parentPath, GuiConst.ACTIVE_PLUGIN);/* "activePlugin" 路径：gui-resources-config */
+        List<KeyValueDto> activePlugin = Lists.newArrayList();
+        if (DAPStringUtils.isNotBlank(json)) {
+            activePlugin = mapper.fromJson(json, mapper.buildCollectionType(List.class, KeyValueDto.class));/* 文件中读取到的信息 */
+        }
+        List<String> plugins = Lists.newArrayList(); /* "com.dmsoft.dap.SpcPlugin" */
+        if (activePlugin != null) {
+            activePlugin.forEach(v -> {
+                if ((boolean) v.getValue()) {
+                    plugins.add(v.getKey());
+                }
+            });
+        }
+
         DAPApplication.initEnv();
         registEvent();
 
@@ -68,6 +93,9 @@ public class GuiApplication extends Application {
         }
 
         MenuFactory.initMenu();
+
+        DAPApplication.startPlugin(Lists.newArrayList(plugins));/* 获取插件信息 */
+
 
         RuntimeContext.registerBean(IMessageManager.class, new MessageManagerFactory());
         LanguageType languageType = RuntimeContext.getBean(EnvService.class).getLanguageType();
