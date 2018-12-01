@@ -1,7 +1,7 @@
 package com.dmsoft.firefly.gui.controller;
 
 import com.dmsoft.firefly.core.utils.DapThreadPoolExecutor;
-import com.dmsoft.firefly.gui.LodingButton;
+import com.dmsoft.firefly.gui.demo.LodingButton;
 import com.dmsoft.firefly.gui.components.utils.DecoratorTextFiledUtils;
 import com.dmsoft.firefly.gui.components.utils.TextFieldPassword;
 import com.dmsoft.firefly.gui.components.utils.TextFieldUser;

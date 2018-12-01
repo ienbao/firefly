@@ -8,6 +8,7 @@ import com.dmsoft.firefly.gui.utils.GuiConst;
 import com.dmsoft.firefly.gui.utils.GuiFxmlAndLanguageUtils;
 import com.dmsoft.firefly.gui.utils.MenuFactory;
 import com.dmsoft.firefly.sdk.RuntimeContext;
+import com.dmsoft.firefly.sdk.dai.dto.UserDto;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.dai.service.SourceDataService;
 import com.dmsoft.firefly.sdk.dai.service.TemplateService;
@@ -64,9 +65,7 @@ public class AppController {
 
     @FXML
     private void initialize() {
-        menuSystem.getMenus().clear();
-        updateMenuSystem();
-        initMenuBar();
+        resetMenu();
         registEvent();
     }
 
@@ -74,13 +73,21 @@ public class AppController {
      * 注册监听事件
      */
     private void registEvent() {
-//
-//        EventContext eventContext = RuntimeContext.getBean(EventContext.class);
-//        eventContext.addEventListener(EventType.SYSTEM_LOGIN_SUCCESS_ACTION, event -> {
-//            Platform.runLater(() -> {
-//
-//            });
-//        });
+        EventContext eventContext = RuntimeContext.getBean(EventContext.class);
+        eventContext.addEventListener(EventType.SYSTEM_LOGIN_SUCCESS_ACTION, event -> {
+            Platform.runLater(() -> {
+                UserDto userDto = (UserDto) event.getMsg();
+                UserModel.getInstance().setUser(userDto);
+                resetMenu();
+            });
+        });
+
+
+        eventContext.addEventListener(EventType.PLATFORM_RESET_MAIN, event -> {
+            Platform.runLater(() ->{
+                resetMenu();
+            });
+        });
 
     }
 
@@ -123,6 +130,16 @@ public class AppController {
         }
     }
 
+    /**
+     * method to reset menu
+     */
+    public void resetMenu() {
+        menuSystem.getMenus().clear();
+        updateMenuSystem();
+        initMenuBar();
+    }
+
+
     private void initEvent() {
         menuChangePassword.setOnAction(event -> {
             GuiFxmlAndLanguageUtils.buildChangePasswordDialog();
@@ -130,7 +147,7 @@ public class AppController {
         menuLoginOut.setOnAction(event -> {
             UserModel.getInstance().setUser(null);
             StageMap.unloadStage(GuiConst.PLARTFORM_STAGE_LOGIN);
-//            resetMenu();
+            resetMenu();
             MenuFactory.getMainController().resetMain();
             GuiFxmlAndLanguageUtils.buildLoginDialog();
         });

@@ -15,7 +15,7 @@ import org.apache.commons.collections.CollectionUtils;
 
 /**
  * 合局事件模型简实现
- * TODO yuanwen 先实现功能后面并发问题再解决
+ * TODO yuanwen 简单做一个全局同步
  *
  * @author Can Guan
  * @author yuanwen
@@ -26,36 +26,42 @@ public class EventContextImpl implements EventContext {
 
     @Override
     public void pushEvent(PlatformEvent event) {
-        List<EventListener> targetList = map.get(event.getEventType());
-        if(CollectionUtils.isEmpty(targetList)){
-            return;
-        }
+        synchronized (map) {
+            List<EventListener> targetList = map.get(event.getEventType());
+            if (CollectionUtils.isEmpty(targetList)) {
+                return;
+            }
 
-        for (EventListener listener : targetList) {
-            listener.eventNotify(event);
+            for (EventListener listener : targetList) {
+                listener.eventNotify(event);
+            }
         }
     }
 
     @Override
     public void addEventListener(EventType eventType, EventListener eventListener) {
-        List<EventListener> targetList = this.map.get(eventType);
+        synchronized (map) {
+            List<EventListener> targetList = this.map.get(eventType);
 
-        if(targetList == null){
-            targetList = new ArrayList<EventListener>();
-            this.map.put(eventType, targetList);
+            if (targetList == null) {
+                targetList = new ArrayList<EventListener>();
+                this.map.put(eventType, targetList);
+            }
+
+            targetList.add(eventListener);
         }
-
-        targetList.add(eventListener);
     }
 
     @Override
     public void removeEventListener(EventType eventType, EventListener eventListener) {
-        List<EventListener> targetList = this.map.get(eventType);
-        if(targetList == null){
-            return;
-        }
+        synchronized (map) {
+            List<EventListener> targetList = this.map.get(eventType);
+            if (targetList == null) {
+                return;
+            }
 
-        targetList.remove(eventListener);
+            targetList.remove(eventListener);
+        }
     }
 
 
@@ -67,7 +73,9 @@ public class EventContextImpl implements EventContext {
      */
     @Override
     public void removeEventListener(EventType eventType) {
-        this.map.remove(eventType);
+        synchronized (map) {
+            this.map.remove(eventType);
+        }
     }
 
 //    @Override

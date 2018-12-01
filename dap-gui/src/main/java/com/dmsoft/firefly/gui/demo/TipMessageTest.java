@@ -1,3 +1,5 @@
+package com.dmsoft.firefly.gui.demo;
+
 import com.dmsoft.firefly.gui.utils.TipMessage;
 import javafx.application.Application;
 import javafx.event.EventHandler;

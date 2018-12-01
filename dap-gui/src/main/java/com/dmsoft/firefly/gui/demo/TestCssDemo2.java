@@ -1,3 +1,5 @@
+package com.dmsoft.firefly.gui.demo;
+
 import com.dmsoft.firefly.gui.component.ContentStackPane;
 import com.dmsoft.firefly.gui.utils.TabUtils;
 import com.dmsoft.firefly.sdk.RuntimeContext;

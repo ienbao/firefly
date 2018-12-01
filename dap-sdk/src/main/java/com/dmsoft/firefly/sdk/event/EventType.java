@@ -16,6 +16,10 @@ public enum EventType {
 
     PLATFORM_SHOW_MAIN,//显示平台
     PLATFORM_PROCESS_CLOSE,//关闭加载进度
+    PLATFORM_RESET_MAIN,//重置主窗体
+    UPDATA_PROGRESS,//更新进度条
+
+
 
 
 }

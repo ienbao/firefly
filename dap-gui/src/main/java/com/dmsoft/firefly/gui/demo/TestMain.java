@@ -1,3 +1,4 @@
+package com.dmsoft.firefly.gui.demo;
 
 import javafx.beans.binding.NumberBinding;
 import javafx.beans.property.IntegerProperty;

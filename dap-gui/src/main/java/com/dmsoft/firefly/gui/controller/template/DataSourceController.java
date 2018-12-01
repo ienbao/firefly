@@ -25,6 +25,9 @@ import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.dai.service.SourceDataService;
 import com.dmsoft.firefly.sdk.dai.service.TemplateService;
 import com.dmsoft.firefly.sdk.dai.service.UserPreferenceService;
+import com.dmsoft.firefly.sdk.event.EventContext;
+import com.dmsoft.firefly.sdk.event.EventType;
+import com.dmsoft.firefly.sdk.event.PlatformEvent;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.google.common.collect.Lists;
 import javafx.beans.property.SimpleObjectProperty;
@@ -339,7 +342,9 @@ public class DataSourceController implements Initializable {
             //TODO notify refresh event
 
             StageMap.closeStage("dataSource");
-            MenuFactory.getMainController().resetMain();
+
+            EventContext eventContext = RuntimeContext.getBean(EventContext.class);
+            eventContext.pushEvent(new PlatformEvent(EventType.PLATFORM_RESET_MAIN, null));
             //refreshMainDataSource(selectProject);
 
         });

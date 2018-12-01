@@ -5,7 +5,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.control.Label?>
-<?import com.dmsoft.firefly.gui.LodingButton?>
+<?import com.dmsoft.firefly.gui.demo.LodingButton?>
 <VBox xmlns="http://javafx.com/javafx/8.0.76-ea" xmlns:fx="http://javafx.com/fxml/1" fx:id="loginPane"
   fx:controller="com.dmsoft.firefly.gui.controller.LoginController">
     <ImageView styleClass="gui-login-logo" fitHeight="48.0" pickOnBounds="true" preserveRatio="true"/>

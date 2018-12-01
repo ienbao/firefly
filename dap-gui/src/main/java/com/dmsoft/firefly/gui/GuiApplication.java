@@ -20,31 +20,16 @@ import com.dmsoft.firefly.sdk.utils.enums.LanguageType;
 import de.codecentric.centerdevice.javafxsvg.SvgImageLoaderFactory;
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.concurrent.Service;
-import javafx.concurrent.Task;
-import javafx.scene.Scene;
-import javafx.scene.effect.BlurType;
-import javafx.scene.effect.DropShadow;
-import javafx.scene.effect.Effect;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
-
-import java.lang.management.ClassLoadingMXBean;
-import java.lang.management.ManagementFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import static com.google.common.io.Resources.getResource;
 
 /**
  * GUI Application
  */
 public class GuiApplication extends Application {
-
     private Logger logger = LoggerFactory.getLogger(GuiApplication.class);
-    public static final int TOTAL_LOAD_CLASS = 4800;
 
     static {
         System.getProperties().put("javafx.pseudoClassOverrideEnabled", "true");
@@ -75,9 +60,11 @@ public class GuiApplication extends Application {
         RuntimeContext.registerBean(BasicJobFactory.class, jobFactory);
         RuntimeContext.registerBean(JobManager.class, jobManager1);
 
-        buildProcessorBarDialog();
+        StageSwitchDialog.buildProcessorBarDialog();
+
         if (StageMap.getStage(GuiConst.PLARTFORM_STAGE_PROCESS).isShowing()) {
-            updateProcessorBar();
+            EventContext eventContext = RuntimeContext.getBean(EventContext.class);
+            eventContext.pushEvent(new PlatformEvent(EventType.UPDATA_PROGRESS, null));
         }
 
         MenuFactory.initMenu();
@@ -87,8 +74,6 @@ public class GuiApplication extends Application {
         if (languageType != null) {
             RuntimeContext.getBean(EnvService.class).setLanguageType(RuntimeContext.getBean(EnvService.class).getLanguageType());
         }
-
-
 
         Pane root = DapUtils.loadFxml("/view/app_menu.fxml");
         Pane main = DapUtils.loadFxml("/view/main.fxml");
@@ -120,7 +105,6 @@ public class GuiApplication extends Application {
         });
     }
 
-
     private void showMain(){
         if (!userService.findLegal()) {
             GuiFxmlAndLanguageUtils.buildLegalDialog();
@@ -135,50 +119,4 @@ public class GuiApplication extends Application {
         }
     }
 
-    /**
-     * method to update process bar
-     */
-    public void updateProcessorBar() {
-        Service<Integer> service = new Service<Integer>() {
-            @Override
-            protected Task<Integer> createTask() {
-                return new Task<Integer>() {
-                    @Override
-                    protected Integer call() throws Exception {
-                        while (true) {
-                            ClassLoadingMXBean classLoadingMXBean = ManagementFactory.getClassLoadingMXBean();
-                            int process = (int) (classLoadingMXBean.getLoadedClassCount() * 1.0 / TOTAL_LOAD_CLASS * 100);
-                            logger.info("count: " + classLoadingMXBean.getLoadedClassCount());
-                            if (process >= 100) {
-                                for (int i = 10; i <= 100; i++) {
-                                    Thread.sleep(20);
-                                    updateProgress(i, 100);
-                                }
-
-                                EventContext eventContext = RuntimeContext.getBean(EventContext.class);
-                                eventContext.pushEvent(new PlatformEvent(EventType.PLATFORM_PROCESS_CLOSE, null));
-
-                                break;
-                            }
-                        }
-                        return null;
-                    }
-                };
-            }
-
-        };
-
-//        systemProcessorController.getProgressBar().progressProperty().bind(service.progressProperty());
-        service.start();
-    }
-
-    private void buildProcessorBarDialog() {
-        Pane root = DapUtils.loadFxml("/view/system_processor_bar.fxml");
-        Stage stage = new Stage();
-        Scene tempScene = new Scene(root);
-        tempScene.getStylesheets().addAll(getResource("css/platform_app.css").toExternalForm(),getResource("css/redfall/main.css").toExternalForm());
-        stage.setScene(tempScene);
-        stage.show();
-        StageMap.addStage(GuiConst.PLARTFORM_STAGE_PROCESS, stage);
-    }
 }
