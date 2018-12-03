@@ -48,7 +48,7 @@ import static com.dmsoft.firefly.sdk.ui.MenuBuilder.MenuType;
 @Component
 public class AppController {
     private final Logger logger = LoggerFactory.getLogger(AppController.class);
-    private TemplateService templateService = RuntimeContext.getBean(TemplateService.class);
+
     @Autowired
     private SourceDataService sourceDataService ;
     @Autowired
@@ -66,6 +66,10 @@ public class AppController {
     private PluginUIContext pluginUIContext;
     @Autowired
     private EventContext eventContext;
+    @Autowired
+    private TemplateService templateService;
+    @Autowired
+    private PluginImageContext pluginImageContext;
 
     @FXML
     private void initialize() {
@@ -290,7 +294,6 @@ public class AppController {
             String json = JsonFileUtil.readJsonFile(file);
             JsonMapper jsonMapper = JsonMapper.defaultMapper();
             if (StringUtils.isNotEmpty(json)) {
-                PluginImageContext pluginImageContext = RuntimeContext.getBean(PluginImageContext.class);
                 List<PluginClass> pluginClasses = pluginImageContext.getPluginClassByType(PluginClassType.CONFIG);
                 Map<String, String> config = jsonMapper.fromJson(json, Map.class);
                 if (config != null && !config.isEmpty()) {

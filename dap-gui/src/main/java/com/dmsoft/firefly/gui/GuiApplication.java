@@ -27,7 +27,6 @@ import org.slf4j.LoggerFactory;
 public class GuiApplication extends Application {
   private Logger logger = LoggerFactory.getLogger(GuiApplication.class);
 
-  //TDOD
   static {
     System.getProperties().put("javafx.pseudoClassOverrideEnabled", "true");
   }

@@ -27,10 +27,13 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.util.List;
 import java.util.Map;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  * Created by GuangLi on 2018/3/8.
  */
+@Component
 public class ExportSettingController {
     private final Logger logger = LoggerFactory.getLogger(ExportSettingController.class);
 
@@ -46,10 +49,11 @@ public class ExportSettingController {
     private Button cancelBtn;
     private CheckBox box;
     private ObservableList<ExportSettingModel> items = FXCollections.observableArrayList();
-
-    private PluginImageContext pluginImageContext = RuntimeContext.getBean(PluginImageContext.class);
-    private List<PluginClass> pluginClasses = pluginImageContext.getPluginClassByType(PluginClassType.CONFIG);
-    private TemplateService templateService = RuntimeContext.getBean(TemplateService.class);
+    @Autowired
+    private PluginImageContext pluginImageContext;
+    private List<PluginClass> pluginClasses;
+    @Autowired
+    private TemplateService templateService;
 
     @FXML
     private void initialize() {

@@ -49,13 +49,16 @@ import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.support.DaoSupport;
+import org.springframework.stereotype.Component;
 
 import static com.google.common.io.Resources.getResource;
 
 /**
  * Created by Guang.Li on 2018/2/10.
  */
+@Component
 public class TemplateController {
     @FXML
     private ComboBox<Integer> decimal;
@@ -92,8 +95,10 @@ public class TemplateController {
     private FilteredList<String> nameFilterList = templateNames.filtered(p -> p.startsWith(""));
     private SortedList<String> nameSortedList = new SortedList<>(nameFilterList);
 
-    private TemplateService templateService = RuntimeContext.getBean(TemplateService.class);
-    private EnvService envService = RuntimeContext.getBean(EnvService.class);
+    @Autowired
+    private TemplateService templateService;
+    @Autowired
+    private EnvService envService;
 
     private LinkedHashMap<String, TemplateSettingDto> allTemplate = Maps.newLinkedHashMap();
     private TemplateSettingDto currTemplate;

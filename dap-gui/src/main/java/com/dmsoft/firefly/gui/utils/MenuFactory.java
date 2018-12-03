@@ -105,7 +105,7 @@ public class MenuFactory {
 
                 @Override
                 public boolean onOkCustomEvent() {
-                    PluginImageContext pluginImageContext = RuntimeContext.getBean(PluginImageContext.class);
+                    PluginImageContext pluginImageContext = DapApplictionContext.getInstance().getBean(PluginImageContext.class);
                     List<PluginClass> pluginClasses = pluginImageContext.getPluginClassByType(PluginClassType.CONFIG);
                     Platform.runLater(() -> {
                         StageMap.getAllStage().clear();

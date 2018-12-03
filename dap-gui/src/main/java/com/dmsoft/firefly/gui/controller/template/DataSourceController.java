@@ -6,18 +6,17 @@ package com.dmsoft.firefly.gui.controller.template;
 
 import com.dmsoft.bamboo.common.utils.mapper.JsonMapper;
 import com.dmsoft.firefly.core.utils.DataFormat;
-import com.dmsoft.firefly.gui.GuiApplication;
 import com.dmsoft.firefly.gui.components.utils.*;
 import com.dmsoft.firefly.gui.components.window.WindowCustomListener;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
 import com.dmsoft.firefly.gui.components.window.WindowMessageController;
 import com.dmsoft.firefly.gui.components.window.WindowMessageFactory;
 import com.dmsoft.firefly.gui.model.ChooseTableRowData;
+import com.dmsoft.firefly.gui.utils.DapApplictionContext;
 import com.dmsoft.firefly.gui.utils.DapUtils;
 import com.dmsoft.firefly.gui.utils.GuiFxmlAndLanguageUtils;
-import com.dmsoft.firefly.gui.utils.MenuFactory;
 import com.dmsoft.firefly.gui.utils.ResourceMassages;
-import com.dmsoft.firefly.sdk.RuntimeContext;
+import com.dmsoft.firefly.gui.view.DataSourceTableCell;
 import com.dmsoft.firefly.sdk.dai.dto.TemplateSettingDto;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemDto;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
@@ -36,6 +35,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -90,20 +90,19 @@ public class DataSourceController implements Initializable {
     private SortedList<ChooseTableRowData> chooseTableRowDataSortedList;
 
     @Autowired
-    private SourceDataService sourceDataService;
+    private SourceDataService sourceDataService ;
     @Autowired
-    private EnvService envService;
+    private EnvService envService ;
     @Autowired
-    private TemplateService templateService;
+    private TemplateService templateService ;
     @Autowired
-    private UserPreferenceService userPreferenceService;
+    private UserPreferenceService userPreferenceService ;
+    @Autowired
+    private EventContext eventContext;
     private EventHandler eventHandler;
 
     private JsonMapper mapper = JsonMapper.defaultMapper();
-    private String renameStr;
-    private String delStr;
 
-    //TODO td svg图片模糊
     private void initTable() {
         filterTf.getTextField().setPromptText(GuiFxmlAndLanguageUtils.getString(ResourceMassages.FILTER));
         TooltipUtil.installNormalTooltip(delete, GuiFxmlAndLanguageUtils.getString(ResourceMassages.DELETE_SOURCE));
@@ -126,94 +125,45 @@ public class DataSourceController implements Initializable {
                             super.setText(null);
                             super.setGraphic(null);
                         } else {
-                            HBox hBox = null;
-                            Label textField = null;
-                            ProgressBar progressBar = null;
-                            Button rename = null;
-                            Button deleteOne = null;
-                            hBox = DapUtils.loadFxml("/view/data_source_cell.fxml");
-                            textField = (Label) hBox.getChildren().get(0);
-                            progressBar = (ProgressBar) hBox.getChildren().get(1);
-                            rename = (Button) hBox.getChildren().get(2);
-                            deleteOne = (Button) hBox.getChildren().get(3);
-                            textField.setText(item.getValue());
-                            if (item.isImport() || item.isError()) {
-                                textField.setDisable(true);
-                                item.getSelector().getCheckbox().setSelected(false);
-                                item.getSelector().getCheckbox().setDisable(true);
-                            } else {
-                                textField.setDisable(false);
-                                item.getSelector().getCheckbox().setDisable(false);
-                            }
-                            progressBar.setProgress(0);
-                            if (item.isError()) {
-                                progressBar.getStyleClass().setAll("progress-bar-lg-red");
-                            } else {
-                                progressBar.getStyleClass().setAll("progress-bar-lg-green");
-                            }
-                            TooltipUtil.installNormalTooltip(rename, renameStr);
-                            TooltipUtil.installNormalTooltip(deleteOne, delStr);
-                            rename.setVisible(false);
-                            deleteOne.setVisible(false);
-                            if (!item.isError()) {
-                                progressBar.setVisible(item.isImport());
-                            } else {
-                                progressBar.setVisible(true);
-                            }
-                            if (item.getProgress() != 0) {
-                                progressBar.setProgress(item.getProgress());
-                            }
-                            HBox.setHgrow(textField, Priority.ALWAYS);
-                            HBox.setHgrow(progressBar, Priority.NEVER);
-                            HBox.setHgrow(rename, Priority.NEVER);
-                            HBox.setHgrow(deleteOne, Priority.NEVER);
-                            Button finalRename = rename;
-                            Button finalDeleteOne = deleteOne;
-                            hBox.setOnMouseEntered(event -> {
-                                finalRename.setVisible(true);
-                                finalDeleteOne.setVisible(true);
-                            });
-                            Button finalRename1 = rename;
-                            Button finalDeleteOne1 = deleteOne;
-                            hBox.setOnMouseExited(event -> {
-                                finalRename1.setVisible(false);
-                                finalDeleteOne1.setVisible(false);
-                            });
+                            try {
+                                DataSourceTableCell dataSourceTableCell = new DataSourceTableCell(item);
+                                Button rename = dataSourceTableCell.getRename();
+                                Button deleteOne = dataSourceTableCell.getDeleteOne();
                                 rename.setOnAction(event -> {
-                                    Pane root = null;
-                                    Stage renameStage = null;
-                                    NewNameController renameTemplateController = null;
-                                    try {
-//                                    FXMLLoader loader = DapUtils.loadFxml("view/new_template.fxml");
-//                                    renameTemplateController = new NewNameController();
-//                                    renameTemplateController.setPaneName("renameProject");
-//                                    renameTemplateController.setInitName(item.getValue());
-
-//                                    loader.setController(renameTemplateController);
-                                    root = DapUtils.loadFxml("/view/new_template.fxml");
-
-                                        NewNameController finalRenameTemplateController = renameTemplateController;
-                                        renameTemplateController.getOk().setOnAction(renameEvent -> {
-                                            if (finalRenameTemplateController.isError()) {
-                                                //WindowMessageFactory.createWindowMessageHasOk(GuiFxmlAndLanguageUtils.getString(ResourceMassages.WARN_HEADER), GuiFxmlAndLanguageUtils.getString(ResourceMassages.TEMPLATE_NAME_EMPTY_WARN));
-                                                return;
-                                            }
-                                            TextField n = finalRenameTemplateController.getName();
-                                            if (StringUtils.isNotEmpty(n.getText()) && !n.getText().equals(item.getValue().toString())) {
-                                                String newString = DAPStringUtils.filterSpeChars4Mongo(n.getText());
-                                                sourceDataService.renameProject(item.getValue(), newString);
-                                                item.setValue(newString);
-                                                dataSourceTable.refresh();
-                                                updateProjectOrder();
-                                            }
-                                            StageMap.closeStage("renameProject");
-                                        });
-                                        renameStage = WindowFactory.createOrUpdateSimpleWindowAsModel("renameProject", GuiFxmlAndLanguageUtils.getString("RENAME_DATA_SOURCE"), root);
-                                        renameTemplateController.getName().setText(item.getValue());
-                                        renameStage.toFront();
-                                        renameStage.show();
-                                    } catch (Exception ignored) {
-                                    }
+//                                    Pane root = null;
+//                                    Stage renameStage = null;
+//                                    NewNameController renameTemplateController = null;
+//                                    try {
+//                                        FXMLLoader loader = GuiFxmlAndLanguageUtils.getLoaderFXML("view/new_template.fxml");
+//                                        renameTemplateController = new NewNameController();
+//                                        renameTemplateController.setPaneName("renameProject");
+//                                        renameTemplateController.setInitName(item.getValue());
+//
+//                                        loader.setController(renameTemplateController);
+//                                        root = loader.load();
+//
+//                                        NewNameController finalRenameTemplateController = renameTemplateController;
+//                                        renameTemplateController.getOk().setOnAction(renameEvent -> {
+//                                            if (finalRenameTemplateController.isError()) {
+//                                                //WindowMessageFactory.createWindowMessageHasOk(GuiFxmlAndLanguageUtils.getString(ResourceMassages.WARN_HEADER), GuiFxmlAndLanguageUtils.getString(ResourceMassages.TEMPLATE_NAME_EMPTY_WARN));
+//                                                return;
+//                                            }
+//                                            TextField n = finalRenameTemplateController.getName();
+//                                            if (StringUtils.isNotEmpty(n.getText()) && !n.getText().equals(item.getValue().toString())) {
+//                                                String newString = DAPStringUtils.filterSpeChars4Mongo(n.getText());
+//                                                sourceDataService.renameProject(item.getValue(), newString);
+//                                                item.setValue(newString);
+//                                                dataSourceTable.refresh();
+//                                                updateProjectOrder();
+//                                            }
+//                                            StageMap.closeStage("renameProject");
+//                                        });
+//                                        renameStage = WindowFactory.createOrUpdateSimpleWindowAsModel("renameProject", GuiFxmlAndLanguageUtils.getString("RENAME_DATA_SOURCE"), root);
+//                                        renameTemplateController.getName().setText(item.getValue());
+//                                        renameStage.toFront();
+//                                        renameStage.show();
+//                                    } catch (Exception ignored) {
+//                                    }
                                 });
                                 deleteOne.setOnAction(event -> {
                                     if (!item.isImport()) {
@@ -247,9 +197,12 @@ public class DataSourceController implements Initializable {
                                             }
                                         });
                                     }
-
                                 });
-                            this.setGraphic(hBox);
+                                dataSourceTableCell.addEventHandler(ActionEvent.ACTION,event -> {updateProjectOrder();});
+                                this.setGraphic(dataSourceTableCell);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
                         }
                     }
                 };
@@ -348,7 +301,6 @@ public class DataSourceController implements Initializable {
 
             StageMap.closeStage("dataSource");
 
-            EventContext eventContext = RuntimeContext.getBean(EventContext.class);
             eventContext.pushEvent(new PlatformEvent(EventType.PLATFORM_RESET_MAIN, null));
             //refreshMainDataSource(selectProject);
 
@@ -419,8 +371,6 @@ public class DataSourceController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        this.renameStr = GuiFxmlAndLanguageUtils.getString(ResourceMassages.RENAME_DATA_SOURCE);
-        this.delStr = GuiFxmlAndLanguageUtils.getString(ResourceMassages.DELETE_SOURCE);
         initTable();
         initEvent();
         initDataSourceTableData();
@@ -429,6 +379,8 @@ public class DataSourceController implements Initializable {
     private void buildDataSourceDialog() {
         Pane root = null;
         try {
+//            FXMLLoader fxmlLoader = GuiFxmlAndLanguageUtils.getLoaderFXML("view/resolver.fxml");
+//            fxmlLoader.setController(new ResolverSelectController(this));
             root = DapUtils.loadFxml("view/resolver.fxml");
             Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("resolver", GuiFxmlAndLanguageUtils.getString("DATA_SOURCE_SELECT_RESOLVER"), root, getResource("css/platform_app.css").toExternalForm());
             stage.setResizable(false);
