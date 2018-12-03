@@ -1,36 +1,20 @@
 package com.dmsoft.firefly.gui.view;
 
-import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.utils.TooltipUtil;
-import com.dmsoft.firefly.gui.components.window.WindowCustomListener;
-import com.dmsoft.firefly.gui.components.window.WindowFactory;
-import com.dmsoft.firefly.gui.components.window.WindowMessageController;
-import com.dmsoft.firefly.gui.components.window.WindowMessageFactory;
-import com.dmsoft.firefly.gui.controller.template.NewNameController;
+import com.dmsoft.firefly.gui.event.DataSourceCellEvent;
 import com.dmsoft.firefly.gui.model.ChooseTableRowData;
 import com.dmsoft.firefly.gui.utils.GuiFxmlAndLanguageUtils;
 import com.dmsoft.firefly.gui.utils.ResourceMassages;
-import com.dmsoft.firefly.sdk.dai.dto.UserPreferenceDto;
-import com.dmsoft.firefly.sdk.dai.service.EnvService;
-import com.dmsoft.firefly.sdk.dai.service.SourceDataService;
-import com.dmsoft.firefly.sdk.dai.service.UserPreferenceService;
-import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
-import com.google.common.collect.Lists;
-import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
+import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
-import javafx.stage.Stage;
-import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.List;
 import java.util.ResourceBundle;
 /**
  * 创建dataSource表格中每一行为一个组件
@@ -109,21 +93,13 @@ public class DataSourceTableCell extends HBox implements Initializable {
             this.rename.setVisible(true);
             this.deleteOne.setVisible(true);
         });
-    }
 
-    public Button getRename() {
-        return rename;
-    }
+        rename.setOnAction(event -> {
+            fireEvent(new DataSourceCellEvent(DataSourceCellEvent.RENAME));
+        });
 
-    public void setRename(Button rename) {
-        this.rename = rename;
-    }
-
-    public Button getDeleteOne() {
-        return deleteOne;
-    }
-
-    public void setDeleteOne(Button deleteOne) {
-        this.deleteOne = deleteOne;
+        deleteOne.setOnAction(event -> {
+            fireEvent(new DataSourceCellEvent(DataSourceCellEvent.DELETE));
+        });
     }
 }
