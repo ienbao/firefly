@@ -4,7 +4,19 @@
 <?import javafx.scene.layout.*?>
 
 <?import javafx.scene.image.ImageView?>
-<HBox fx:id="hBox" styleClass="gui-datasource-table-h-box" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" >
+<!--<HBox fx:id="hBox" styleClass="gui-datasource-table-h-box" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" >-->
+    <!--<Label fx:id="textField" styleClass="table-text-field,gui-datasource-text-filed"/>-->
+    <!--<ProgressBar fx:id="progressBar" styleClass="gui-datasource-progressBar"/>-->
+    <!--<Button fx:id="rename" styleClass="btn-icon">-->
+        <!--<graphic><ImageView fitWidth="16" fitHeight="16" styleClass="gui-datasource-rename-btn"/></graphic>-->
+    <!--</Button>-->
+    <!--<Button fx:id="deleteOne" styleClass="btn-icon">-->
+        <!--<graphic><ImageView fitWidth="16" fitHeight="16" styleClass="gui-datasource-delete-one-btn"/></graphic>-->
+    <!--</Button>-->
+<!--</HBox>-->
+
+<fx:root xmlns="http://javafx.com/javafx" xmlns:fx="http://java.sun.com/JSP/Page"
+         type="HBox" styleClass="gui-datasource-table-h-box" >
     <Label fx:id="textField" styleClass="table-text-field,gui-datasource-text-filed"/>
     <ProgressBar fx:id="progressBar" styleClass="gui-datasource-progressBar"/>
     <Button fx:id="rename" styleClass="btn-icon">
@@ -13,4 +25,4 @@
     <Button fx:id="deleteOne" styleClass="btn-icon">
         <graphic><ImageView fitWidth="16" fitHeight="16" styleClass="gui-datasource-delete-one-btn"/></graphic>
     </Button>
-</HBox>
+</fx:root>

@@ -38,23 +38,40 @@ import java.math.BigDecimal;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  * Created by Garen.Pang on 2018/3/1.
  */
+@Component
 public class ResolverSelectController implements Initializable {
 
     private static final Double D100 = 100.0;
     private DataSourceController controller;
     private ObservableList<String> resolverData;
-    private EnvService envService = RuntimeContext.getBean(EnvService.class);
+    @Autowired
+    private EnvService envService;
     @FXML
     private ComboBox<String> resolver;
     @FXML
     private Button nextStep;
     @FXML
     private CheckBox defaultTemplate;
-    private UserPreferenceService userPreferenceService = RuntimeContext.getBean(UserPreferenceService.class);
+    @Autowired
+    private UserPreferenceService userPreferenceService;
+    @Autowired
+    private PluginImageContext pluginImageContext;
+
+    private JobManager jobManager;
+
+    private JobContext context;
+
+    private JobPipeline jobPipeline;
+
+    public ResolverSelectController(){
+
+    }
 
     /**
      * constructotr
@@ -72,7 +89,6 @@ public class ResolverSelectController implements Initializable {
     }
 
     private void initComBox() {
-        PluginImageContext pluginImageContext = RuntimeContext.getBean(PluginImageContext.class);
         List<PluginClass> pluginClasses = pluginImageContext.getPluginClassByType(PluginClassType.DATA_PARSER);
         List<String> name = Lists.newArrayList();
         pluginClasses.forEach(v -> name.add(((IDataParser) v.getInstance()).getName()));
@@ -157,8 +173,8 @@ public class ResolverSelectController implements Initializable {
         chooseTableRowData.setImport(true);
         controller.getChooseTableRowDataObservableList().add(chooseTableRowData);
         controller.getDataSourceTable().refresh();
-        JobManager jobManager = RuntimeContext.getBean(JobManager.class);
-        JobContext context = RuntimeContext.getBean(JobFactory.class).createJobContext();
+
+
         context.addJobEventListener(event -> {
             BigDecimal bg = new BigDecimal(event.getProgress());
             double f1 = bg.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue();
@@ -169,8 +185,7 @@ public class ResolverSelectController implements Initializable {
         });
         context.put(ParamKeys.FILE_PATH, filePath);
         context.put(ParamKeys.RESOLVER_TEMPLATE_NAME, resolverName);
-        JobPipeline jobPipeline = RuntimeContext.getBean(JobFactory.class).createJobPipeLine()
-                .addLast(new ResolverSelectHandler())
+        jobPipeline.addLast(new ResolverSelectHandler())
                 .addLast(new CsvImportHandler().setWeight(D100));
 
         jobPipeline.setCompleteHandler(new AbstractBasicJobHandler() {

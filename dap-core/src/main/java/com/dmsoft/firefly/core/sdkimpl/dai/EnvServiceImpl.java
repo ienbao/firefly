@@ -18,6 +18,7 @@ import com.google.common.collect.Maps;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -33,6 +34,12 @@ public class EnvServiceImpl implements EnvService {
     private List<String> projectNames;
     private List<String> plugNames;
     private JsonMapper mapper = JsonMapper.defaultMapper();
+    @Autowired
+    private UserPreferenceService userPreferenceService;
+    @Autowired
+    private TemplateService templateService;
+    @Autowired
+    private SourceDataService sourceDataService;
 
     @Override
     public String getUserName() {
@@ -51,12 +58,19 @@ public class EnvServiceImpl implements EnvService {
         userPreferenceDto.setCode("activeTemplate");
         userPreferenceDto.setUserName(userName);
         userPreferenceDto.setValue(templateName);
-        getUserPreferenceService().updatePreference(userPreferenceDto);
+        this.userPreferenceService.updatePreference(userPreferenceDto);
     }
 
     @Override
     public TemplateSettingDto findActivatedTemplate() {
-        return templateName != null ? getTemplateService().findAnalysisTemplate(templateName) : getTemplateService().findAnalysisTemplate(findPreference("activeTemplate"));
+        if(templateName != null){
+
+            return this.templateService.findAnalysisTemplate(templateName);
+        }else {
+
+            return this.templateService.findAnalysisTemplate(findPreference("activeTemplate"));
+        }
+
 
     }
 
@@ -90,12 +104,12 @@ public class EnvServiceImpl implements EnvService {
         userPreferenceDto.setCode("selectProject");
         userPreferenceDto.setUserName(userName);
         userPreferenceDto.setValue(activatedProjectName);
-        getUserPreferenceService().updatePreference(userPreferenceDto);
+        this.userPreferenceService.updatePreference(userPreferenceDto);
     }
 
     @Override
     public String findPreference(String code) {
-        return getUserPreferenceService().findPreferenceByUserId(code, userName);
+        return this.userPreferenceService.findPreferenceByUserId(code, userName);
     }
 
     @Override
@@ -131,7 +145,7 @@ public class EnvServiceImpl implements EnvService {
 
     @Override
     public LanguageType getLanguageType() {
-        String languageType = RuntimeContext.getBean(UserPreferenceService.class).findPreferenceByUserId("languageType", userName);
+        String languageType = this.userPreferenceService.findPreferenceByUserId("languageType", userName);
         if (DAPStringUtils.isBlank(languageType)) {
             this.setLanguageType(LanguageType.EN);
             languageType = LanguageType.EN.toString();
@@ -146,28 +160,19 @@ public class EnvServiceImpl implements EnvService {
         userPreferenceDto.setCode("languageType");
         userPreferenceDto.setUserName(userName);
         userPreferenceDto.setValue(languageType);
-        getUserPreferenceService().updatePreference(userPreferenceDto);
+        this.userPreferenceService.updatePreference(userPreferenceDto);
     }
 
     @Override
     public void initTestItem(String activeTemplateName) {
-        SourceDataService sourceDataService = RuntimeContext.getBean(SourceDataService.class);
-        TemplateService templateService = RuntimeContext.getBean(TemplateService.class);
 
         List<String> projectName = this.findActivatedProjectName();
         if (projectName != null && !projectName.isEmpty()) {
             Map<String, TestItemDto> testItemDtoMap = sourceDataService.findAllTestItem(projectName);
-            LinkedHashMap<String, TestItemWithTypeDto> itemWithTypeDtoMap = templateService.assembleTemplate(testItemDtoMap, activeTemplateName);
+            LinkedHashMap<String, TestItemWithTypeDto> itemWithTypeDtoMap = this.templateService.assembleTemplate(testItemDtoMap, activeTemplateName);
             this.setTestItems(itemWithTypeDtoMap);
             this.setActivatedProjectName(projectName);
         }
     }
 
-    private UserPreferenceService getUserPreferenceService() {
-        return RuntimeContext.getBean(UserPreferenceService.class);
-    }
-
-    private TemplateService getTemplateService() {
-        return RuntimeContext.getBean(TemplateService.class);
-    }
 }

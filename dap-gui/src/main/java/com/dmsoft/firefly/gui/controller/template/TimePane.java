@@ -9,6 +9,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  * Created by GuangLi on 2018/2/28.
@@ -16,7 +18,7 @@ import javafx.scene.layout.VBox;
 public class TimePane extends HBox {
     private ComboBox<String> item;
     private Button delete;
-    private EnvService envService = RuntimeContext.getBean(EnvService.class);
+    private EnvService envService;
 
     /**
      * constructor

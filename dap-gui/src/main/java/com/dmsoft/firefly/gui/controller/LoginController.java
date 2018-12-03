@@ -48,6 +48,8 @@ public class LoginController {
     private EnvService envService ;
     @Autowired
     private UserService userService ;
+    @Autowired
+    private EventContext eventContext;
 
 
     @FXML
@@ -67,7 +69,6 @@ public class LoginController {
             this.doLogin();
         });
 
-        EventContext eventContext = RuntimeContext.getBean(EventContext.class);
         eventContext.addEventListener(EventType.SYSTEM_LOGIN_FAIL_ACITON, event -> {
             resetLoginBtn();
             loginFailLbl.setVisible(true);
@@ -88,7 +89,6 @@ public class LoginController {
             String password = passwordField.getTextField().getText();
             UserDto userDto = userService.validateUser(username, password);
 
-            EventContext eventContext = RuntimeContext.getBean(EventContext.class);
             if (userDto != null) {
                 //发送登陆成功消息
                 eventContext.pushEvent(new PlatformEvent(EventType.SYSTEM_LOGIN_SUCCESS_ACTION, userDto));

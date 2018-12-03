@@ -7,12 +7,14 @@ import com.google.common.collect.Maps;
 
 import java.util.Map;
 import java.util.Set;
+import org.springframework.stereotype.Service;
 
 /**
  * impl class for plugin ui context impl
  *
  * @author Can Guan
  */
+@Service
 public class PluginUIContextImpl implements PluginUIContext {
     private Map<String, IMenu> menuMap;
     private Map<String, IMainBodyPane> paneMap;

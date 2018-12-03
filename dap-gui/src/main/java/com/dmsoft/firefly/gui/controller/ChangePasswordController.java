@@ -1,6 +1,5 @@
 package com.dmsoft.firefly.gui.controller;
 
-import com.dmsoft.firefly.gui.components.utils.TestUtil;
 import com.dmsoft.firefly.gui.components.utils.TooltipUtil;
 import com.dmsoft.firefly.gui.components.window.WindowMessageFactory;
 import com.dmsoft.firefly.gui.model.UserModel;
@@ -145,6 +144,4 @@ public class ChangePasswordController {
             TooltipUtil.uninstallWarnTooltip(node);
         }
     }
-
-
 }

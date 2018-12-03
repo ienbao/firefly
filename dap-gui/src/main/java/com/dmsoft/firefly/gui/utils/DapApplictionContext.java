@@ -4,7 +4,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
- * DAP spring上下文
+ * DAP spring加载全局配置文件。
+ * 通过两种方式引用，直接方法调用和动态注入
  *
  * @author yuanwen
  */

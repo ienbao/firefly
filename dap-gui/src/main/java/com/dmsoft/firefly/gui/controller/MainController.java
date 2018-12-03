@@ -10,14 +10,13 @@ import com.dmsoft.firefly.gui.components.window.WindowCustomListener;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
 import com.dmsoft.firefly.gui.components.window.WindowMessageController;
 import com.dmsoft.firefly.gui.components.window.WindowMessageFactory;
-import com.dmsoft.firefly.gui.controller.template.DataSourceController;
 import com.dmsoft.firefly.gui.model.StateBarTemplateModel;
 import com.dmsoft.firefly.gui.model.UserModel;
+import com.dmsoft.firefly.gui.utils.DapUtils;
 import com.dmsoft.firefly.gui.utils.GuiConst;
 import com.dmsoft.firefly.gui.utils.GuiFxmlAndLanguageUtils;
 import com.dmsoft.firefly.gui.utils.ResourceMassages;
 import com.dmsoft.firefly.gui.utils.TabUtils;
-import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.TemplateSettingDto;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemDto;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
@@ -36,7 +35,6 @@ import javafx.collections.ObservableList;
 import javafx.concurrent.Service;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -89,14 +87,16 @@ public class MainController {
     private ObservableList<StateBarTemplateModel> templateList = FXCollections.observableArrayList();
     private AtomicBoolean isShow = new AtomicBoolean(false);
     private Map<String, TabPane> tabPaneMap = new LinkedHashMap<>();
+    @Autowired
     private PluginUIContext pluginUIContext;
-
     @Autowired
     private EnvService envService;
     @Autowired
     private TemplateService templateService;
     @Autowired
     private SourceDataService sourceDataService;
+    @Autowired
+    private EventContext eventContext;
 
 
     @FXML
@@ -106,7 +106,6 @@ public class MainController {
         contentStackPane = new ContentStackPane();
         grpContent.add(contentStackPane, 0, 1);
         grpContent.setDisable(true);
-        this.pluginUIContext = RuntimeContext.getBean(PluginUIContext.class);
 
         this.initToolBar();
         this.initStateBar();
@@ -125,7 +124,6 @@ public class MainController {
     }
 
     private void registEvent() {
-        EventContext eventContext = RuntimeContext.getBean(EventContext.class);
         eventContext.addEventListener(EventType.SYSTEM_LOGIN_SUCCESS_ACTION, event -> {
             Platform.runLater(() ->{
                 resetMain();
@@ -231,7 +229,7 @@ public class MainController {
     }
 
     private void initStateBar() {
-        LanguageType languageType = RuntimeContext.getBean(EnvService.class).getLanguageType();
+        LanguageType languageType = this.envService.getLanguageType();
         if (LanguageType.EN.equals(languageType)) {
             stateBar.getColumnConstraints().get(0).setMaxWidth(85);
         } else {
@@ -572,11 +570,11 @@ public class MainController {
     private void buildDataSourceDialog() {
         Pane root = null;
         try {
-            FXMLLoader fxmlLoader = GuiFxmlAndLanguageUtils.getLoaderFXML("view/data_source.fxml");
-            root = fxmlLoader.load();
-            DataSourceController controller = fxmlLoader.getController();
+//            FXMLLoader fxmlLoader = GuiFxmlAndLanguageUtils.getLoaderFXML("view/data_source.fxml");
+            root = DapUtils.loadFxml("view/data_source.fxml");
+//            DataSourceController controller = fxmlLoader.getController();
             Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("dataSource", GuiFxmlAndLanguageUtils.getString(ResourceMassages.DATA_SOURCE), root, getResource("css/platform_app.css").toExternalForm());
-            stage.setOnCloseRequest(controller.getEventHandler());
+//            stage.setOnCloseRequest(controller.getEventHandler());
             stage.setResizable(false);
             stage.toFront();
             stage.show();

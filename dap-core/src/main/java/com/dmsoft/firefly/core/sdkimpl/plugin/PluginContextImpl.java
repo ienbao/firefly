@@ -12,18 +12,29 @@ import java.security.PrivilegedAction;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
 /**
  * Impl class for plugin context and plugin context listener
  *
  * @author Can Guan
  */
+@Service
 public class PluginContextImpl implements PluginContext, PluginContextListener {
+    private static Logger logger = LoggerFactory.getLogger(PluginContextImpl.class);
+
     private Map<String, PluginInfo> pluginInfoMap;
     private List<PluginContextListener> pluginContextListeners;
     private ClassLoader parentClassLoader;
     private Map<String, PluginClassLoader> pluginClassLoaderMap;
     private InitModel initModel;
+
+
+    public PluginContextImpl(){
+        this(InitModel.INIT_WITH_UI);
+    }
 
     /**
      * constructor
@@ -72,26 +83,35 @@ public class PluginContextImpl implements PluginContext, PluginContextListener {
 
     @Override
     public void installPlugin(PluginInfo pluginInfo) {
-        if (pluginInfo != null) {
-            if (privateInstallPlugin(pluginInfo)) {
-                notifyListeners(new PluginContextEvent(PluginContextEvent.EventType.INSTALL, Lists.newArrayList(pluginInfo.getId())));
-            }
+        if (pluginInfo == null) {
+            return ;
+        }
+
+        if (privateInstallPlugin(pluginInfo)) {
+            notifyListeners(new PluginContextEvent(PluginContextEvent.EventType.INSTALL, Lists.newArrayList(pluginInfo.getId())));
         }
     }
 
     @Override
     public void installPlugin(List<PluginInfo> pluginInfoList) {
-        if (pluginInfoList != null) {
-            List<String> idList = Lists.newArrayList();
-            for (PluginInfo pluginInfo : pluginInfoList) {
-                if (pluginInfo != null) {
-                    if (privateInstallPlugin(pluginInfo)) {
-                        idList.add(pluginInfo.getId());
-                    }
-                }
-            }
-            notifyListeners(new PluginContextEvent(PluginContextEvent.EventType.INSTALL, idList));
+        if (pluginInfoList == null) {
+            return;
         }
+
+        List<String> idList = Lists.newArrayList();
+
+        for (PluginInfo pluginInfo : pluginInfoList) {
+            if (pluginInfo == null) {
+                continue;
+            }
+
+            if (privateInstallPlugin(pluginInfo)) {
+                logger.debug("install plugin: " + pluginInfo.getId());
+                idList.add(pluginInfo.getId());
+            }
+        }
+
+        notifyListeners(new PluginContextEvent(PluginContextEvent.EventType.INSTALL, idList));
     }
 
     @Override
@@ -285,10 +305,14 @@ public class PluginContextImpl implements PluginContext, PluginContextListener {
 
     @Override
     public void startPlugin(String pluginId) {
+        logger.debug("start plugin:" + pluginId);
         PluginInfo pluginInfo = this.pluginInfoMap.get(pluginId);
-        if (pluginInfo != null && PluginStatus.ACTIVE.equals(pluginInfo.getStatus()) && pluginInfo.getPluginObject() != null) {
-            pluginInfo.getPluginObject().start();
+        if (pluginInfo == null || PluginStatus.ACTIVE.equals(pluginInfo.getStatus()) && pluginInfo.getPluginObject() == null) {
+            logger.debug("加载plugin info 为空，pluginId:" + pluginId);
+            return;
         }
+
+        pluginInfo.getPluginObject().start();
     }
 
     @Override
@@ -296,6 +320,7 @@ public class PluginContextImpl implements PluginContext, PluginContextListener {
         if (pluginIdList == null) {
             return;
         }
+
         for (String pluginId : pluginIdList) {
             startPlugin(pluginId);
         }
@@ -323,14 +348,24 @@ public class PluginContextImpl implements PluginContext, PluginContextListener {
     }
 
     private boolean privateInstallPlugin(PluginInfo pluginInfo) {
-        if (this.pluginInfoMap.containsKey(pluginInfo.getId())
-                && VersionUtils.compareVersion(this.pluginInfoMap.get(pluginInfo.getId()).getVersion(), pluginInfo.getVersion()) >= 0) {
+
+        PluginInfo existsPlugin = this.pluginInfoMap.get(pluginInfo.getId());
+        if (existsPlugin == null){
+            logger.debug("当plugin信息不存在, pluginfoId:" + pluginInfo.getId());
             return false;
         }
+
+        if(VersionUtils.compareVersion(existsPlugin.getVersion(), pluginInfo.getVersion()) >= 0) {
+            logger.debug("当前plugin 版本号过旧, exist version:" + existsPlugin.getVersion() + ", install version:" + pluginInfo.getVersion());
+            return false;
+        }
+
         if (pluginInfo.getStatus() == null) {
             pluginInfo.setStatus(PluginStatus.INACTIVE);
         }
+
         this.pluginInfoMap.put(pluginInfo.getId(), pluginInfo);
+
         return true;
     }
 
