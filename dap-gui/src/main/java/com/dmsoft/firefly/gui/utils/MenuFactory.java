@@ -14,6 +14,7 @@ import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.dai.service.UserPreferenceService;
 import com.dmsoft.firefly.sdk.plugin.PluginClass;
 import com.dmsoft.firefly.sdk.plugin.PluginClassType;
+import com.dmsoft.firefly.sdk.plugin.PluginContext;
 import com.dmsoft.firefly.sdk.plugin.PluginImageContext;
 import com.dmsoft.firefly.sdk.plugin.apis.IConfig;
 import com.dmsoft.firefly.sdk.ui.MenuBuilder;
@@ -45,8 +46,8 @@ public class MenuFactory {
     public static final String PLATFORM_ID = "Platform";
     private static MainController mainController;
     private static AppController appController;
-    private static EnvService envService = RuntimeContext.getBean(EnvService.class);
-    private static UserPreferenceService userPreferenceService = RuntimeContext.getBean(UserPreferenceService.class);
+    private static EnvService envService = DapApplictionContext.getInstance().getBean(EnvService.class);
+    private static UserPreferenceService userPreferenceService = DapApplictionContext.getInstance().getBean(UserPreferenceService.class);
     private static boolean isChangeEnLanguage = true;
     private static boolean isChangeZhLanguage = true;
 
@@ -66,9 +67,11 @@ public class MenuFactory {
      * method to init menu
      */
     public static void initMenu() {
-        RuntimeContext.getBean(PluginUIContext.class).registerMenu(createFileMenu());
-        RuntimeContext.getBean(PluginUIContext.class).registerMenu(createPreferenceMenu());
-        RuntimeContext.getBean(PluginUIContext.class).registerMenu(createHelpMenu());
+        DapApplictionContext applictionContext = DapApplictionContext.getInstance();
+
+        applictionContext.getBean(PluginUIContext.class).registerMenu(createFileMenu());
+        applictionContext.getBean(PluginUIContext.class).registerMenu(createPreferenceMenu());
+        applictionContext.getBean(PluginUIContext.class).registerMenu(createHelpMenu());
     }
 
     private static MenuBuilder createFileMenu() {
@@ -280,8 +283,8 @@ public class MenuFactory {
         } else {
             Pane root = null;
             try {
-                FXMLLoader fxmlLoader = GuiFxmlAndLanguageUtils.getLoaderFXML("view/data_source_setting.fxml");
-                root = fxmlLoader.load();
+//                FXMLLoader fxmlLoader = GuiFxmlAndLanguageUtils.getLoaderFXML("view/data_source_setting.fxml");
+                root = DapUtils.loadFxml("view/data_source_setting.fxml");
                 Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("sourceSetting", GuiFxmlAndLanguageUtils.getString(ResourceMassages.SOURCE_SETTING), root,
                         getResource("css/platform_app.css").toExternalForm());
                 stage.toFront();
@@ -295,8 +298,8 @@ public class MenuFactory {
     private static void buildeSettingExportDia() {
         Pane root = null;
         try {
-            FXMLLoader fxmlLoader = GuiFxmlAndLanguageUtils.getLoaderFXML("view/export_setting.fxml");
-            root = fxmlLoader.load();
+//            FXMLLoader fxmlLoader = GuiFxmlAndLanguageUtils.getLoaderFXML("view/export_setting.fxml");
+            root = DapUtils.loadFxml("view/export_setting.fxml");
             Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("exportSetting", GuiFxmlAndLanguageUtils.getString(ResourceMassages.GLOBAL_EXPORT_SETTING), root,
                     getResource("css/platform_app.css").toExternalForm());
             stage.toFront();
@@ -309,12 +312,12 @@ public class MenuFactory {
     private static void buildPluginManageDialog() {
         Pane root = null;
         try {
-            FXMLLoader fxmlLoader = GuiFxmlAndLanguageUtils.getLoaderFXML("view/plugin.fxml");
-            root = fxmlLoader.load();
+//            FXMLLoader fxmlLoader = GuiFxmlAndLanguageUtils.getLoaderFXML("view/plugin.fxml");
+            root = DapUtils.loadFxml("view/plugin.fxml");
             Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("pluginManage", GuiFxmlAndLanguageUtils.getString(ResourceMassages.PLUGIN_MANAGE), root,
                     getResource("css/platform_app.css").toExternalForm());
-            PluginManageController controller = fxmlLoader.getController();
-            stage.setOnCloseRequest(controller.getOnCloseRequest());
+//            PluginManageController controller = fxmlLoader.getController();
+//            stage.setOnCloseRequest(controller.getOnCloseRequest());
             stage.toFront();
             stage.show();
         } catch (Exception ex) {

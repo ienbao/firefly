@@ -28,6 +28,7 @@ import org.bson.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.mongodb.core.DocumentCallbackHandler;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -57,6 +58,9 @@ public class SourceDataServiceImpl implements SourceDataService {
     private static final String IN_USED_FIELD = "inUsed";
     private static final String DATA_FIELD = "data";
     private final Logger logger = LoggerFactory.getLogger(SourceDataServiceImpl.class);
+
+    @Autowired
+    private MongoTemplate mongoTemplate;
 
     @Override
     public void saveProject(String projectName) {
@@ -200,7 +204,7 @@ public class SourceDataServiceImpl implements SourceDataService {
                 result.add(project.getProjectName());
             }
         } catch (Exception e) {
-            logger.error("Find all projectNames error! Exception = {}", e.getMessage());
+            logger.error("Find all projectNames error! Exception = {}", e.getMessage(), e);
             throw new ApplicationException(CoreExceptionParser.parser(CoreExceptionCode.ERR_11002));
         }
         return result;
@@ -551,7 +555,7 @@ public class SourceDataServiceImpl implements SourceDataService {
     }
 
     private MongoTemplate getMongoTemplate() {
-        return RuntimeContext.getBean(MongoTemplate.class);
+        return this.mongoTemplate;
     }
 
     // private method without check project exist or not

@@ -56,6 +56,10 @@ public class ResolverSelectController implements Initializable {
     private CheckBox defaultTemplate;
     private UserPreferenceService userPreferenceService = RuntimeContext.getBean(UserPreferenceService.class);
 
+    public ResolverSelectController(){
+
+    }
+
     /**
      * constructotr
      *

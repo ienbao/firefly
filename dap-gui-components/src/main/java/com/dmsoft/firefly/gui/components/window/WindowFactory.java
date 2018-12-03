@@ -19,11 +19,13 @@ public class WindowFactory {
 
     public static List<String> checkStyles(String... styles) {
         List<String> list = Lists.newArrayList();
-        if (LanguageType.ZH.equals(RuntimeContext.getBean(EnvService.class).getLanguageType())) {
-            list.add(PLATFORM_CSS_PATH_ZN);
-        } else {
+
+        //TODO yuanwen 代码结构优化中重建
+//        if (LanguageType.ZH.equals(RuntimeContext.getBean(EnvService.class).getLanguageType())) {
+//            list.add(PLATFORM_CSS_PATH_ZN);
+//        } else {
             list.add(PLATFORM_CSS_PATH);
-        }
+//        }
         if (styles != null && styles.length > 0) {
             Collections.addAll(list, styles);
         }

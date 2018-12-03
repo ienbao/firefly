@@ -12,18 +12,25 @@ import java.security.PrivilegedAction;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import org.springframework.stereotype.Service;
 
 /**
  * Impl class for plugin context and plugin context listener
  *
  * @author Can Guan
  */
+@Service
 public class PluginContextImpl implements PluginContext, PluginContextListener {
     private Map<String, PluginInfo> pluginInfoMap;
     private List<PluginContextListener> pluginContextListeners;
     private ClassLoader parentClassLoader;
     private Map<String, PluginClassLoader> pluginClassLoaderMap;
     private InitModel initModel;
+
+
+    public PluginContextImpl(){
+        this(InitModel.INIT_WITH_UI);
+    }
 
     /**
      * constructor

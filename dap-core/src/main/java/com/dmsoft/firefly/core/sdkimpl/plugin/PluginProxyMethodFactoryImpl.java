@@ -9,12 +9,14 @@ import com.dmsoft.firefly.sdk.plugin.PluginProxyMethodFactory;
 
 import java.lang.reflect.Method;
 import java.util.List;
+import org.springframework.stereotype.Service;
 
 /**
  * Impl class for plugin proxy method factory
  *
  * @author Li Guang, Can Guan
  */
+@Service
 public class PluginProxyMethodFactoryImpl implements PluginProxyMethodFactory {
     @Override
     @SuppressWarnings("unchecked")
