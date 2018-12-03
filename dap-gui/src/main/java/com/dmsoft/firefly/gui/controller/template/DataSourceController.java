@@ -120,7 +120,78 @@ public class DataSourceController implements Initializable {
                             super.setGraphic(null);
                         } else {
                             try {
-                                DataSourceTableCell dataSourceTableCell = new DataSourceTableCell(item,sourceDataService,dataSourceTable,envService,chooseTableRowDataObservableList);
+                                DataSourceTableCell dataSourceTableCell = new DataSourceTableCell(item);
+                                Button rename = dataSourceTableCell.getRename();
+                                Button deleteOne = dataSourceTableCell.getDeleteOne();
+                                rename.setOnAction(event -> {
+                                    Pane root = null;
+                                    Stage renameStage = null;
+                                    NewNameController renameTemplateController = null;
+                                    try {
+                                        FXMLLoader loader = GuiFxmlAndLanguageUtils.getLoaderFXML("view/new_template.fxml");
+                                        renameTemplateController = new NewNameController();
+                                        renameTemplateController.setPaneName("renameProject");
+                                        renameTemplateController.setInitName(item.getValue());
+
+                                        loader.setController(renameTemplateController);
+                                        root = loader.load();
+
+                                        NewNameController finalRenameTemplateController = renameTemplateController;
+                                        renameTemplateController.getOk().setOnAction(renameEvent -> {
+                                            if (finalRenameTemplateController.isError()) {
+                                                //WindowMessageFactory.createWindowMessageHasOk(GuiFxmlAndLanguageUtils.getString(ResourceMassages.WARN_HEADER), GuiFxmlAndLanguageUtils.getString(ResourceMassages.TEMPLATE_NAME_EMPTY_WARN));
+                                                return;
+                                            }
+                                            TextField n = finalRenameTemplateController.getName();
+                                            if (StringUtils.isNotEmpty(n.getText()) && !n.getText().equals(item.getValue().toString())) {
+                                                String newString = DAPStringUtils.filterSpeChars4Mongo(n.getText());
+                                                sourceDataService.renameProject(item.getValue(), newString);
+                                                item.setValue(newString);
+                                                dataSourceTable.refresh();
+                                                updateProjectOrder();
+                                            }
+                                            StageMap.closeStage("renameProject");
+                                        });
+                                        renameStage = WindowFactory.createOrUpdateSimpleWindowAsModel("renameProject", GuiFxmlAndLanguageUtils.getString("RENAME_DATA_SOURCE"), root);
+                                        renameTemplateController.getName().setText(item.getValue());
+                                        renameStage.toFront();
+                                        renameStage.show();
+                                    } catch (Exception ignored) {
+                                    }
+                                });
+                                deleteOne.setOnAction(event -> {
+                                    if (!item.isImport()) {
+                                        WindowMessageController controller = WindowMessageFactory.createWindowMessageHasOkAndCancel(GuiFxmlAndLanguageUtils.getString("DELETE_SOURCE"), GuiFxmlAndLanguageUtils.getString("DELETE_DATA_SOURCE_CONFIRM"));
+                                        controller.addProcessMonitorListener(new WindowCustomListener() {
+                                            @Override
+                                            public boolean onShowCustomEvent() {
+                                                return false;
+                                            }
+
+                                            @Override
+                                            public boolean onCloseAndCancelCustomEvent() {
+                                                return false;
+                                            }
+
+                                            @Override
+                                            public boolean onOkCustomEvent() {
+                                                List<String> deleteProjects = Lists.newArrayList();
+                                                List<String> activeProject = envService.findActivatedProjectName();
+                                                if (activeProject != null && activeProject.contains(item.getValue())) {
+                                                    activeProject.remove(item.getValue());
+                                                }
+                                                deleteProjects.add(item.getValue());
+                                                if (!item.isError()) {
+                                                    sourceDataService.deleteProject(deleteProjects);
+                                                }
+                                                envService.setActivatedProjectName(activeProject);
+                                                chooseTableRowDataObservableList.remove(item);
+                                                updateProjectOrder();
+                                                return false;
+                                            }
+                                        });
+                                    }
+                                });
                                 dataSourceTableCell.addEventHandler(ActionEvent.ACTION,event -> {updateProjectOrder();});
                                 this.setGraphic(dataSourceTableCell);
                             } catch (IOException e) {
