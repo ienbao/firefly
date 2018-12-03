@@ -39,12 +39,13 @@ public class LanguageServiceImpl implements LanguageService {
     if (LanguageType.ZH.equals(languageType)) {
       bundleKey = "i18n.message_zh_CN_";
     }
-    bundleKey = bundleKey + ModuleType.GUI.name();
+    bundleKey = bundleKey + com.dmsoft.firefly.core.sdkimpl.dai.ModuleType.GUI.name();
     return ResourceBundle.getBundle(bundleKey);
   }
 
 
-  public ResourceBundle getBundle(ModuleType moduleKey) {
+  @Override
+  public ResourceBundle getBundle(com.dmsoft.firefly.core.sdkimpl.dai.ModuleType moduleKey) {
     LanguageType languageType = null;
     if (IS_DEBUG == false) {
       languageType = RuntimeContext.getBean(EnvService.class).getLanguageType();

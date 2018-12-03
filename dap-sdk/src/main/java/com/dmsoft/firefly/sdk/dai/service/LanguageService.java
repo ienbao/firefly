@@ -1,7 +1,7 @@
 package com.dmsoft.firefly.sdk.dai.service;
 
+import com.dmsoft.firefly.core.sdkimpl.dai.ModuleType;
 import java.util.ResourceBundle;
-import sun.security.pkcs11.Secmod.ModuleType;
 
 /**
  * 多语言处理类
