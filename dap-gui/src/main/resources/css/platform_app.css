@@ -290,15 +290,15 @@
 }
 
 .gui-change-password-back-root{
-    -fx-max-height: 192;
-    -fx-min-height: 192;
-    -fx-pref-height: 192;
-    -fx-max-width: 330;
-    -fx-min-width: 330;
-    -fx-pref-width: 330;
-    -fx-padding: 0 0 10 30;
+    -fx-max-height: 212;
+    -fx-min-height: 212;
+    -fx-pref-height: 212;
+    -fx-max-width: 350;
+    -fx-min-width: 350;
+    -fx-pref-width: 350;
+    -fx-padding: 0 10 10 30;
     -fx-alignment: center;
-    -fx-padding: 10;
+
 
 }
 .gui-change-password-back-iconlb{
