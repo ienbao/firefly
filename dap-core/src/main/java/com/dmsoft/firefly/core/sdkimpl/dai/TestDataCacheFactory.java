@@ -16,12 +16,14 @@ import com.google.common.collect.Sets;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+import org.springframework.stereotype.Service;
 
 /**
  * cache data for source data
  *
  * @author Can Guan
  */
+@Service
 public class TestDataCacheFactory {
     private LoadingCache<String, Set<String>> testDataCache;
     private JsonMapper mapper = JsonMapper.defaultMapper();

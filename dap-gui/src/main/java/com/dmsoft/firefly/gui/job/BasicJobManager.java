@@ -9,12 +9,14 @@ import javafx.application.Platform;
 
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
+import org.springframework.stereotype.Service;
 
 /**
  * basic impl for job manager
  *
  * @author Can Guan
  */
+@Service
 public class BasicJobManager implements JobManager {
     private Map<String, JobPipeline> pipelineMap = Maps.newHashMap();
     private Map<Thread, JobContext> contextMap = Maps.newHashMap();

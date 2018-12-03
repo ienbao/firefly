@@ -10,13 +10,19 @@ import com.dmsoft.firefly.sdk.job.core.JobContext;
 import com.google.common.collect.Lists;
 
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  * handler for finding test data
  *
  * @author Can Guan
  */
+@Component
 public class FindTestDataHandler extends AbstractBasicJobHandler {
+
+    @Autowired
+    private SourceDataService sourceDataService;
     /**
      * constructor
      */
@@ -36,7 +42,6 @@ public class FindTestDataHandler extends AbstractBasicJobHandler {
             testItemNames.add(testItemWithTypeDto.getTestItemName());
         }
 
-        SourceDataService sourceDataService = RuntimeContext.getBean(SourceDataService.class);
 
         TestItemDataset testItemDataset = sourceDataService.findTestDataset(projectNameList, testItemNames, null);
         context.put(ParamKeys.ROW_DATA_DTO_LIST, testItemDataset);

@@ -11,6 +11,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextArea;
 import javafx.stage.Stage;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 
 /**
@@ -18,8 +20,9 @@ import javafx.stage.Stage;
  *
  * @author Julia
  */
+@Component
 public class LegalNoticeController {
-    private UserService userService = RuntimeContext.getBean(UserService.class);
+
     @FXML
     private CheckBox acceptCkb;
 
@@ -28,6 +31,10 @@ public class LegalNoticeController {
 
     @FXML
     private TextArea legalNoticeTextArea;
+
+    @Autowired
+    private UserService userService;
+
 
     @FXML
     private void initialize() {
@@ -38,6 +45,7 @@ public class LegalNoticeController {
         acceptCkb.setFocusTraversable(false);
         legalOkBtn.setFocusTraversable(false);
         legalOkBtn.setDisable(true);
+
         if (userService.findLegal()) {
             acceptCkb.setVisible(true);
             acceptCkb.setSelected(true);

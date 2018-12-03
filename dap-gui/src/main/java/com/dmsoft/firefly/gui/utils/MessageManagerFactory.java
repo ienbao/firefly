@@ -19,10 +19,13 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.atomic.AtomicBoolean;
+import org.springframework.stereotype.Service;
 
 /**
  * factory class for massage manager
  */
+
+@Service
 public class MessageManagerFactory implements IMessageManager {
 
     private List<Popup> popupList = Lists.newLinkedList();

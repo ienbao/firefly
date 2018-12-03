@@ -13,12 +13,14 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import org.springframework.stereotype.Service;
 
 /**
  * Impl class for plugin image and plugin context listener
  *
  * @author Can Guan
  */
+@Service
 public class PluginImageContextImpl implements PluginImageContext, PluginContextListener {
     // plugin image map, key : plugin id, key : plugin image
     private Map<String, PluginImage> pluginImageMap;

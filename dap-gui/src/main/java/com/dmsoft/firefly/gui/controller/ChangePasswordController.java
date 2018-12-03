@@ -11,15 +11,19 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  * Created by Julia.Zhou on 2018/2/11.
  */
+@Component
 public class ChangePasswordController {
 
     private static String errorStyle = "text-field-error";
 
-    private UserService userService = RuntimeContext.getBean(UserService.class);
+    @Autowired
+    private UserService userService;
 
     @FXML
     private TextField txtOldPassword;

@@ -4,6 +4,7 @@ import com.dmsoft.firefly.gui.components.utils.CommonResourceMassages;
 import com.dmsoft.firefly.gui.components.utils.FxmlAndLanguageUtils;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
 import com.dmsoft.firefly.gui.components.window.WindowPane;
+import com.dmsoft.firefly.gui.utils.DapUtils;
 import com.dmsoft.firefly.gui.utils.GuiFxmlAndLanguageUtils;
 import com.google.common.collect.Lists;
 import javafx.fxml.FXMLLoader;
@@ -47,10 +48,10 @@ public class ChooseTestItemDialog extends Stage {
     public ChooseTestItemDialog(List<String> items, List<String> selectedItems, int maxLength) {
         super(StageStyle.TRANSPARENT);
         try {
-            FXMLLoader fxmlLoader = GuiFxmlAndLanguageUtils.getLoaderFXML("view/choose_dialog1.fxml");
-            Pane root = fxmlLoader.load();
-            chooseDialogController = fxmlLoader.getController();
-            chooseDialogController.ChooseTestItemPane(items, selectedItems, maxLength);
+//            FXMLLoader fxmlLoader = GuiFxmlAndLanguageUtils.getLoaderFXML("view/choose_dialog1.fxml");
+            Pane root = DapUtils.loadFxml("view/choose_dialog1.fxml");
+//            chooseDialogController = fxmlLoader.getController();
+//            chooseDialogController.ChooseTestItemPane(items, selectedItems, maxLength);
 //            mainPane = new ChooseTestItemPane(items, selectedItems, maxLength);
             WindowPane windowPane = new WindowPane(FxmlAndLanguageUtils.getString(CommonResourceMassages.CHOOSE_ITEM), root);
             windowPane.setStage(this);
@@ -61,7 +62,7 @@ public class ChooseTestItemDialog extends Stage {
             this.initModality(Modality.APPLICATION_MODAL);
             this.setResizable(false);
             windowPane.init();
-            chooseDialogController.getOkBtn().setOnAction(event -> this.close());
+//            chooseDialogController.getOkBtn().setOnAction(event -> this.close());
             Image image = new Image("/images/desktop_mac_logo.png");
             this.getIcons().add(image);
         } catch (Exception ex) {

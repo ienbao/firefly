@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import org.apache.commons.collections.CollectionUtils;
+import org.springframework.stereotype.Service;
 
 /**
  * 合局事件模型简实现
@@ -21,6 +22,7 @@ import org.apache.commons.collections.CollectionUtils;
  * @author yuanwen
  *
  */
+@Service
 public class EventContextImpl implements EventContext {
     private Map<EventType, List<EventListener>> map = new HashMap<EventType, List<EventListener>>();
 

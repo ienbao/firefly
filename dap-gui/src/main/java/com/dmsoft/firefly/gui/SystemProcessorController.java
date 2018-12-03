@@ -28,6 +28,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.lang.management.ClassLoadingMXBean;
@@ -44,12 +45,14 @@ public class SystemProcessorController {
     @FXML
     private ProgressBar progressBar;
 
+    @Autowired
+    private EventContext eventContext;
+
     @FXML
     private void initialize() {
         LOGGER.debug("The processor bar is start.");
         progressBar.setProgress(0);
 
-        EventContext eventContext = RuntimeContext.getBean(EventContext.class);
         eventContext.addEventListener(EventType.UPDATA_PROGRESS, event -> {
             Platform.runLater(() -> {
                 updateProcessorBar();
@@ -78,9 +81,7 @@ public class SystemProcessorController {
                                     Thread.sleep(20);
                                     updateProgress(i, 100);
                                 }
-                                EventContext eventContext = RuntimeContext.getBean(EventContext.class);
                                 eventContext.pushEvent(new PlatformEvent(EventType.PLATFORM_PROCESS_CLOSE, null));
-
                                 break;
                             }
                         }

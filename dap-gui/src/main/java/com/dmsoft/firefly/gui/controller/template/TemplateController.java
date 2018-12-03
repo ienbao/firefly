@@ -15,6 +15,7 @@ import com.dmsoft.firefly.gui.components.window.WindowMessageFactory;
 import com.dmsoft.firefly.gui.model.StateBarTemplateModel;
 import com.dmsoft.firefly.gui.model.TemplateItemDFModel;
 import com.dmsoft.firefly.gui.model.TemplateItemModel;
+import com.dmsoft.firefly.gui.utils.DapUtils;
 import com.dmsoft.firefly.gui.utils.GuiConst;
 import com.dmsoft.firefly.gui.utils.GuiFxmlAndLanguageUtils;
 import com.dmsoft.firefly.gui.utils.MenuFactory;
@@ -48,12 +49,16 @@ import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.support.DaoSupport;
+import org.springframework.stereotype.Component;
 
 import static com.google.common.io.Resources.getResource;
 
 /**
  * Created by Guang.Li on 2018/2/10.
  */
+@Component
 public class TemplateController {
     @FXML
     private ComboBox<Integer> decimal;
@@ -90,8 +95,10 @@ public class TemplateController {
     private FilteredList<String> nameFilterList = templateNames.filtered(p -> p.startsWith(""));
     private SortedList<String> nameSortedList = new SortedList<>(nameFilterList);
 
-    private TemplateService templateService = RuntimeContext.getBean(TemplateService.class);
-    private EnvService envService = RuntimeContext.getBean(EnvService.class);
+    @Autowired
+    private TemplateService templateService;
+    @Autowired
+    private EnvService envService;
 
     private LinkedHashMap<String, TemplateSettingDto> allTemplate = Maps.newLinkedHashMap();
     private TemplateSettingDto currTemplate;
@@ -328,153 +335,153 @@ public class TemplateController {
 
     private void buildNewTemplateDialog() {
         Pane root;
-        try {
-            FXMLLoader fxmlLoader = GuiFxmlAndLanguageUtils.getLoaderFXML("view/new_template.fxml");
-            NewNameController newNameController = new NewNameController();
-            newNameController.setPaneName("newTemplate");
-            fxmlLoader.setController(newNameController);
-            root = fxmlLoader.load();
-            newNameController.getOk().setOnAction(event -> {
-                if (newNameController.isError()) {
-                    //WindowMessageFactory.createWindowMessageHasOk(GuiFxmlAndLanguageUtils.getString(ResourceMassages.WARN_HEADER), GuiFxmlAndLanguageUtils.getString(ResourceMassages.TEMPLATE_NAME_EMPTY_WARN));
-                    return;
-                }
-                String newTemplateName = newNameController.getName().getText();
-                if (templateNames.contains(newTemplateName)) {
-                    WindowMessageFactory.createWindowMessageHasOk(GuiFxmlAndLanguageUtils.getString(ResourceMassages.WARN_HEADER), GuiFxmlAndLanguageUtils.getString(ResourceMassages.TEMPLATE_NAME_REPEAT_WARN));
-                    return;
-                }
-                if (StringUtils.isNotEmpty(newTemplateName)) {
-                    if (!templateNames.contains(newTemplateName)) {
-                        templateNames.add(newTemplateName);
-                        TemplateSettingDto newDto = new TemplateSettingDto();
-                        newDto.setName(newTemplateName);
-                        allTemplate.put(newTemplateName, newDto);
-                        initData(newTemplateName);
-                    }
-                }
-                StageMap.closeStage("newTemplate");
-            });
+//        try {
+//            FXMLLoader fxmlLoader = GuiFxmlAndLanguageUtils.getLoaderFXML("view/new_template.fxml");
+//            NewNameController newNameController = new NewNameController();
+//            newNameController.setPaneName("newTemplate");
+//            fxmlLoader.setController(newNameController);
+            root = DapUtils.loadFxml("view/new_template.fxml");
+//            newNameController.getOk().setOnAction(event -> {
+//                if (newNameController.isError()) {
+//                    //WindowMessageFactory.createWindowMessageHasOk(GuiFxmlAndLanguageUtils.getString(ResourceMassages.WARN_HEADER), GuiFxmlAndLanguageUtils.getString(ResourceMassages.TEMPLATE_NAME_EMPTY_WARN));
+//                    return;
+//                }
+//                String newTemplateName = newNameController.getName().getText();
+//                if (templateNames.contains(newTemplateName)) {
+//                    WindowMessageFactory.createWindowMessageHasOk(GuiFxmlAndLanguageUtils.getString(ResourceMassages.WARN_HEADER), GuiFxmlAndLanguageUtils.getString(ResourceMassages.TEMPLATE_NAME_REPEAT_WARN));
+//                    return;
+//                }
+//                if (StringUtils.isNotEmpty(newTemplateName)) {
+//                    if (!templateNames.contains(newTemplateName)) {
+//                        templateNames.add(newTemplateName);
+//                        TemplateSettingDto newDto = new TemplateSettingDto();
+//                        newDto.setName(newTemplateName);
+//                        allTemplate.put(newTemplateName, newDto);
+//                        initData(newTemplateName);
+//                    }
+//                }
+//                StageMap.closeStage("newTemplate");
+//            });
 
             Stage newStage = WindowFactory.createOrUpdateSimpleWindowAsModel("newTemplate", GuiFxmlAndLanguageUtils.getString(ResourceMassages.NEW_TEMPLATE), root);
-            newStage.setOnCloseRequest(event -> newNameController.getName().setText(""));
+//            newStage.setOnCloseRequest(event -> newNameController.getName().setText(""));
             newStage.toFront();
             newStage.show();
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
 
     }
 
     private void buildRenameTemplateDialog() {
         Pane root;
-        try {
-            FXMLLoader fxmlLoader = GuiFxmlAndLanguageUtils.getLoaderFXML("view/new_template.fxml");
-            NewNameController renameTemplateController = new NewNameController();
-            renameTemplateController.setPaneName("renameTemplate");
+//        try {
+//            FXMLLoader fxmlLoader = GuiFxmlAndLanguageUtils.getLoaderFXML("view/new_template.fxml");
+//            NewNameController renameTemplateController = new NewNameController();
+//            renameTemplateController.setPaneName("renameTemplate");
 
-            fxmlLoader.setController(renameTemplateController);
-            root = fxmlLoader.load();
-            renameTemplateController.getOk().setOnAction(event -> {
-                if (renameTemplateController.isError()) {
-                    //WindowMessageFactory.createWindowMessageHasOk(GuiFxmlAndLanguageUtils.getString(ResourceMassages.WARN_HEADER), GuiFxmlAndLanguageUtils.getString(ResourceMassages.TEMPLATE_NAME_EMPTY_WARN));
-                    return;
-                }
-                String newTemplateName = renameTemplateController.getName().getText();
-                if (!newTemplateName.equals(templateName.getSelectionModel().getSelectedItem()) && templateNames.contains(newTemplateName)) {
-                    WindowMessageFactory.createWindowMessageHasOk(GuiFxmlAndLanguageUtils.getString(ResourceMassages.WARN_HEADER), GuiFxmlAndLanguageUtils.getString(ResourceMassages.TEMPLATE_NAME_REPEAT_WARN));
-                    return;
-                }
-                String selectTemplateName = templateName.getSelectionModel().getSelectedItem();
-                if (selectTemplateName.equals(newTemplateName)) {
-                    return;
-                }
-                if (selectTemplateName.equals(templateSettingDto.getName())) {
-                    templateSettingDto.setName(newTemplateName);
-                }
-                TemplateSettingDto selectDto = allTemplate.get(selectTemplateName);
-                selectDto.setName(newTemplateName);
-                allTemplate.put(newTemplateName, selectDto);
-                allTemplate.remove(selectTemplateName);
-
-                int index = templateNames.indexOf(templateName.getSelectionModel().getSelectedItem());
-//                templateNames.remove(templateName.getSelectionModel().getSelectedItem());
-//                templateNames.add(index, newTemplateName);
-                templateNames.set(index, newTemplateName);
-
-
-//                if (StringUtils.isNotEmpty(n.getText()) && !n.getText().equals(templateName.getSelectionModel().getSelectedItem())) {
-//                    for (int i = 0; i < templateNames.size(); i++) {
-//                        if (templateNames.get(i).equals(templateName.getSelectionModel().getSelectedItem())) {
-//                            allTemplate.put(n.getText(), allTemplate.get(templateNames.get(i)));
-//                            allTemplate.remove(templateNames.get(i));
-//                            templateNames.set(i, n.getText());
-//                        }
-//                    }
+//            fxmlLoader.setController(renameTemplateController);
+            root = DapUtils.loadFxml("view/new_template.fxml");
+//            renameTemplateController.getOk().setOnAction(event -> {
+//                if (renameTemplateController.isError()) {
+//                    //WindowMessageFactory.createWindowMessageHasOk(GuiFxmlAndLanguageUtils.getString(ResourceMassages.WARN_HEADER), GuiFxmlAndLanguageUtils.getString(ResourceMassages.TEMPLATE_NAME_EMPTY_WARN));
+//                    return;
 //                }
-                StageMap.closeStage("renameTemplate");
-            });
+//                String newTemplateName = renameTemplateController.getName().getText();
+//                if (!newTemplateName.equals(templateName.getSelectionModel().getSelectedItem()) && templateNames.contains(newTemplateName)) {
+//                    WindowMessageFactory.createWindowMessageHasOk(GuiFxmlAndLanguageUtils.getString(ResourceMassages.WARN_HEADER), GuiFxmlAndLanguageUtils.getString(ResourceMassages.TEMPLATE_NAME_REPEAT_WARN));
+//                    return;
+//                }
+//                String selectTemplateName = templateName.getSelectionModel().getSelectedItem();
+//                if (selectTemplateName.equals(newTemplateName)) {
+//                    return;
+//                }
+//                if (selectTemplateName.equals(templateSettingDto.getName())) {
+//                    templateSettingDto.setName(newTemplateName);
+//                }
+//                TemplateSettingDto selectDto = allTemplate.get(selectTemplateName);
+//                selectDto.setName(newTemplateName);
+//                allTemplate.put(newTemplateName, selectDto);
+//                allTemplate.remove(selectTemplateName);
+//
+//                int index = templateNames.indexOf(templateName.getSelectionModel().getSelectedItem());
+////                templateNames.remove(templateName.getSelectionModel().getSelectedItem());
+////                templateNames.add(index, newTemplateName);
+//                templateNames.set(index, newTemplateName);
+//
+//
+////                if (StringUtils.isNotEmpty(n.getText()) && !n.getText().equals(templateName.getSelectionModel().getSelectedItem())) {
+////                    for (int i = 0; i < templateNames.size(); i++) {
+////                        if (templateNames.get(i).equals(templateName.getSelectionModel().getSelectedItem())) {
+////                            allTemplate.put(n.getText(), allTemplate.get(templateNames.get(i)));
+////                            allTemplate.remove(templateNames.get(i));
+////                            templateNames.set(i, n.getText());
+////                        }
+////                    }
+////                }
+//                StageMap.closeStage("renameTemplate");
+//            });
             Stage renameStage = WindowFactory.createOrUpdateSimpleWindowAsModel("renameTemplate", GuiFxmlAndLanguageUtils.getString(ResourceMassages.RENAME_TEMPLATE_TITLE), root);
-            renameTemplateController.getName().setText(templateName.getSelectionModel().getSelectedItem());
+//            renameTemplateController.getName().setText(templateName.getSelectionModel().getSelectedItem());
             renameStage.setResizable(false);
             renameStage.toFront();
             renameStage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
 
     }
 
     private void buildCopyTemplateDialog() {
         Pane root;
-        try {
-            FXMLLoader fxmlLoader = GuiFxmlAndLanguageUtils.getLoaderFXML("view/new_template.fxml");
-            NewNameController copyTemplateController = new NewNameController();
-            copyTemplateController.setPaneName("copyTemplate");
+//        try {
+//            FXMLLoader fxmlLoader = GuiFxmlAndLanguageUtils.getLoaderFXML("view/new_template.fxml");
+//            NewNameController copyTemplateController = new NewNameController();
+//            copyTemplateController.setPaneName("copyTemplate");
 
-            fxmlLoader.setController(copyTemplateController);
-            root = fxmlLoader.load();
-            copyTemplateController.getOk().setOnAction(event -> {
-                if (copyTemplateController.isError()) {
-                    //WindowMessageFactory.createWindowMessageHasOk(GuiFxmlAndLanguageUtils.getString(ResourceMassages.WARN_HEADER), GuiFxmlAndLanguageUtils.getString(ResourceMassages.TEMPLATE_NAME_EMPTY_WARN));
-                    return;
-                }
-                String newTemplateName = copyTemplateController.getName().getText();
-                if (templateNames.contains(newTemplateName)) {
-                    WindowMessageFactory.createWindowMessageHasOk(GuiFxmlAndLanguageUtils.getString(ResourceMassages.WARN_HEADER), GuiFxmlAndLanguageUtils.getString(ResourceMassages.TEMPLATE_NAME_REPEAT_WARN));
-                    return;
-                }
-                if (StringUtils.isNotEmpty(newTemplateName)) {
-                    if (!templateNames.contains(newTemplateName)) {
-                        TemplateSettingDto copyDto = new TemplateSettingDto();
-                        try {
-                            copyDto = (TemplateSettingDto) DeepCopy.deepCopy(currTemplate);
-                        } catch (IOException | ClassNotFoundException e) {
-                            e.printStackTrace();
-                        }
-                        copyDto.setName(newTemplateName);
-                        allTemplate.put(newTemplateName, copyDto);
-                        templateNames.add(newTemplateName);
-                        templateName.getSelectionModel().select(newTemplateName);
-                    }
-                }
-                StageMap.closeStage("copyTemplate");
-            });
+//            fxmlLoader.setController(copyTemplateController);
+            root = DapUtils.loadFxml("view/new_template.fxml");
+//            copyTemplateController.getOk().setOnAction(event -> {
+//                if (copyTemplateController.isError()) {
+//                    //WindowMessageFactory.createWindowMessageHasOk(GuiFxmlAndLanguageUtils.getString(ResourceMassages.WARN_HEADER), GuiFxmlAndLanguageUtils.getString(ResourceMassages.TEMPLATE_NAME_EMPTY_WARN));
+//                    return;
+//                }
+//                String newTemplateName = copyTemplateController.getName().getText();
+//                if (templateNames.contains(newTemplateName)) {
+//                    WindowMessageFactory.createWindowMessageHasOk(GuiFxmlAndLanguageUtils.getString(ResourceMassages.WARN_HEADER), GuiFxmlAndLanguageUtils.getString(ResourceMassages.TEMPLATE_NAME_REPEAT_WARN));
+//                    return;
+//                }
+//                if (StringUtils.isNotEmpty(newTemplateName)) {
+//                    if (!templateNames.contains(newTemplateName)) {
+//                        TemplateSettingDto copyDto = new TemplateSettingDto();
+//                        try {
+//                            copyDto = (TemplateSettingDto) DeepCopy.deepCopy(currTemplate);
+//                        } catch (IOException | ClassNotFoundException e) {
+//                            e.printStackTrace();
+//                        }
+//                        copyDto.setName(newTemplateName);
+//                        allTemplate.put(newTemplateName, copyDto);
+//                        templateNames.add(newTemplateName);
+//                        templateName.getSelectionModel().select(newTemplateName);
+//                    }
+//                }
+//                StageMap.closeStage("copyTemplate");
+//            });
             Stage copyStage = WindowFactory.createOrUpdateSimpleWindowAsModel("copyTemplate",  GuiFxmlAndLanguageUtils.getString(ResourceMassages.COPY_TEMPLATE_TITLE), root);
-            copyTemplateController.getName().setText(templateName.getSelectionModel().getSelectedItem());
+//            copyTemplateController.getName().setText(templateName.getSelectionModel().getSelectedItem());
             copyStage.toFront();
             copyStage.show();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
     }
 
     private void buildPatternDia() {
         Pane root;
         try {
-            FXMLLoader fxmlLoader = GuiFxmlAndLanguageUtils.getLoaderFXML("view/pattern.fxml");
-            root = fxmlLoader.load();
+//            FXMLLoader fxmlLoader = GuiFxmlAndLanguageUtils.getLoaderFXML("view/pattern.fxml");
+            root = DapUtils.loadFxml("view/pattern.fxml");
             Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("pattern", GuiFxmlAndLanguageUtils.getString(ResourceMassages.TIME_PATTERN), root, getResource("css/platform_app.css").toExternalForm());
             stage.toFront();
             stage.show();
@@ -486,23 +493,23 @@ public class TemplateController {
     private void buildAddItemDia() {
         Pane root;
         try {
-            FXMLLoader fxmlLoader = GuiFxmlAndLanguageUtils.getLoaderFXML("view/additem.fxml");
+//            FXMLLoader fxmlLoader = GuiFxmlAndLanguageUtils.getLoaderFXML("view/additem.fxml");
 
-            AddItemController addItem = new AddItemController();
-            addItem.setItemTableData(templateItemDFModel.getRowKeyArray());
-            fxmlLoader.setController(addItem);
-            root = fxmlLoader.load();
+//            AddItemController addItem = new AddItemController();
+//            addItem.setItemTableData(templateItemDFModel.getRowKeyArray());
+//            fxmlLoader.setController(addItem);
+            root = DapUtils.loadFxml("view/additem.fxml");
             Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("addItem", GuiFxmlAndLanguageUtils.getString(ResourceMassages.ADD_ITEM), root, getResource("css/platform_app.css").toExternalForm());
-            addItem.getAddItemOk().setOnAction(event -> {
-                List<String> selectItems = addItem.getSelectItem();
-                selectItems.forEach(item -> {
-                    SpecificationDataDto dataDto = new SpecificationDataDto();
-                    dataDto.setTestItemName(item);
-                    dataDto.setDataType(TestItemType.VARIABLE.getCode());
-                    templateItemDFModel.addTestItem(dataDto);
-                });
-                StageMap.closeStage("addItem");
-            });
+//            addItem.getAddItemOk().setOnAction(event -> {
+//                List<String> selectItems = addItem.getSelectItem();
+//                selectItems.forEach(item -> {
+//                    SpecificationDataDto dataDto = new SpecificationDataDto();
+//                    dataDto.setTestItemName(item);
+//                    dataDto.setDataType(TestItemType.VARIABLE.getCode());
+//                    templateItemDFModel.addTestItem(dataDto);
+//                });
+//                StageMap.closeStage("addItem");
+//            });
             stage.setResizable(false);
             stage.toFront();
             stage.show();

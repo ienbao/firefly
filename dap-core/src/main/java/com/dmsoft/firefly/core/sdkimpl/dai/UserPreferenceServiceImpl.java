@@ -15,10 +15,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import org.springframework.stereotype.Service;
 
 /**
  * Created by Lucien.Chen on 2018/2/9.
  */
+@Service
 public class UserPreferenceServiceImpl implements UserPreferenceService {
 
     private final String parentPath = ApplicationPathUtil.getPath("config");

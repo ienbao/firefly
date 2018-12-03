@@ -10,12 +10,14 @@ import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
 import com.google.common.collect.Lists;
 
 import java.util.List;
+import org.springframework.stereotype.Service;
 
 /**
  * basic data frame factory impl for data frame factory
  *
  * @author Can Guan
  */
+@Service
 public class BasicDataFrameFactoryImpl implements DataFrameFactory {
     @Override
     public DataFrame createDataFrame(List<TestItemWithTypeDto> testItemWithTypeDtoList, List<RowDataDto> rowDataDtoList) {

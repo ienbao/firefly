@@ -83,4 +83,19 @@ public class ApplicationPathUtil {
             return path;
         }
     }
+
+
+    /**
+     * 获取系统配置文件路径
+     *
+     * @return
+     */
+    public static String getApplicationPath(){
+        String propertiesURL = ApplicationPathUtil.getPath("application.properties");
+        if (propertiesURL == null) {
+            propertiesURL = ApplicationPathUtil.getPath("dev", "application.properties");
+        }
+
+        return propertiesURL;
+    }
 }
