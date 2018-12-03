@@ -11,6 +11,7 @@ import com.dmsoft.firefly.gui.components.window.WindowCustomListener;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
 import com.dmsoft.firefly.gui.components.window.WindowMessageController;
 import com.dmsoft.firefly.gui.components.window.WindowMessageFactory;
+import com.dmsoft.firefly.gui.event.DataSourceCellEvent;
 import com.dmsoft.firefly.gui.model.ChooseTableRowData;
 import com.dmsoft.firefly.gui.utils.DapApplictionContext;
 import com.dmsoft.firefly.gui.utils.DapUtils;
@@ -35,19 +36,15 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.geometry.Pos;
 import javafx.scene.control.*;
 import javafx.scene.input.ClipboardContent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.Priority;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.Callback;
@@ -127,9 +124,7 @@ public class DataSourceController implements Initializable {
                         } else {
                             try {
                                 DataSourceTableCell dataSourceTableCell = new DataSourceTableCell(item);
-                                Button rename = dataSourceTableCell.getRename();
-                                Button deleteOne = dataSourceTableCell.getDeleteOne();
-                                rename.setOnAction(event -> {
+                                dataSourceTableCell.addEventHandler(DataSourceCellEvent.RENAME, event -> {
 //                                    Pane root = null;
 //                                    Stage renameStage = null;
 //                                    NewNameController renameTemplateController = null;
@@ -165,7 +160,8 @@ public class DataSourceController implements Initializable {
 //                                    } catch (Exception ignored) {
 //                                    }
                                 });
-                                deleteOne.setOnAction(event -> {
+
+                                dataSourceTableCell.addEventHandler(DataSourceCellEvent.DELETE,event -> {
                                     if (!item.isImport()) {
                                         WindowMessageController controller = WindowMessageFactory.createWindowMessageHasOkAndCancel(GuiFxmlAndLanguageUtils.getString("DELETE_SOURCE"), GuiFxmlAndLanguageUtils.getString("DELETE_DATA_SOURCE_CONFIRM"));
                                         controller.addProcessMonitorListener(new WindowCustomListener() {
@@ -198,7 +194,6 @@ public class DataSourceController implements Initializable {
                                         });
                                     }
                                 });
-                                dataSourceTableCell.addEventHandler(ActionEvent.ACTION,event -> {updateProjectOrder();});
                                 this.setGraphic(dataSourceTableCell);
                             } catch (IOException e) {
                                 e.printStackTrace();
