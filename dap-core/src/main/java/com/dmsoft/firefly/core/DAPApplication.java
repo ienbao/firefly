@@ -63,27 +63,30 @@ public class DAPApplication {
 //        RuntimeContext.registerBean(MongoTemplate.class, mongoTemplate);
     }
 
-    /**
-     * method to start application
-     *
-     * @param activePlugins plugins to be excluded
-     */
-    public static void startPlugin(List<String> activePlugins) {
-        // prepare env done
-        try {
-            String propertiesURL = ApplicationPathUtil.getPath("application.properties");
-            Properties properties = PropertyConfig.getProperties(propertiesURL);
-            String pluginFolderPath = PropertiesUtils.getPluginsPath(properties);
-            logger.info("start scan... pluginFolderPath = " + pluginFolderPath);
-            List<PluginInfo> scannedPlugins = PluginScanner.scanPluginByPath(pluginFolderPath);
-            logger.info("end scan... PluginInfo = " + scannedPlugins.toString());
-            RuntimeContext.getBean(PluginContext.class).installPlugin(scannedPlugins);
-            RuntimeContext.getBean(PluginContext.class).enablePlugin(activePlugins);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        RuntimeContext.getBean(PluginContext.class).startPlugin(activePlugins);
-    }
+//    /**
+//     * method to start application
+//     *
+//     * @param activePlugins plugins to be excluded
+//     */
+//    public static void startPlugin(List<String> activePlugins) {
+//        // prepare env done
+//        try {
+//            String propertiesURL = ApplicationPathUtil.getPath("application.properties");
+//            Properties properties = PropertyConfig.getProperties(propertiesURL);
+//            String pluginFolderPath = PropertiesUtils.getPluginsPath(properties);
+//            logger.info("start scan... pluginFolderPath = " + pluginFolderPath);
+//            List<PluginInfo> scannedPlugins = PluginScanner.scanPluginByPath(pluginFolderPath);
+//            logger.info("end scan... PluginInfo = " + scannedPlugins.toString());
+//            RuntimeContext.getBean(PluginContext.class).installPlugin(scannedPlugins);
+//            RuntimeContext.getBean(PluginContext.class).enablePlugin(activePlugins);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        RuntimeContext.getBean(PluginContext.class).startPlugin(activePlugins);
+//    }
+
+
+
 
     /**
      * main method
@@ -92,7 +95,7 @@ public class DAPApplication {
      */
     public static void main(String[] args) {
         initEnv();
-        startPlugin(Lists.newArrayList("com.dmsoft.dap.SpcPlugin"));
+//        startPlugin(Lists.newArrayList("com.dmsoft.dap.SpcPlugin"));
     }
 
 }

@@ -1,6 +1,11 @@
 package com.dmsoft.firefly.gui;
 
+import com.dmsoft.bamboo.common.utils.mapper.JsonMapper;
 import com.dmsoft.firefly.core.DAPApplication;
+import com.dmsoft.firefly.core.utils.ApplicationPathUtil;
+import com.dmsoft.firefly.core.utils.JsonFileUtil;
+import com.dmsoft.firefly.core.utils.PluginScanner;
+import com.dmsoft.firefly.core.utils.PluginXMLParser;
 import com.dmsoft.firefly.gui.components.utils.NodeMap;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
@@ -11,8 +16,14 @@ import com.dmsoft.firefly.sdk.dai.service.UserService;
 import com.dmsoft.firefly.sdk.event.EventContext;
 import com.dmsoft.firefly.sdk.event.EventType;
 import com.dmsoft.firefly.sdk.event.PlatformEvent;
+import com.dmsoft.firefly.sdk.plugin.PluginContext;
+import com.dmsoft.firefly.sdk.plugin.PluginInfo;
+import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.dmsoft.firefly.sdk.utils.enums.LanguageType;
+import com.google.common.collect.Lists;
 import de.codecentric.centerdevice.javafxsvg.SvgImageLoaderFactory;
+import java.util.ArrayList;
+import java.util.List;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.layout.Pane;
@@ -34,6 +45,8 @@ public class GuiApplication extends Application {
   private UserService userService;
   private EventContext eventContext;
   private EnvService envService;
+  private PluginContext pluginContext;
+
 
   /**
    * main method
@@ -53,6 +66,25 @@ public class GuiApplication extends Application {
     this.userService = applictionContext.getBean(UserService.class);
     this.eventContext = applictionContext.getBean(EventContext.class);
     this.envService = applictionContext.getBean(EnvService.class);
+    this.pluginContext = applictionContext.getBean(PluginContext.class);
+
+    String parentPath = ApplicationPathUtil.getPath(GuiConst.CONFIG_PATH);
+    JsonMapper mapper = JsonMapper.defaultMapper();
+    String json = JsonFileUtil.readJsonFile(parentPath, GuiConst.ACTIVE_PLUGIN);/* "activePlugin" 路径：gui-resources-config */
+    List<KeyValueDto> activePlugin = Lists.newArrayList();
+    if (DAPStringUtils.isNotBlank(json)) {
+      activePlugin = mapper.fromJson(json, mapper.buildCollectionType(List.class, KeyValueDto.class));/* 文件中读取到的信息 */
+    }
+    List<String> plugins = Lists.newArrayList(); /* "com.dmsoft.dap.SpcPlugin" */
+    if (activePlugin != null) {
+      activePlugin.forEach(v -> {
+        if ((boolean) v.getValue()) {
+          plugins.add(v.getKey());
+        }
+      });
+    }
+
+    this.loadingPlugin(plugins);
 
     DAPApplication.initEnv();
     registEvent();
@@ -98,6 +130,22 @@ public class GuiApplication extends Application {
         EventType.PLATFORM_TEMPLATE_SHOW,
         event -> { GuiFxmlAndLanguageUtils.buildTemplateDialog(); });
   }
+
+
+  private void loadingPlugin(List<String> activePluginList){
+    List<String> urlList = new ArrayList<>();
+    urlList.add(this.getClass().getClassLoader().getResource("plugins/am-plugin.xml").getFile());
+    urlList.add(this.getClass().getClassLoader().getResource("plugins/grr-plugin.xml").getFile());
+    urlList.add(this.getClass().getClassLoader().getResource("plugins/spc-plugin.xml").getFile());
+    urlList.add(this.getClass().getClassLoader().getResource("plugins/tm-plugin.xml").getFile());
+    urlList.add(this.getClass().getClassLoader().getResource("plugins/yeild-plugin.xml").getFile());
+
+    List<PluginInfo> scannedPlugins = PluginXMLParser.parseXML(urlList);
+    this.pluginContext.installPlugin(scannedPlugins);
+    this.pluginContext.enablePlugin(activePluginList);
+    this.pluginContext.startPlugin(activePluginList);
+  }
+
 
   private void showMain(){
     if (!userService.findLegal()) {
