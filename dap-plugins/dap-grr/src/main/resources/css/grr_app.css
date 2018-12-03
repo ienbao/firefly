@@ -341,9 +341,7 @@ table
     -fx-pref-width: 12;
     -fx-pref-height: 12;
 }
-.grr-item{
-    -fx-pref-width: 148;
-}
+
 /*******************************************************************************
  *                                                                             *
  *grr export/item page css                                                     *
