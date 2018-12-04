@@ -6,6 +6,7 @@ import com.dmsoft.firefly.gui.components.service.GuiComponentFxmlLoadService;
 import com.dmsoft.firefly.gui.components.utils.CommonResourceMassages;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
 import com.dmsoft.firefly.gui.components.window.WindowMessageController;
+import com.dmsoft.firefly.sdk.dai.service.FxmlLoadService;
 import com.dmsoft.firefly.sdk.dai.service.LanguageService;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -24,6 +25,8 @@ public class GuiComponentFxmlLoadServiceImpl implements GuiComponentFxmlLoadServ
   private ApplicationContext context;
   @Autowired
   private LanguageService languageService;
+  @Autowired
+  private FxmlLoadService fxmlLoadService;
 
 
   @Override
