@@ -56,6 +56,8 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.Callback;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.awt.*;
 import java.io.File;
@@ -65,6 +67,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
+@Component
 public class YieldExportController {
     private static final String STICKY_ON_TOP_CODE = "stick_on_top";
     private static final Double D100 = 100.0d;
@@ -117,12 +120,26 @@ public class YieldExportController {
     private ContextMenu pop;
     private boolean isFilterUslOrLsl = false;
 
-    private EnvService envService = RuntimeContext.getBean(EnvService.class);
-    private SourceDataService dataService = RuntimeContext.getBean(SourceDataService.class);
+    @Autowired
+    private EnvService envService;
+    @Autowired
+    private SourceDataService dataService;
+    @Autowired
+    private UserPreferenceService userPreferenceService;
+    @Autowired
+    private YieldSettingServiceImpl settingService;
+    @Autowired
+    private JobFactory jobFactory;
+    @Autowired
+    private JobManager jobManager;
+    @Autowired
+    private IMessageManager iMessageManager;
+    @Autowired
+    private EventContext eventContext;
+    @Autowired
+    private YieldSettingServiceImpl yieldSettingService;
     private SearchDataFrame dataFrame;
-    private UserPreferenceService userPreferenceService = RuntimeContext.getBean(UserPreferenceService.class);
     private JsonMapper mapper = JsonMapper.defaultMapper();
-    private YieldSettingServiceImpl settingService = RuntimeContext.getBean(YieldSettingServiceImpl.class);
     private YieldExportServiceImpl yieldExportService = new YieldExportServiceImpl();
     private YieldLeftConfigServiceImpl leftConfigService = new YieldLeftConfigServiceImpl();
     private Map<String, Color> colorMap = Maps.newHashMap();
@@ -462,7 +479,7 @@ public class YieldExportController {
             if (yieldLeftConfigDto != null) {
                 this.initYieldExportLeftConfig(yieldLeftConfigDto);
             } else {
-                RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
+                this.iMessageManager.showWarnMsg(
                         YieldFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
                        YieldFxmlAndLanguageUtils.getString("IMPORT_EXCEPTION"));
             }
@@ -534,7 +551,7 @@ public class YieldExportController {
             itemTable.refresh();
         });
         MenuItem specSetting = new MenuItem(YieldFxmlAndLanguageUtils.getString(ResourceMassages.SPECIFICATION_SETTING));
-        specSetting.setOnAction(event -> RuntimeContext.getBean(EventContext.class).pushEvent(new PlatformEvent(null, "Template_Show")));
+        specSetting.setOnAction(event -> this.eventContext.pushEvent(new PlatformEvent(null, "Template_Show")));
         right.getItems().addAll(top, specSetting);
         return right;
     }
@@ -612,10 +629,10 @@ public class YieldExportController {
                 selectItemDto.removeAll(selectItemDto.subList(50, selectItemDto.size()));
             }
 
-            JobContext context = RuntimeContext.getBean(JobFactory.class).createJobContext();
+            JobContext context = this.jobFactory.createJobContext();
             context.put(ParamKeys.PROJECT_NAME_LIST, envService.findActivatedProjectName());
             context.put(ParamKeys.TEST_ITEM_WITH_TYPE_DTO_LIST, selectItemDto);
-            JobPipeline jobPipeline = RuntimeContext.getBean(JobManager.class).getPipeLine(ParamKeys.SPC_EXPORT_VIEW_DATA);
+            JobPipeline jobPipeline = this.jobManager.getPipeLine(ParamKeys.SPC_EXPORT_VIEW_DATA);
             jobPipeline.setCompleteHandler(new AbstractBasicJobHandler() {
                 @Override
                 public void doJob(JobContext context) {
@@ -623,7 +640,7 @@ public class YieldExportController {
                     buildViewDataDialog(conditionTestItem);
                 }
             });
-            RuntimeContext.getBean(JobManager.class).fireJobASyn(jobPipeline, context);
+            this.jobManager.fireJobASyn(jobPipeline, context);
         }
 
     }
@@ -650,7 +667,7 @@ public class YieldExportController {
         WindowProgressTipController windowProgressTipController = WindowMessageFactory.createWindowProgressTip(YieldFxmlAndLanguageUtils.getString(ResourceMassages.EXPORT));
         windowProgressTipController.setAutoHide(false);
         windowProgressTipController.getAnalysisLB().setText(YieldFxmlAndLanguageUtils.getString(ResourceMassages.EXPORTING));
-        JobContext context = RuntimeContext.getBean(JobFactory.class).createJobContext();
+        JobContext context = this.jobFactory.createJobContext();
         Stage stage1 = StageMap.getStage(CommonResourceMassages.COMPONENT_STAGE_WINDOW_PROGRESS_TIP);
         WindowPane windowPane = null;
         if (stage1.getScene().getRoot() instanceof WindowPane) {
@@ -700,7 +717,7 @@ public class YieldExportController {
         yieldConfig.setPerformer(envService.getUserName());
         yieldConfig.setDigNum(envService.findActivatedTemplate().getDecimalDigit());
 //        yieldConfig.setExportDataItem(exportDataItem);
-        JobPipeline jobPipeline = RuntimeContext.getBean(JobFactory.class).createJobPipeLine();
+        JobPipeline jobPipeline = this.jobFactory.createJobPipeLine();
         jobPipeline.setCompleteHandler(new AbstractBasicJobHandler() {
             @Override
             public void doJob(JobContext context) {
@@ -754,7 +771,7 @@ public class YieldExportController {
             }
         });
         int groupSize = 100;
-        YieldSettingDto yieldSettingDto = RuntimeContext.getBean(YieldSettingServiceImpl.class).findYieldSetting();
+        YieldSettingDto yieldSettingDto = this.yieldSettingService.findYieldSetting();
         List<TestItemWithTypeDto> testItemWithTypeDtoList = initSelectedItemDto();
         String exportProjectFilePath;
         if (exportEachFile) {
@@ -827,7 +844,7 @@ public class YieldExportController {
             }.setWeight(D100));
         }
 
-        RuntimeContext.getBean(JobManager.class).fireJobASyn(jobPipeline, context);
+        this.jobManager.fireJobASyn(jobPipeline, context);
     }
     private String getTimeString() {
         Date d = new Date();
@@ -925,8 +942,8 @@ public class YieldExportController {
                               List<SearchConditionDto> searchConditionDtoList,
                               YieldAnalysisConfigDto yieldAnalysisConfigDto,
                               YieldExportConfigDto yieldConfig, JobContext context, int groupCount, int a) {
-        JobContext singleJobContext = RuntimeContext.getBean(JobFactory.class).createJobContext();
-        JobPipeline jobPipeline = RuntimeContext.getBean(JobManager.class).getPipeLine(ParamKeys.YIELD_ANALYSIS_EXPORT_JOB_PIPELINE);
+        JobContext singleJobContext = this.jobFactory.createJobContext();
+        JobPipeline jobPipeline = this.jobManager.getPipeLine(ParamKeys.YIELD_ANALYSIS_EXPORT_JOB_PIPELINE);
         jobPipeline.setErrorHandler(new AbstractBasicJobHandler() {
             @Override
             public void doJob(JobContext context1) {
@@ -938,7 +955,7 @@ public class YieldExportController {
         singleJobContext.put(ParamKeys.SEARCH_CONDITION_DTO_LIST, searchConditionDtoList);
         singleJobContext.put(ParamKeys.YIELD_ANALYSIS_CONFIG_DTO, yieldAnalysisConfigDto);
         singleJobContext.put(ParamKeys.TEST_ITEM_WITH_TYPE_DTO_LIST, testItemWithTypeDtoList);
-        RuntimeContext.getBean(JobManager.class).fireJobSyn(jobPipeline, singleJobContext);
+        this.jobManager.fireJobSyn(jobPipeline, singleJobContext);
 
         List<YieldOverviewResultAlarmDto> yieldStatsDtoList = (List<YieldOverviewResultAlarmDto>) singleJobContext.get(ParamKeys.YIELD_STATISTICAL_RESULT_ALARM_DTO_LIST);
         context.pushEvent(new JobEvent("Get Stats & Alarm Result", D30 / groupCount + D100 * a / groupCount, null));

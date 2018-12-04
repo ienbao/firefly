@@ -9,6 +9,8 @@
 
   <import resource="spring-config-core.xml"  />
   <import resource="spring-config-spc.xml" />
+  
+  <import resource="spring-config-yield.xml"/>
 
   <context:component-scan base-package="com.dmsoft.firefly.gui" />
 

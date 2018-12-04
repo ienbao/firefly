@@ -16,13 +16,17 @@ import com.google.common.collect.Lists;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.*;
 
-
+@Service
 public class YieldServiceImpl implements YieldService {
     private static Logger logger = LoggerFactory.getLogger(YieldServiceImpl.class);
 
+    @Autowired
+    private JobManager jobManager;
 
     @Override
     public YieldResultDto getYieldResult(SearchDataFrame searchDataFrame, List<SearchConditionDto> oldSearchConditions,
@@ -886,7 +890,7 @@ public class YieldServiceImpl implements YieldService {
     }
 
     private void pushProgress(int progress) {
-        JobContext context = RuntimeContext.getBean(JobManager.class).findJobContext(Thread.currentThread());
+        JobContext context = this.jobManager.findJobContext(Thread.currentThread());
         if (context != null) {
             context.pushEvent(new JobEvent("YieldService", progress + 0.0, null));
         }
