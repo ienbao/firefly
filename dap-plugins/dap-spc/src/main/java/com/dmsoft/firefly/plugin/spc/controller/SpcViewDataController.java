@@ -44,13 +44,15 @@ import java.net.URL;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
+import org.springframework.stereotype.Component;
 
 import static com.google.common.io.Resources.getResource;
 
 /**
  * Created by Ethan.Yang on 2018/2/2.
  */
-public class ViewDataController implements Initializable {
+@Component
+public class SpcViewDataController implements Initializable {
     @FXML
     private Button clearFilterBtn;
     @FXML

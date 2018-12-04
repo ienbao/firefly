@@ -45,6 +45,7 @@ import org.slf4j.LoggerFactory;
 
 import java.net.URL;
 import java.util.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -56,9 +57,12 @@ public class ChartResultController implements Initializable {
     private Logger logger = LoggerFactory.getLogger(ChartResultController.class);
 
     private SpcMainController spcMainController;
-    private EnvService envService = RuntimeContext.getBean(EnvService.class);
-    private SourceDataService sourceDataService = RuntimeContext.getBean(SourceDataService.class);
-    private UserPreferenceService userPreferenceService = RuntimeContext.getBean(UserPreferenceService.class);
+    @Autowired
+    private EnvService envService ;
+    @Autowired
+    private SourceDataService sourceDataService ;
+    @Autowired
+    private UserPreferenceService userPreferenceService ;
 
     private ChartAnnotationButton editBtn;
     private Map<String, XYChart> chartMap = Maps.newHashMap();

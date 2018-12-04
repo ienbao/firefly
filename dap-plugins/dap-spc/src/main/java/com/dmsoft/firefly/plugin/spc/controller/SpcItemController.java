@@ -55,6 +55,7 @@ import javax.swing.text.html.ImageView;
 import java.io.File;
 import java.net.URL;
 import java.util.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 
@@ -105,7 +106,8 @@ public class SpcItemController implements Initializable {
     private boolean isFilterUslOrLsl = false;
     private EnvService envService = RuntimeContext.getBean(EnvService.class);
     private SpcLeftConfigServiceImpl leftConfigService = new SpcLeftConfigServiceImpl();
-    private UserPreferenceService userPreferenceService = RuntimeContext.getBean(UserPreferenceService.class);
+    @Autowired
+    private UserPreferenceService userPreferenceService;
     private JsonMapper mapper = JsonMapper.defaultMapper();
     // cached items for user preference
     private List<String> stickyOnTopItems = Lists.newArrayList();
