@@ -1,5 +1,6 @@
 package com.dmsoft.firefly.sdk.dai.service;
 
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 
 /**
@@ -11,5 +12,7 @@ import javafx.scene.Node;
 public interface FxmlLoadService {
 
 
-  <T extends Node> T loadFxml(String fxmlFile);
+    <T extends Node> T loadFxml(String fxmlFile);
+
+    FXMLLoader getFxmlLoader(String fxmlFile);
 }

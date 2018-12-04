@@ -36,7 +36,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-@Component
 public class ViewDataModel implements TableModel {
 
     private static Logger logger = LoggerFactory.getLogger(ViewDataModel.class);

@@ -3,7 +3,7 @@
 <?import javafx.scene.layout.*?>
 
 <VBox styleClass="tip-pop-window,padding-lg" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1"
-  fx:controller="com.dmsoft.firefly.gui.controller.template.NewNameController">
+  fx:controller="com.dmsoft.firefly.gui.components.window.NewNameController">
    <HBox styleClass="spacing-lg,h-box-center" prefWidth="290.0" prefHeight="100.0" VBox.vgrow="ALWAYS">
          <Label text="%TEMPLATE_NAME"/>
          <TextField fx:id="name" prefWidth="200.0" />

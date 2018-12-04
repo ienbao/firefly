@@ -1,4 +1,4 @@
-package com.dmsoft.firefly.gui.controller.template;
+package com.dmsoft.firefly.gui.components.window;
 
 
 import com.dmsoft.firefly.gui.components.utils.*;

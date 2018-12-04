@@ -6,14 +6,11 @@ package com.dmsoft.firefly.gui.controller.template;
 
 import com.dmsoft.bamboo.common.utils.mapper.JsonMapper;
 import com.dmsoft.firefly.core.utils.DataFormat;
+import com.dmsoft.firefly.gui.components.service.GuiComponentFxmlLoadService;
 import com.dmsoft.firefly.gui.components.utils.*;
-import com.dmsoft.firefly.gui.components.window.WindowCustomListener;
-import com.dmsoft.firefly.gui.components.window.WindowFactory;
-import com.dmsoft.firefly.gui.components.window.WindowMessageController;
-import com.dmsoft.firefly.gui.components.window.WindowMessageFactory;
+import com.dmsoft.firefly.gui.components.window.*;
 import com.dmsoft.firefly.gui.event.DataSourceCellEvent;
 import com.dmsoft.firefly.gui.model.ChooseTableRowData;
-import com.dmsoft.firefly.gui.utils.DapApplictionContext;
 import com.dmsoft.firefly.gui.utils.DapUtils;
 import com.dmsoft.firefly.gui.utils.GuiFxmlAndLanguageUtils;
 import com.dmsoft.firefly.gui.utils.ResourceMassages;
@@ -22,10 +19,7 @@ import com.dmsoft.firefly.sdk.dai.dto.TemplateSettingDto;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemDto;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
 import com.dmsoft.firefly.sdk.dai.dto.UserPreferenceDto;
-import com.dmsoft.firefly.sdk.dai.service.EnvService;
-import com.dmsoft.firefly.sdk.dai.service.SourceDataService;
-import com.dmsoft.firefly.sdk.dai.service.TemplateService;
-import com.dmsoft.firefly.sdk.dai.service.UserPreferenceService;
+import com.dmsoft.firefly.sdk.dai.service.*;
 import com.dmsoft.firefly.sdk.event.EventContext;
 import com.dmsoft.firefly.sdk.event.EventType;
 import com.dmsoft.firefly.sdk.event.PlatformEvent;
@@ -96,6 +90,11 @@ public class DataSourceController implements Initializable {
     private UserPreferenceService userPreferenceService ;
     @Autowired
     private EventContext eventContext;
+    @Autowired
+    private LanguageService languageService;
+    @Autowired
+    private GuiComponentFxmlLoadService guiComponentFxmlLoadService;
+
     private EventHandler eventHandler;
 
     private JsonMapper mapper = JsonMapper.defaultMapper();
@@ -129,13 +128,11 @@ public class DataSourceController implements Initializable {
 //                                    Stage renameStage = null;
 //                                    NewNameController renameTemplateController = null;
 //                                    try {
-//                                        FXMLLoader loader = GuiFxmlAndLanguageUtils.getLoaderFXML("view/new_template.fxml");
-//                                        renameTemplateController = new NewNameController();
+//                                        FXMLLoader loader = this.fxmlLoadService.loadFxml("view/new_template.fxml");
+//                                        root = loader.load();
+//                                        renameTemplateController = loader.getController();
 //                                        renameTemplateController.setPaneName("renameProject");
 //                                        renameTemplateController.setInitName(item.getValue());
-//
-//                                        loader.setController(renameTemplateController);
-//                                        root = loader.load();
 //
 //                                        NewNameController finalRenameTemplateController = renameTemplateController;
 //                                        renameTemplateController.getOk().setOnAction(renameEvent -> {
@@ -163,7 +160,9 @@ public class DataSourceController implements Initializable {
 
                                 dataSourceTableCell.addEventHandler(DataSourceCellEvent.DELETE,event -> {
                                     if (!item.isImport()) {
-                                        WindowMessageController controller = WindowMessageFactory.createWindowMessageHasOkAndCancel(GuiFxmlAndLanguageUtils.getString("DELETE_SOURCE"), GuiFxmlAndLanguageUtils.getString("DELETE_DATA_SOURCE_CONFIRM"));
+                                        WindowMessageController controller = guiComponentFxmlLoadService.loadWindowMessage(
+                                                languageService.getResourceBundle().getString("DELETE_SOURCE"),
+                                                languageService.getResourceBundle().getString("DELETE_DATA_SOURCE_CONFIRM"));
                                         controller.addProcessMonitorListener(new WindowCustomListener() {
                                             @Override
                                             public boolean onShowCustomEvent() {
