@@ -26,6 +26,14 @@
             <groupId>com.dmsoft</groupId>
             <artifactId>dap-gui-components</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.dmsoft</groupId>
+            <artifactId>bamboo</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.dmsoft</groupId>
+            <artifactId>dap-core</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -44,15 +52,6 @@
         <dependency>
             <groupId>fakepath</groupId>
             <artifactId>aspose-cells</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.dmsoft</groupId>
-            <artifactId>bamboo</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.dmsoft</groupId>
-            <artifactId>dap-core</artifactId>
-            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>com.github.lucarosellini.rJava</groupId>
