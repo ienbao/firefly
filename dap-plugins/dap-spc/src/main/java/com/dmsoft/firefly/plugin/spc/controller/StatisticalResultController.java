@@ -41,12 +41,14 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
+import org.springframework.stereotype.Component;
 
 import static java.util.Arrays.asList;
 
 /**
  * Created by Ethan.Yang on 2018/2/2.
  */
+@Component
 public class StatisticalResultController implements Initializable {
     @FXML
     private Button chooseColumnBtn;

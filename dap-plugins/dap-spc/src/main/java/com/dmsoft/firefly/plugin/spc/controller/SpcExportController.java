@@ -65,11 +65,13 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
+import org.springframework.stereotype.Component;
 
 /**
  * Created by GuangLi on 2018/3/7.
  * Updated by Can Guan on 2018/3/23
  */
+@Component
 public class SpcExportController {
     private static final String STICKY_ON_TOP_CODE = "stick_on_top";
     private static final Double D100 = 100.0d;

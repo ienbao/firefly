@@ -18,10 +18,12 @@ import javafx.scene.control.CheckBox;
 import java.net.URL;
 import java.util.Map;
 import java.util.ResourceBundle;
+import org.springframework.stereotype.Component;
 
 /**
  * Created by Ethan.Yang on 2018/3/14.
  */
+@Component
 public class SpcExportSettingController implements Initializable {
     @FXML
     private Button saveBtn;

@@ -55,12 +55,14 @@ import javax.swing.text.html.ImageView;
 import java.io.File;
 import java.net.URL;
 import java.util.*;
+import org.springframework.stereotype.Component;
 
 
 /**
  * Created by Ethan.Yang on 2018/2/6.
  * Updated by Can Guan on 2018/3/23
  */
+@Component
 public class SpcItemController implements Initializable {
     private static final String STICKY_ON_TOP_CODE = "stick_on_top";
     private static final Double D20 = 20.0d;

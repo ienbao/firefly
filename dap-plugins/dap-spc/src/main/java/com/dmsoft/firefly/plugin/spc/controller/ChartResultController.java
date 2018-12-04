@@ -45,10 +45,12 @@ import org.slf4j.LoggerFactory;
 
 import java.net.URL;
 import java.util.*;
+import org.springframework.stereotype.Component;
 
 /**
  * Created by Ethan.Yang on 2018/2/2.
  */
+@Component
 public class ChartResultController implements Initializable {
 
     private Logger logger = LoggerFactory.getLogger(ChartResultController.class);

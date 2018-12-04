@@ -80,8 +80,8 @@ public class GuiApplication extends Application {
       this.envService.setLanguageType(languageType);
     }
 
-    Pane root = DapUtils.loadFxml("/view/app_menu.fxml");
-    Pane main = DapUtils.loadFxml("/view/main.fxml");
+    Pane root = DapUtils.loadFxml("view/app_menu.fxml");
+    Pane main = DapUtils.loadFxml("view/main.fxml");
 
     StageMap.setPrimaryStage(GuiConst.PLARTFORM_STAGE_MAIN, WindowFactory.createFullWindow(GuiConst.PLARTFORM_STAGE_MAIN, root, main,
         getClass().getClassLoader().getResource("css/platform_app.css").toExternalForm()));

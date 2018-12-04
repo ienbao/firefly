@@ -94,7 +94,7 @@ public class GuiFxmlAndLanguageUtils {
     public static void buildLoginDialog() {
         Pane root = null;
         try {
-            root = DapUtils.loadFxml("/view/login.fxml");
+            root = DapUtils.loadFxml("view/login.fxml");
             Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel(GuiConst.PLARTFORM_STAGE_LOGIN, "", root, getResource("css/platform_app.css").toExternalForm());
             stage.setResizable(false);
             stage.toFront();
@@ -110,7 +110,7 @@ public class GuiFxmlAndLanguageUtils {
     public static void buildChangePasswordDialog() {
         Pane root = null;
         try {
-            root = DapUtils.loadFxml("/view/change_password.fxml");
+            root = DapUtils.loadFxml("view/change_password.fxml");
             Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel(GuiConst.PLARTFORM_STAGE_CHANGE_PASSWORD,
                     GuiFxmlAndLanguageUtils.getString("CHANGE_PASSWORD"), root, getResource("css/platform_app.css").toExternalForm());
             stage.setResizable(false);
@@ -127,7 +127,7 @@ public class GuiFxmlAndLanguageUtils {
     public static void buildLegalDialog() {
         Pane root = null;
         try {
-            root = DapUtils.loadFxml("/view/legal_notice.fxml");
+            root = DapUtils.loadFxml("view/legal_notice.fxml");
             Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel(GuiConst.PLARTFORM_STAGE_LEGAL,
                     GuiFxmlAndLanguageUtils.getString(ResourceMassages.MENU_LEGAL_NOTICE), root, getResource("css/platform_app.css").toExternalForm());
             stage.setResizable(false);
@@ -199,7 +199,7 @@ public class GuiFxmlAndLanguageUtils {
     public static void buildSelectDataSource() {
         Pane root = null;
         try {
-            root = DapUtils.loadFxml("/view/data_source.fxml");
+            root = DapUtils.loadFxml("view/data_source.fxml");
             Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("dataSource",
                     GuiFxmlAndLanguageUtils.getString(ResourceMassages.DATA_SOURCE), root, getResource("css/platform_app.css").toExternalForm());
             stage.toFront();
