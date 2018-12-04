@@ -28,7 +28,7 @@ public class GuiComponentFxmlLoadServiceImpl implements GuiComponentFxmlLoadServ
     public WindowMessageController loadWindowMessage(String title,String msg) {
         WindowMessageController windowMessageController = null;
         try {
-            FXMLLoader loader = this.fxmlLoadService.loadFxml("view/window_message.fxml");
+            FXMLLoader loader = this.fxmlLoadService.getFxmlLoader("view/window_message.fxml");
             Pane root = loader.load();
             windowMessageController = loader.getController();
             windowMessageController.updateMsgLbl(msg);
