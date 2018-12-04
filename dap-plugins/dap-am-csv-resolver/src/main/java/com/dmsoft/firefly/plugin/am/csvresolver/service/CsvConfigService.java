@@ -7,15 +7,19 @@ import com.dmsoft.firefly.sdk.plugin.PluginContext;
 import com.dmsoft.firefly.sdk.plugin.apis.IConfig;
 import com.dmsoft.firefly.sdk.plugin.apis.annotation.Config;
 import com.dmsoft.firefly.sdk.utils.FileUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.io.File;
 
 /**
  * Created by GuangLi on 2018/3/9.
  */
-@Config
+@Service
 public class CsvConfigService implements IConfig {
-    private PluginContext pluginContext = RuntimeContext.getBean(PluginContext.class);
+
+    @Autowired
+    private PluginContext pluginContext;
     private CsvResolverService csvResolverService = new CsvResolverService();
     private JsonMapper jsonMapper = JsonMapper.defaultMapper();
 
