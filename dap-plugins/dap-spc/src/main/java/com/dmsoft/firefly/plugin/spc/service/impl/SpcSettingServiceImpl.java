@@ -33,12 +33,13 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.util.List;
 import java.util.Map;
+import org.springframework.stereotype.Service;
 
 
 /**
  * Created by Ethan.Yang on 2018/3/12.
  */
-@Config
+@Service
 public class SpcSettingServiceImpl implements SpcSettingService, IConfig {
     private final Logger logger = LoggerFactory.getLogger(SpcSettingServiceImpl.class);
     private JsonMapper jsonMapper = JsonMapper.defaultMapper();

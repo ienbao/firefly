@@ -36,39 +36,48 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  * spc plugin
  */
+@Component
 public class SpcPlugin extends Plugin {
     public static final String SPC_PLUGIN_NAME = "com.dmsoft.dap.SpcPlugin";
     private static final Logger LOGGER = LoggerFactory.getLogger(SpcPlugin.class);
     private static final Double D100 = 100.0;
     private SpcSettingController spcSettingController;
 
+    @Autowired
+    private PluginUIContext pluginUIContext;
+    @Autowired
+    private SpcService spcService;
+    @Autowired
+    private  SpcAnalysisService spcAnalysisService;
+    @Autowired
+    private SpcSettingService spcSettingService;
+    @Autowired
+    private PluginImageContext pluginImageContext;
+    @Autowired
+    private JobManager jobManager;
+    @Autowired
+    private JobFactory jobFactory;
+
     @Override
     public void initialize(InitModel model) {
-        SpcServiceImpl spcService = new SpcServiceImpl();
-        SpcAnalysisServiceImpl spcAnalysisService = new SpcAnalysisServiceImpl();
-        SpcSettingService spcSettingService = new SpcSettingServiceImpl();
-        spcService.setAnalysisService(spcAnalysisService);
-        RuntimeContext.registerBean(SpcService.class, spcService);
-        RuntimeContext.registerBean(SpcAnalysisService.class, spcAnalysisService);
-        RuntimeContext.registerBean(SpcSettingService.class, spcSettingService);
-        RuntimeContext.getBean(PluginImageContext.class).registerPluginInstance(SPC_PLUGIN_NAME,
+        this.pluginImageContext.registerPluginInstance(SPC_PLUGIN_NAME,
                 "com.dmsoft.firefly.plugin.spc.service.impl.SpcServiceImpl", spcService);
-
-        RuntimeContext.getBean(PluginImageContext.class).registerPluginInstance(SPC_PLUGIN_NAME,
+        this.pluginImageContext.registerPluginInstance(SPC_PLUGIN_NAME,
                 "com.dmsoft.firefly.plugin.spc.service.impl.SpcAnalysisServiceImpl", spcAnalysisService);
-
-        RuntimeContext.getBean(PluginImageContext.class).registerPluginInstance(SPC_PLUGIN_NAME,
+        this.pluginImageContext.registerPluginInstance(SPC_PLUGIN_NAME,
                 "com.dmsoft.firefly.plugin.spc.service.impl.SpcSettingServiceImpl", spcSettingService);
         LOGGER.info("Plugin-SPC Initialized.");
     }
 
     @Override
     public void start() {
-        RuntimeContext.getBean(PluginUIContext.class).registerMainBody("SPC", new IMainBodyPane() {
+        this.pluginUIContext.registerMainBody("SPC", new IMainBodyPane() {
             @Override
             public Pane getNewPane() {
                 SvgImageLoaderFactory.install();
@@ -106,11 +115,9 @@ public class SpcPlugin extends Plugin {
                 StageMap.showStage(StateKey.SPC_SETTING);
             }
         });
-        RuntimeContext.getBean(PluginUIContext.class).registerMenu(new MenuBuilder("com.dmsoft.dap.SpcPlugin",
+        this.pluginUIContext.registerMenu(new MenuBuilder("com.dmsoft.dap.SpcPlugin",
                 MenuBuilder.MenuType.MENU_ITEM, "Spc Settings", MenuBuilder.MENU_PREFERENCE).addMenu(menuItem));
 
-        JobManager jobManager = RuntimeContext.getBean(JobManager.class);
-        JobFactory jobFactory = RuntimeContext.getBean(JobFactory.class);
         jobManager.initializeJob(ParamKeys.SPC_ANALYSIS_JOB_PIPELINE, jobFactory.createJobPipeLine()
                 .addLast(new FindSpcSettingDataHandler())
                 .addLast(new FindTestDataHandler().setWeight(D100))

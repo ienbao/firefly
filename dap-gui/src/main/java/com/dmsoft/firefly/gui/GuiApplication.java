@@ -1,10 +1,6 @@
 package com.dmsoft.firefly.gui;
 
-import com.dmsoft.bamboo.common.utils.mapper.JsonMapper;
 import com.dmsoft.firefly.core.DAPApplication;
-import com.dmsoft.firefly.core.utils.ApplicationPathUtil;
-import com.dmsoft.firefly.core.utils.JsonFileUtil;
-import com.dmsoft.firefly.core.utils.PluginScanner;
 import com.dmsoft.firefly.core.utils.PluginXMLParser;
 import com.dmsoft.firefly.gui.components.utils.NodeMap;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
@@ -18,9 +14,7 @@ import com.dmsoft.firefly.sdk.event.EventType;
 import com.dmsoft.firefly.sdk.event.PlatformEvent;
 import com.dmsoft.firefly.sdk.plugin.PluginContext;
 import com.dmsoft.firefly.sdk.plugin.PluginInfo;
-import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.dmsoft.firefly.sdk.utils.enums.LanguageType;
-import com.google.common.collect.Lists;
 import de.codecentric.centerdevice.javafxsvg.SvgImageLoaderFactory;
 import java.util.ArrayList;
 import java.util.List;
@@ -68,24 +62,6 @@ public class GuiApplication extends Application {
     this.envService = applictionContext.getBean(EnvService.class);
     this.pluginContext = applictionContext.getBean(PluginContext.class);
 
-    String parentPath = ApplicationPathUtil.getPath(GuiConst.CONFIG_PATH);
-    JsonMapper mapper = JsonMapper.defaultMapper();
-    String json = JsonFileUtil.readJsonFile(parentPath, GuiConst.ACTIVE_PLUGIN);/* "activePlugin" 路径：gui-resources-config */
-    List<KeyValueDto> activePlugin = Lists.newArrayList();
-    if (DAPStringUtils.isNotBlank(json)) {
-      activePlugin = mapper.fromJson(json, mapper.buildCollectionType(List.class, KeyValueDto.class));/* 文件中读取到的信息 */
-    }
-    List<String> plugins = Lists.newArrayList(); /* "com.dmsoft.dap.SpcPlugin" */
-    if (activePlugin != null) {
-      activePlugin.forEach(v -> {
-        if ((boolean) v.getValue()) {
-          plugins.add(v.getKey());
-        }
-      });
-    }
-
-    this.loadingPlugin(plugins);
-
     DAPApplication.initEnv();
     registEvent();
 
@@ -96,6 +72,8 @@ public class GuiApplication extends Application {
     }
 
     MenuFactory.initMenu();
+    this.loadingPlugin(DapUtils.loadActivePluginList());
+
 
     LanguageType languageType = this.envService.getLanguageType();
     if (languageType != null) {
@@ -108,7 +86,6 @@ public class GuiApplication extends Application {
     StageMap.setPrimaryStage(GuiConst.PLARTFORM_STAGE_MAIN, WindowFactory.createFullWindow(GuiConst.PLARTFORM_STAGE_MAIN, root, main,
         getClass().getClassLoader().getResource("css/platform_app.css").toExternalForm()));
     NodeMap.addNode(GuiConst.PLARTFORM_NODE_MAIN, main);
-
 
     Runtime.getRuntime().addShutdownHook(new Thread() {
       @Override
@@ -134,11 +111,11 @@ public class GuiApplication extends Application {
 
   private void loadingPlugin(List<String> activePluginList){
     List<String> urlList = new ArrayList<>();
-    urlList.add(this.getClass().getClassLoader().getResource("plugins/am-plugin.xml").getFile());
-    urlList.add(this.getClass().getClassLoader().getResource("plugins/grr-plugin.xml").getFile());
+//    urlList.add(this.getClass().getClassLoader().getResource("plugins/am-plugin.xml").getFile());
+//    urlList.add(this.getClass().getClassLoader().getResource("plugins/grr-plugin.xml").getFile());
     urlList.add(this.getClass().getClassLoader().getResource("plugins/spc-plugin.xml").getFile());
-    urlList.add(this.getClass().getClassLoader().getResource("plugins/tm-plugin.xml").getFile());
-    urlList.add(this.getClass().getClassLoader().getResource("plugins/yeild-plugin.xml").getFile());
+//    urlList.add(this.getClass().getClassLoader().getResource("plugins/tm-plugin.xml").getFile());
+//    urlList.add(this.getClass().getClassLoader().getResource("plugins/yeild-plugin.xml").getFile());
 
     List<PluginInfo> scannedPlugins = PluginXMLParser.parseXML(urlList);
     this.pluginContext.installPlugin(scannedPlugins);

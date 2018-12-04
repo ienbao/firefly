@@ -1,7 +1,6 @@
 package com.dmsoft.firefly.core.sdkimpl.plugin;
 
 import com.dmsoft.firefly.core.utils.ClassScanner;
-import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.plugin.*;
 import com.dmsoft.firefly.sdk.plugin.apis.annotation.*;
 import com.google.common.collect.Lists;
@@ -13,6 +12,7 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -22,8 +22,10 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class PluginImageContextImpl implements PluginImageContext, PluginContextListener {
-    // plugin image map, key : plugin id, key : plugin image
     private Map<String, PluginImage> pluginImageMap;
+
+    @Autowired
+    private PluginContext pluginContext;
 
     /**
      * constructor
@@ -44,9 +46,9 @@ public class PluginImageContextImpl implements PluginImageContext, PluginContext
 
     @Override
     public void registerPlugin(String pluginId) {
-        PluginInfo pluginInfo = RuntimeContext.getBean(PluginContext.class).getEnabledPluginInfo(pluginId);
+        PluginInfo pluginInfo = this.pluginContext.getEnabledPluginInfo(pluginId);
         if (pluginInfo != null) {
-            Map<String, PluginClass> openClasses = privateScanClass(RuntimeContext.getBean(PluginContext.class).getDAPClassLoader(pluginInfo.getId()),
+            Map<String, PluginClass> openClasses = privateScanClass(this.pluginContext.getDAPClassLoader(pluginInfo.getId()),
                     pluginInfo.getScanPath());
             for (PluginClass pc : openClasses.values()) {
                 pc.setPluginId(pluginId);

@@ -8,6 +8,8 @@ import com.dmsoft.firefly.sdk.plugin.PluginConstants;
 import com.dmsoft.firefly.sdk.plugin.PluginInfo;
 import com.dmsoft.firefly.sdk.utils.FileUtils;
 import com.google.common.collect.Lists;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.SAXParser;
@@ -22,6 +24,7 @@ import java.util.List;
  * @author Can Guan
  */
 public class PluginXMLParser {
+    private static Logger logger = LoggerFactory.getLogger(PluginXMLParser.class);
     /**
      * method to parse xml into plugin info
      *
@@ -49,7 +52,9 @@ public class PluginXMLParser {
             List<PluginInfo> result = Lists.newArrayList();
             SAXParserFactory sf = SAXParserFactory.newInstance();
             SAXParser sp = sf.newSAXParser();
+
             for (String folderUri : pluginFolderUris) {
+                logger.debug("解释当前插件配置文件, file:" +  folderUri);
                 PluginInfo pluginInfo = parserXML(folderUri, sp);
                 if (pluginInfo != null) {
                     result.add(pluginInfo);
@@ -63,12 +68,11 @@ public class PluginXMLParser {
 
     private static PluginInfo parserXML(String pluginFolderUri, SAXParser sp) {
         try {
-            // get plugin xml file uri
-            String pluginXMLFileUri = FileUtils.buildFilePath(pluginFolderUri, PluginConstants.FILE_NAME_PLUGIN);
 
             // judge file exist or not
-            File pluginXMLFile = new File(pluginXMLFileUri);
+            File pluginXMLFile = new File(pluginFolderUri);
             if (!pluginXMLFile.isFile()) {
+                logger.debug("当前文件不存在，file:" + pluginXMLFile);
                 return null;
             }
 
@@ -87,8 +91,10 @@ public class PluginXMLParser {
                 sp.parse(configXMLFileUri, configXMLHandler);
                 pluginInfo.setConfig(configXMLHandler.getConfigMap());
             }
+
             return pluginInfo;
-        } catch (IOException | SAXException e) {
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
             return null;
         }
     }

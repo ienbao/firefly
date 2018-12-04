@@ -6,16 +6,10 @@ package com.dmsoft.firefly.gui.utils;
 import com.dmsoft.firefly.gui.components.utils.ModuleType;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
-import com.dmsoft.firefly.gui.controller.SpringFxmlLoader;
-import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
-import com.dmsoft.firefly.sdk.event.EventContext;
 import com.dmsoft.firefly.sdk.utils.enums.LanguageType;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.text.MessageFormat;
 import java.util.ResourceBundle;

@@ -68,7 +68,6 @@ public class MenuFactory {
      */
     public static void initMenu() {
         DapApplictionContext applictionContext = DapApplictionContext.getInstance();
-
         applictionContext.getBean(PluginUIContext.class).registerMenu(createFileMenu());
         applictionContext.getBean(PluginUIContext.class).registerMenu(createPreferenceMenu());
         applictionContext.getBean(PluginUIContext.class).registerMenu(createHelpMenu());
@@ -283,7 +282,6 @@ public class MenuFactory {
         } else {
             Pane root = null;
             try {
-//                FXMLLoader fxmlLoader = GuiFxmlAndLanguageUtils.getLoaderFXML("view/data_source_setting.fxml");
                 root = DapUtils.loadFxml("view/data_source_setting.fxml");
                 Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("sourceSetting", GuiFxmlAndLanguageUtils.getString(ResourceMassages.SOURCE_SETTING), root,
                         getResource("css/platform_app.css").toExternalForm());
@@ -298,7 +296,6 @@ public class MenuFactory {
     private static void buildeSettingExportDia() {
         Pane root = null;
         try {
-//            FXMLLoader fxmlLoader = GuiFxmlAndLanguageUtils.getLoaderFXML("view/export_setting.fxml");
             root = DapUtils.loadFxml("view/export_setting.fxml");
             Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("exportSetting", GuiFxmlAndLanguageUtils.getString(ResourceMassages.GLOBAL_EXPORT_SETTING), root,
                     getResource("css/platform_app.css").toExternalForm());
@@ -312,7 +309,6 @@ public class MenuFactory {
     private static void buildPluginManageDialog() {
         Pane root = null;
         try {
-//            FXMLLoader fxmlLoader = GuiFxmlAndLanguageUtils.getLoaderFXML("view/plugin.fxml");
             root = DapUtils.loadFxml("view/plugin.fxml");
             Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("pluginManage", GuiFxmlAndLanguageUtils.getString(ResourceMassages.PLUGIN_MANAGE), root,
                     getResource("css/platform_app.css").toExternalForm());

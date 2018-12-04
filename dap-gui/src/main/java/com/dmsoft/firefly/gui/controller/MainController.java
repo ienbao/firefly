@@ -42,6 +42,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.lang.management.ManagementFactory;
@@ -133,8 +134,9 @@ public class MainController {
     }
 
     private void initToolBar() {
-        Set<String> names = this.pluginUIContext.getAllMainBodyNames();
-        names.forEach(name -> {
+        Set<String> nameSet = this.pluginUIContext.getAllMainBodyNames();
+        logger.info("初始化当前界面toolbar, 当前列表是nameList[{}]", Arrays.toString(nameSet.toArray()));
+        nameSet.forEach(name -> {
             Button btn = new Button(name);
             btn.setId(name);
             btn.setFocusTraversable(true);

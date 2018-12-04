@@ -25,13 +25,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import org.springframework.stereotype.Component;
 
 /**
  * impl class for spc service
  *
  * @author Can Guan, Ethan Yang
  */
-@OpenService
+@Component
 public class SpcServiceImpl implements SpcService {
     private static Logger logger = LoggerFactory.getLogger(SpcServiceImpl.class);
     private SpcAnalysisService analysisService;
