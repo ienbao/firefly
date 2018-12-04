@@ -24,6 +24,8 @@ import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import javafx.scene.control.Button;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.awt.*;
 import java.net.URL;
@@ -32,7 +34,7 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Set;
 
-
+@Component
 public class YieldMainController implements Initializable {
     private static Logger logger = LoggerFactory.getLogger(YieldMainController.class);
     @FXML
@@ -60,8 +62,16 @@ public class YieldMainController implements Initializable {
     private YieldResultDto yieldResultDto;
 
 
-    private YieldSettingService yieldSettingService = RuntimeContext.getBean(YieldSettingService.class);
-    private EnvService envService = RuntimeContext.getBean(EnvService.class);
+    @Autowired
+    private YieldSettingService yieldSettingService;
+    @Autowired
+    private EnvService envService;
+    @Autowired
+    private IMessageManager iMessageManager;
+    @Autowired
+    private JobFactory jobFactory;
+    @Autowired
+    private JobManager jobManager;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -139,7 +149,7 @@ public class YieldMainController implements Initializable {
     @SuppressWarnings("unchecked")
     private void getResetBtnEvent() {
         WindowProgressTipController windowProgressTipController = WindowMessageFactory.createWindowProgressTip();
-        JobContext context = RuntimeContext.getBean(JobFactory.class).createJobContext();
+        JobContext context = this.jobFactory.createJobContext();
         context.put(ParamKeys.YIELD_SETTING_DTO, yieldSettingDto);
         context.put(ParamKeys.SEARCH_CONDITION_DTO_LIST, initSearchConditionDtoList);
         context.put(ParamKeys.YIELD_ANALYSIS_CONFIG_DTO, analysisConfigDto);
@@ -164,7 +174,7 @@ public class YieldMainController implements Initializable {
                 context.interruptBeforeNextJobHandler();
             });
         }
-        JobPipeline jobPipeline = RuntimeContext.getBean(JobManager.class).getPipeLine(ParamKeys.YIELD_RESET_JOB_PIPELINE);
+        JobPipeline jobPipeline = this.jobManager.getPipeLine(ParamKeys.YIELD_RESET_JOB_PIPELINE);
         jobPipeline.setCompleteHandler(new AbstractBasicJobHandler() {
             @Override
             public void doJob(JobContext context) {
@@ -194,7 +204,7 @@ public class YieldMainController implements Initializable {
                 windowProgressTipController.closeDialog();
             }
         });
-        RuntimeContext.getBean(JobManager.class).fireJobASyn(jobPipeline, context);
+        this.jobManager.fireJobASyn(jobPipeline, context);
     }
 
     private void getExportBtnEvent() {
@@ -247,7 +257,7 @@ public class YieldMainController implements Initializable {
 
         switch (refreshType) {
             case NOT_NEED_REFRESH:
-                RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
+                this.iMessageManager.showWarnMsg(
                         YieldFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
                         YieldFxmlAndLanguageUtils.getString("EXCEPTION_SPC_NO_REFRESH_RESULT"));
 
@@ -340,7 +350,7 @@ public class YieldMainController implements Initializable {
     @SuppressWarnings("unchecked")
     private void refreshStatisticalResult(YieldRefreshJudgeUtil spcRefreshJudgeUtil) {
         WindowProgressTipController windowProgressTipController = WindowMessageFactory.createWindowProgressTip();
-        JobContext context = RuntimeContext.getBean(JobFactory.class).createJobContext();
+        JobContext context = this.jobFactory.createJobContext();
 
         Stage stage1 = StageMap.getStage(CommonResourceMassages.COMPONENT_STAGE_WINDOW_PROGRESS_TIP);
         WindowPane windowPane = null;
@@ -378,7 +388,7 @@ public class YieldMainController implements Initializable {
             }
         });
 
-        JobPipeline jobPipeline = RuntimeContext.getBean(JobManager.class).getPipeLine(ParamKeys.SPC_REFRESH_STATISTICAL_JOB_PIPELINE);
+        JobPipeline jobPipeline = this.jobManager.getPipeLine(ParamKeys.SPC_REFRESH_STATISTICAL_JOB_PIPELINE);
         jobPipeline.setCompleteHandler(new AbstractBasicJobHandler() {
             @Override
             public void doJob(JobContext context) {
@@ -408,7 +418,7 @@ public class YieldMainController implements Initializable {
             }
         });
         logger.info("Start refresh Spc statistical data.");
-        RuntimeContext.getBean(JobManager.class).fireJobASyn(jobPipeline, context);
+        this.jobManager.fireJobASyn(jobPipeline, context);
     }
 
 

@@ -36,12 +36,15 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 
+@Component
 public class ViewDataController implements Initializable {
     private final Logger logger = LoggerFactory.getLogger(ViewDataController.class);
 
@@ -57,6 +60,13 @@ public class ViewDataController implements Initializable {
     private Label viewDataR;
     @FXML
     private Label viewDataC;
+
+    @Autowired
+    private EnvService envService;
+    @Autowired
+    private SourceDataService sourceDataService;
+    @Autowired
+    private DataFrameFactory dataFrameFactory;
 
     private YieldMainController yieldMainController;
     private ViewDataModel model;
@@ -78,7 +88,7 @@ public class ViewDataController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        this.typeDtoList = RuntimeContext.getBean(EnvService.class).findTestItems();/*获取到所有测试项 */
+        this.typeDtoList = this.envService.findTestItems();/*获取到所有测试项 */
         this.testItemNames = Lists.newArrayList();
         if (this.typeDtoList != null) {
             for (TestItemWithTypeDto typeDto : typeDtoList) {
@@ -89,7 +99,7 @@ public class ViewDataController implements Initializable {
         this.buildChooseColumnDialog();
         this.initBtnIcon();
         this.initComponentEvent();
-        this.selectedProjectNames = RuntimeContext.getBean(EnvService.class).findActivatedProjectName();
+        this.selectedProjectNames = this.envService.findActivatedProjectName();
         viewDataTable.getColumns().clear();
         chooseColumnBtn.setDisable(true);
         filteValueTf.setDisable(true);
@@ -210,9 +220,9 @@ public class ViewDataController implements Initializable {
                     String testItemName = typeDto.getTestItemName();
                     if (resultTestItemName.contains(testItemName)) {
                         if (resultTestItemName.contains(testItemName) && !dataFrame.isTestItemExist(testItemName)) {
-                            List<RowDataDto> rowDataDtoList = RuntimeContext.getBean(SourceDataService.class).findTestData(this.selectedProjectNames,
+                            List<RowDataDto> rowDataDtoList = this.sourceDataService.findTestData(this.selectedProjectNames,
                                     Lists.newArrayList(testItemName));
-                            DataColumn dataColumn = RuntimeContext.getBean(DataFrameFactory.class).createDataColumn(Lists.newArrayList(typeDto), rowDataDtoList).get(0);/* 新增表中的列 */
+                            DataColumn dataColumn = this.dataFrameFactory.createDataColumn(Lists.newArrayList(typeDto), rowDataDtoList).get(0);/* 新增表中的列 */
                             this.dataFrame.appendColumn(curIndex, dataColumn);
                             curIndex++;
                         }
@@ -368,9 +378,9 @@ public class ViewDataController implements Initializable {
                 String testItemName = typeDto.getTestItemName();
                 if (selectedTestItems.contains(testItemName)) {
                     if (selectedTestItems.contains(testItemName) && !dataFrame.isTestItemExist(testItemName)) {
-                        List<RowDataDto> rowDataDtoList = RuntimeContext.getBean(SourceDataService.class).findTestData(this.selectedProjectNames,
+                        List<RowDataDto> rowDataDtoList = this.sourceDataService.findTestData(this.selectedProjectNames,
                                 Lists.newArrayList(testItemName));
-                        DataColumn dataColumn = RuntimeContext.getBean(DataFrameFactory.class).createDataColumn(Lists.newArrayList(typeDto), rowDataDtoList).get(0);/* 新增表中的列 */
+                        DataColumn dataColumn = this.dataFrameFactory.createDataColumn(Lists.newArrayList(typeDto), rowDataDtoList).get(0);/* 新增表中的列 */
                         dataFrame.appendColumn(curIndex, dataColumn);
                         curIndex++;
                     }
@@ -420,9 +430,9 @@ public class ViewDataController implements Initializable {
         for (TestItemWithTypeDto typeDto : typeDtoList) {
             if (selectedTestItems.contains(typeDto.getTestItemName())) {
                 if (!dataFrame.isTestItemExist(typeDto.getTestItemName())) {
-                    List<RowDataDto> rowDataDtoList = RuntimeContext.getBean(SourceDataService.class).findTestData(this.selectedProjectNames,
+                    List<RowDataDto> rowDataDtoList = this.sourceDataService.findTestData(this.selectedProjectNames,
                             Lists.newArrayList(typeDto.getTestItemName()));
-                    DataColumn dataColumn = RuntimeContext.getBean(DataFrameFactory.class).createDataColumn(Lists.newArrayList(typeDto), rowDataDtoList).get(0);
+                    DataColumn dataColumn = this.dataFrameFactory.createDataColumn(Lists.newArrayList(typeDto), rowDataDtoList).get(0);
                     dataFrame.appendColumn(curIndex, dataColumn);
                 }
                 curIndex++;

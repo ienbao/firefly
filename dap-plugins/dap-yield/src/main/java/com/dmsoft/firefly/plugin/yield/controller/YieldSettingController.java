@@ -22,11 +22,14 @@ import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.net.URL;
 import java.util.Map;
 import java.util.ResourceBundle;
 
+@Component
 public class YieldSettingController implements Initializable {
     private final Logger logger = LoggerFactory.getLogger(YieldSettingController.class);
     @FXML
@@ -66,6 +69,12 @@ public class YieldSettingController implements Initializable {
 
     @FXML
     private VBox  alarmSettingVBox;
+
+    @Autowired
+    private JobFactory jobFactory;
+    @Autowired
+    private JobManager jobManager;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         this.initData();
@@ -76,8 +85,8 @@ public class YieldSettingController implements Initializable {
      * init data
      */
     public void initData() {
-        JobContext context = RuntimeContext.getBean(JobFactory.class).createJobContext();
-        RuntimeContext.getBean(JobManager.class).fireJobSyn(ParamKeys.FIND_YIELD_SETTING_DATA_JOP_PIPELINE, context);
+        JobContext context = this.jobFactory.createJobContext();
+        this.jobManager.fireJobSyn(ParamKeys.FIND_YIELD_SETTING_DATA_JOP_PIPELINE, context);
 
         YieldSettingDto yieldSettingDto = context.getParam(ParamKeys.YIELD_SETTING_DTO, YieldSettingDto.class);
         this.setProcessAlarmSettingData(yieldSettingDto.getAbilityAlarmRule());
@@ -162,9 +171,9 @@ public class YieldSettingController implements Initializable {
     }
     private void saveSetting() {
         YieldSettingDto yieldSettingDto = this.buildSaveSettingData();
-        JobContext context = RuntimeContext.getBean(JobFactory.class).createJobContext();
+        JobContext context = this.jobFactory.createJobContext();
         context.put(ParamKeys.YIELD_SETTING_DTO, yieldSettingDto);
-        RuntimeContext.getBean(JobManager.class).fireJobSyn(ParamKeys.SAVE_YIELD_SETTING_DATA_JOP_PIPELINE, context);
+        this.jobManager.fireJobSyn(ParamKeys.SAVE_YIELD_SETTING_DATA_JOP_PIPELINE, context);
     }
     private YieldSettingDto buildSaveSettingData() {
         YieldSettingDto yieldSettingDto = new YieldSettingDto();

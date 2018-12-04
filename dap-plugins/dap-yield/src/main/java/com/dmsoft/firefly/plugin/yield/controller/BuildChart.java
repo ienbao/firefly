@@ -22,6 +22,7 @@ import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.image.WritableImage;
+import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.util.Date;
@@ -29,6 +30,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
+@Component
 public class BuildChart {
     private static final Float F9 = 0.9f;
     private static int digNum = 6;

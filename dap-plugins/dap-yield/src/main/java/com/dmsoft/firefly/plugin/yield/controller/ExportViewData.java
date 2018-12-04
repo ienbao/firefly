@@ -9,9 +9,11 @@ import com.google.common.collect.Lists;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableView;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+@Component
 public class ExportViewData {
     @FXML
 private TableView<String> viewData;

@@ -8,10 +8,14 @@ import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
 import com.dmsoft.firefly.sdk.job.core.AbstractBasicJobHandler;
 import com.dmsoft.firefly.sdk.job.core.JobContext;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
 public class YieldResultDataHandler extends AbstractBasicJobHandler {
+
+    @Autowired
+    private YieldService yieldService;
 
     /**
      * constructor
@@ -26,7 +30,7 @@ public class YieldResultDataHandler extends AbstractBasicJobHandler {
         SearchDataFrame dataFrame = context.getParam(ParamKeys.SEARCH_DATA_FRAME, SearchDataFrame.class);
         List<SearchConditionDto> searchConditionDtoList = (List<SearchConditionDto>) context.get(ParamKeys.SEARCH_CONDITION_DTO_LIST);
         YieldAnalysisConfigDto analysisConfigDto = (YieldAnalysisConfigDto) context.get(ParamKeys.YIELD_ANALYSIS_CONFIG_DTO);
-        YieldService yieldService = RuntimeContext.getBean(YieldService.class);
+//        YieldService yieldService = RuntimeContext.getBean(YieldService.class);
         YieldViewDataResultDto yieldViewDataResultDto = yieldService.getTotalData(dataFrame, searchConditionDtoList, analysisConfigDto);
         context.put(ParamKeys.YIELD_VIEW_DATA_RESULT_DTO, yieldViewDataResultDto);
     }

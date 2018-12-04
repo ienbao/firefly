@@ -7,14 +7,18 @@ import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.plugin.PluginContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.io.File;
 
+@Service
 public class YieldLeftConfigServiceImpl {
     private Logger logger = LoggerFactory.getLogger(YieldLeftConfigServiceImpl.class);
     private JsonMapper mapper = JsonMapper.defaultMapper();
-    private PluginContext pluginContext = RuntimeContext.getBean(PluginContext.class);
 
+    @Autowired
+    private PluginContext pluginContext;
     public YieldLeftConfigDto importSpcConfig(File file) {
         String json = JsonFileUtil.readJsonFile(file);
         if (json == null) {
