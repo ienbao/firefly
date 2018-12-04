@@ -17,6 +17,7 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableView;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 import java.util.Map;
@@ -25,6 +26,9 @@ import java.util.Map;
  * model class for spc export view data
  */
 public class GrrExportViewDataModel implements TableModel {
+
+    @Autowired
+    private EnvService envService;
     private SearchDataFrame dataFrame;
     private List<String> searchConditions;
     private ObservableList<String> headerArray;
@@ -59,7 +63,7 @@ public class GrrExportViewDataModel implements TableModel {
             }
             this.rowKeyArray.addAll(searchedRowKeys);
         }
-        testItemDtoMap = Maps.newHashMap(RuntimeContext.getBean(EnvService.class).findTestItemsMap());
+        testItemDtoMap = Maps.newHashMap(this.envService.findTestItemsMap());
         cellMap = Maps.newHashMap();
     }
 

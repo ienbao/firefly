@@ -19,6 +19,8 @@ import java.util.Map;
  * @author Can Guan
  */
 public class ExportDetailResultHandler extends AbstractBasicJobHandler {
+
+    private GrrExportService grrExportService;
     /**
      * constructor
      */
@@ -79,7 +81,7 @@ public class ExportDetailResultHandler extends AbstractBasicJobHandler {
 //            exportResultDto.setGrrImageDto(BuildChart.buildImage(dto.getExportDetailDto(), searchConditionDto.getParts(), searchConditionDto.getAppraisers(), configDto.getGrrConfigDto().getExport()));
             grrExportResultDtos.add(exportResultDto);
         }
-        String path = RuntimeContext.getBean(GrrExportService.class).exportGrrSummaryDetail(configDto, summaryDtos, grrExportResultDtos);
+        String path =this.grrExportService.exportGrrSummaryDetail(configDto, summaryDtos, grrExportResultDtos);
         context.put(ParamKeys.EXPORT_PATH, path);
     }
 }

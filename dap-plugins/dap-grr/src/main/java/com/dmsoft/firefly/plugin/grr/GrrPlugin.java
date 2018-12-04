@@ -29,10 +29,13 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  * grr plugin
  */
+@Component
 public class GrrPlugin extends Plugin {
     public static final String GRR_PLUGIN_ID = "com.dmsoft.dap.GrrPlugin";
 
@@ -45,29 +48,55 @@ public class GrrPlugin extends Plugin {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GrrPlugin.class);
 
+    @Autowired
+    private GrrServiceImpl grrService;
+    @Autowired
+    private GrrAnalysisService grrAnalysisService;
+
+    @Autowired
+    private GrrConfigService grrConfigService;
+
+    @Autowired
+    private GrrFilterService grrFilterService;
+
+    @Autowired
+    private GrrExportService grrExportService;
+
+    @Autowired
+    private PluginImageContext pluginImageContext;
+
+    @Autowired
+    private PluginUIContext pluginUIContext;
+
     @Override
     public void initialize(InitModel model) {
-        GrrServiceImpl grrService = new GrrServiceImpl();
-        GrrAnalysisService grrAnalysisService = new GrrAnalysisServiceImpl();
-        GrrConfigService grrConfigService = new GrrConfigServiceImpl();
-        GrrFilterService grrFilterService = new GrrFilterServiceImpl();
+//        GrrServiceImpl grrService = new GrrServiceImpl();
+//        GrrAnalysisService grrAnalysisService = new GrrAnalysisServiceImpl();
+//        GrrConfigService grrConfigService = new GrrConfigServiceImpl();
+//        GrrFilterService grrFilterService = new GrrFilterServiceImpl();
 
-        grrService.setAnalysisService(grrAnalysisService);
-        RuntimeContext.registerBean(GrrService.class, grrService);
-        RuntimeContext.registerBean(GrrConfigService.class, grrConfigService);
-        RuntimeContext.registerBean(GrrAnalysisService.class, grrAnalysisService);
-        RuntimeContext.registerBean(GrrFilterService.class, grrFilterService);
-        RuntimeContext.registerBean(GrrExportService.class, new GrrExportServiceImpl());
-        RuntimeContext.getBean(PluginImageContext.class).registerPluginInstance(GRR_PLUGIN_ID, GRR_SERVICE_PACKAGE + GRR_SERVICE_CONFIG_NAME, grrConfigService);
-        RuntimeContext.getBean(PluginImageContext.class).registerPluginInstance(GRR_PLUGIN_ID, GRR_SERVICE_PACKAGE + GRR_SERVICE_RESULT_NAME, grrService);
-        RuntimeContext.getBean(PluginImageContext.class).registerPluginInstance(GRR_PLUGIN_ID, GRR_SERVICE_PACKAGE + GRR_SERVICE_ANALYSIS_NAME, grrAnalysisService);
-        RuntimeContext.getBean(PluginImageContext.class).registerPluginInstance(GRR_PLUGIN_ID, GRR_SERVICE_PACKAGE + GRR_SERVICE_FILTER, grrFilterService);
+//        grrService.setAnalysisService(grrAnalysisService);
+//        RuntimeContext.registerBean(GrrService.class, grrService);
+//        RuntimeContext.registerBean(GrrConfigService.class, grrConfigService);
+//        RuntimeContext.registerBean(GrrAnalysisService.class, grrAnalysisService);
+//        RuntimeContext.registerBean(GrrFilterService.class, grrFilterService);
+//        RuntimeContext.registerBean(GrrExportService.class, new GrrExportServiceImpl());
+
+
+        this.pluginImageContext.registerPluginInstance(GRR_PLUGIN_ID, GRR_SERVICE_PACKAGE + GRR_SERVICE_CONFIG_NAME, grrConfigService);
+        this.pluginImageContext.registerPluginInstance(GRR_PLUGIN_ID, GRR_SERVICE_PACKAGE + GRR_SERVICE_RESULT_NAME, grrService);
+        this.pluginImageContext.registerPluginInstance(GRR_PLUGIN_ID, GRR_SERVICE_PACKAGE + GRR_SERVICE_ANALYSIS_NAME, grrAnalysisService);
+        this.pluginImageContext.registerPluginInstance(GRR_PLUGIN_ID, GRR_SERVICE_PACKAGE + GRR_SERVICE_FILTER, grrFilterService);
+//        RuntimeContext.getBean(PluginImageContext.class).registerPluginInstance(GRR_PLUGIN_ID, GRR_SERVICE_PACKAGE + GRR_SERVICE_CONFIG_NAME, grrConfigService);
+//        RuntimeContext.getBean(PluginImageContext.class).registerPluginInstance(GRR_PLUGIN_ID, GRR_SERVICE_PACKAGE + GRR_SERVICE_RESULT_NAME, grrService);
+//        RuntimeContext.getBean(PluginImageContext.class).registerPluginInstance(GRR_PLUGIN_ID, GRR_SERVICE_PACKAGE + GRR_SERVICE_ANALYSIS_NAME, grrAnalysisService);
+//        RuntimeContext.getBean(PluginImageContext.class).registerPluginInstance(GRR_PLUGIN_ID, GRR_SERVICE_PACKAGE + GRR_SERVICE_FILTER, grrFilterService);
         LOGGER.info("Plugin-GRR Initialized.");
     }
 
     @Override
     public void start() {
-        RuntimeContext.getBean(PluginUIContext.class).registerMainBody("GRR", new IMainBodyPane() {
+        this.pluginUIContext.registerMainBody("GRR", new IMainBodyPane() {
             @Override
             public Pane getNewPane() {
                 SvgImageLoaderFactory.install();
@@ -95,7 +124,7 @@ public class GrrPlugin extends Plugin {
         menuItem.setMnemonicParsing(true);
         menuItem.setAccelerator(new KeyCodeCombination(KeyCode.G, KeyCombination.SHORTCUT_DOWN));
 
-        RuntimeContext.getBean(PluginUIContext.class).registerMenu(new MenuBuilder("com.dmsoft.dap.GrrPlugin",
+        this.pluginUIContext.registerMenu(new MenuBuilder("com.dmsoft.dap.GrrPlugin",
                 MenuBuilder.MenuType.MENU_ITEM, "Grr Settings", MenuBuilder.MENU_PREFERENCE).addMenu(menuItem));
 
         JobManager jobManager = RuntimeContext.getBean(JobManager.class);

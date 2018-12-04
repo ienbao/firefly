@@ -58,6 +58,7 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.Callback;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.awt.*;
 import java.io.File;
@@ -146,11 +147,32 @@ public class GrrExportController {
     private boolean isFilterUslOrLsl = false;
     private ToggleGroup group = new ToggleGroup();
 
-    private EnvService envService = RuntimeContext.getBean(EnvService.class);
-    private SourceDataService dataService = RuntimeContext.getBean(SourceDataService.class);
-    private GrrConfigServiceImpl grrConfigService = new GrrConfigServiceImpl();
-    private GrrLeftConfigServiceImpl leftConfigService = new GrrLeftConfigServiceImpl();
-    private UserPreferenceService userPreferenceService = RuntimeContext.getBean(UserPreferenceService.class);
+    @Autowired
+   private EnvService envService;
+
+    @Autowired
+    private SourceDataService dataService;
+
+    @Autowired
+    private GrrConfigServiceImpl grrConfigService;
+
+    @Autowired
+    private GrrLeftConfigServiceImpl leftConfigService;
+
+    @Autowired
+    private UserPreferenceService userPreferenceService;
+
+    @Autowired
+    private EventContext eventContext;
+
+    @Autowired
+    private JobFactory jobFactory;
+
+    @Autowired
+    private JobManager jobManager;
+
+    @Autowired
+    private IMessageManager iMessageManager;
 
     private JsonMapper mapper = JsonMapper.defaultMapper();
 
@@ -743,7 +765,7 @@ public class GrrExportController {
             itemTable.refresh();
         });
         MenuItem specSetting = new MenuItem(GrrFxmlAndLanguageUtils.getString(ResourceMassages.SPECIFICATION_SETTING));
-        specSetting.setOnAction(event -> RuntimeContext.getBean(EventContext.class).pushEvent(new PlatformEvent(null, "Template_Show")));
+        specSetting.setOnAction(event -> this.eventContext.pushEvent(new PlatformEvent(null, "Template_Show")));
         right.getItems().addAll(top, specSetting);
         return right;
     }
@@ -913,10 +935,10 @@ public class GrrExportController {
                 selectItemDto.removeAll(selectItemDto.subList(50, selectItemDto.size()));
             }
 
-            JobContext context = RuntimeContext.getBean(JobFactory.class).createJobContext();
+            JobContext context = this.jobFactory.createJobContext();
             context.put(ParamKeys.PROJECT_NAME_LIST, envService.findActivatedProjectName());
             context.put(ParamKeys.TEST_ITEM_WITH_TYPE_DTO_LIST, selectItemDto);
-            JobPipeline jobPipeline = RuntimeContext.getBean(JobManager.class).getPipeLine(ParamKeys.GRR_EXPORT_VIEW_DATA);
+            JobPipeline jobPipeline = this.jobManager.getPipeLine(ParamKeys.GRR_EXPORT_VIEW_DATA);
             jobPipeline.setCompleteHandler(new AbstractBasicJobHandler() {
                 @Override
                 public void doJob(JobContext context) {
@@ -924,7 +946,7 @@ public class GrrExportController {
                     buildViewDataDialog(conditionTestItem);
                 }
             });
-            RuntimeContext.getBean(JobManager.class).fireJobASyn(jobPipeline, context);
+            this.jobManager.fireJobASyn(jobPipeline, context);
         }
     }
 
@@ -966,7 +988,7 @@ public class GrrExportController {
         WindowProgressTipController windowProgressTipController = WindowMessageFactory.createWindowProgressTip(GrrFxmlAndLanguageUtils.getString(ResourceMassages.EXPORT));
         windowProgressTipController.setAutoHide(false);
         windowProgressTipController.getAnalysisLB().setText(GrrFxmlAndLanguageUtils.getString(ResourceMassages.EXPORTING));
-        JobContext context = RuntimeContext.getBean(JobFactory.class).createJobContext();
+        JobContext context = this.jobFactory.createJobContext();
         context.addJobEventListener(event -> {
             if ("Error".equals(event.getEventName())) {
                 windowProgressTipController.updateFailProgress(event.getProgress(), event.getEventObject().toString());
@@ -990,7 +1012,7 @@ public class GrrExportController {
             });
 
         }
-        JobPipeline jobPipeline = RuntimeContext.getBean(JobFactory.class).createJobPipeLine();
+        JobPipeline jobPipeline = this.jobFactory.createJobPipeLine();
         jobPipeline.setCompleteHandler(new AbstractBasicJobHandler() {
             @Override
             public void doJob(JobContext context) {
@@ -1089,7 +1111,7 @@ public class GrrExportController {
             exportProjectFilePath = savePath + "/" + "Grr_" + getTimeString();
             addHandler(jobPipeline, windowProgressTipController, projectNameList, "Export Grr Reports", exportProjectFilePath, testItemWithTypeDtoList);
         }
-        RuntimeContext.getBean(JobManager.class).fireJobASyn(jobPipeline, context, true);
+        this.jobManager.fireJobASyn(jobPipeline, context, true);
     }
 
     private void addHandler(JobPipeline pipeline, WindowProgressTipController windowProgressTipController, List<String> projectNameList, String handlerName,
@@ -1146,7 +1168,7 @@ public class GrrExportController {
                             SearchConditionDto searchConditionDto = initSearchConditionDto();
                             searchConditionDto.setSelectedTestItemDtos(groupList);
 
-                            JobContext context1 = RuntimeContext.getBean(JobFactory.class).createJobContext();
+                            JobContext context1 = jobFactory.createJobContext();
                             context1.put(ParamKeys.PROJECT_NAME_LIST, projectNameList);
                             context1.put(ParamKeys.TEST_ITEM_WITH_TYPE_DTO_LIST, searchTestItemList);
                             context1.put(ParamKeys.SEARCH_GRR_CONDITION_DTO, searchConditionDto);
@@ -1154,16 +1176,16 @@ public class GrrExportController {
                             final int a = i;
                             context1.addJobEventListener(event -> context.pushEvent(new JobEvent(handlerName, event.getProgress() * D100 / groupCount + D100 * a / groupCount, event.getEventObject())));
                             if (!detail) {
-                                JobPipeline jobPipeline = RuntimeContext.getBean(JobManager.class).getPipeLine(ParamKeys.GRR_EXPORT_JOB_PIPELINE);
+                                JobPipeline jobPipeline = jobManager.getPipeLine(ParamKeys.GRR_EXPORT_JOB_PIPELINE);
                                 jobPipeline.setErrorHandler(new AbstractBasicJobHandler() {
                                     @Override
                                     public void doJob(JobContext context) {
                                         windowProgressTipController.updateFailProgress(context.getError().getMessage());
                                     }
                                 });
-                                RuntimeContext.getBean(JobManager.class).fireJobSyn(jobPipeline, context1);
+                                jobManager.fireJobSyn(jobPipeline, context1);
                             } else {
-                                JobPipeline jobPipeline = RuntimeContext.getBean(JobManager.class).getPipeLine(ParamKeys.GRR_EXPORT_DETAIL_JOB_PIPELINE);
+                                JobPipeline jobPipeline = jobManager.getPipeLine(ParamKeys.GRR_EXPORT_DETAIL_JOB_PIPELINE);
                                 jobPipeline.setErrorHandler(new AbstractBasicJobHandler() {
                                     @Override
                                     public void doJob(JobContext context) {
@@ -1186,7 +1208,7 @@ public class GrrExportController {
                                         windowProgressTipController.updateFailProgress(stringBuilder.toString());
                                     }
                                 });
-                                RuntimeContext.getBean(JobManager.class).fireJobSyn(jobPipeline, context1);
+                                jobManager.fireJobSyn(jobPipeline, context1);
                             }
                             context.put(ParamKeys.EXPORT_PATH, savePath);
                         }
@@ -1335,7 +1357,7 @@ public class GrrExportController {
                     updateAppraiserListViewDatas(null, grrLeftConfigDto.getAppraiser());
                 }
             } else {
-                RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
+                this.iMessageManager.showWarnMsg(
                         GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
                         GrrFxmlAndLanguageUtils.getString("IMPORT_EXCEPTION"));
             }

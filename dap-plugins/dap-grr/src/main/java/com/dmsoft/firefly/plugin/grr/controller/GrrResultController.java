@@ -54,6 +54,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.net.URL;
 import java.util.*;
@@ -65,14 +66,44 @@ import java.util.function.Function;
 public class GrrResultController implements Initializable {
     private Set<String> parts = Sets.newLinkedHashSet();
     private Set<String> appraisers = Sets.newLinkedHashSet();
-    private GrrSummaryModel summaryModel = new GrrSummaryModel();
-    private ItemResultModel itemResultModel = new ItemResultModel();
-    private GrrAnovaModel grrAnovaModel = new GrrAnovaModel();
-    private GrrSourceModel grrSourceModel = new GrrSourceModel();
+//    private GrrSummaryModel summaryModel = new GrrSummaryModel();
+//    private ItemResultModel itemResultModel = new ItemResultModel();
+//    private GrrAnovaModel grrAnovaModel = new GrrAnovaModel();
+//    private GrrSourceModel grrSourceModel = new GrrSourceModel();
     private GrrMainController grrMainController;
-    private EnvService envService = RuntimeContext.getBean(EnvService.class);
-    private UserPreferenceService userPreferenceService = RuntimeContext.getBean(UserPreferenceService.class);
-    private GrrConfigService grrConfigService = RuntimeContext.getBean(GrrConfigService.class);
+
+    @Autowired
+    private  GrrSummaryModel summaryModel;
+
+    @Autowired
+    private ItemResultModel itemResultModel;
+
+    @Autowired
+    private GrrAnovaModel grrAnovaModel;
+
+    @Autowired
+    private GrrSourceModel grrSourceModel;
+
+    @Autowired
+    private EnvService envService;
+
+    @Autowired
+    private UserPreferenceService userPreferenceService;
+
+    @Autowired
+    private GrrConfigService grrConfigService;
+
+    @Autowired
+    private IMessageManager iMessageManager;
+
+    @Autowired
+    private JobFactory jobFactory;
+
+    @Autowired
+    private JobManager jobManager;
+//    private EnvService envService = RuntimeContext.getBean(EnvService.class);
+//    private UserPreferenceService userPreferenceService = RuntimeContext.getBean(UserPreferenceService.class);
+//    private GrrConfigService grrConfigService = RuntimeContext.getBean(GrrConfigService.class);
     private JsonMapper mapper = JsonMapper.defaultMapper();
 
     /**
@@ -123,7 +154,7 @@ public class GrrResultController implements Initializable {
             this.setAnalysisItemResultData(grrDetailDto);
         } else {
             this.enableSubResultOperator(false);
-            RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
+            this.iMessageManager.showWarnMsg(
                     GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
                     GrrFxmlAndLanguageUtils.getString("EXCEPTION_GRR_NO_ANALYSIS_RESULT"));
         }
@@ -165,7 +196,7 @@ public class GrrResultController implements Initializable {
             List<TestItemWithTypeDto> selectTestItemWithTypeDtos = grrMainController.getSearchConditionDto().getSelectedTestItemDtos();
             List<TestItemWithTypeDto> changedTestItemWithTypeDtos = summaryModel.getEditTestItem();
             if (changedTestItemWithTypeDtos.isEmpty() || selectTestItemWithTypeDtos.isEmpty()) {
-                RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
+                this.iMessageManager.showWarnMsg(
                         GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
                         GrrFxmlAndLanguageUtils.getString("EXCEPTION_GRR_NO_REFRESH_RESULT"));
                 return;
@@ -205,7 +236,7 @@ public class GrrResultController implements Initializable {
 
     @SuppressWarnings("unchecked")
     private void submitGrrResult(TestItemWithTypeDto testItemWithTypeDto, Boolean analyseSubResult) {
-        JobContext context = RuntimeContext.getBean(JobFactory.class).createJobContext();
+        JobContext context = this.jobFactory.createJobContext();
         WindowProgressTipController windowProgressTipController = WindowMessageFactory.createWindowProgressTip();
         context.put(ParamKeys.SEARCH_GRR_CONDITION_DTO, grrMainController.getSearchConditionDto());
         context.put(ParamKeys.SEARCH_VIEW_DATA_FRAME, grrMainController.getGrrDataFrame());
@@ -220,7 +251,7 @@ public class GrrResultController implements Initializable {
                 windowProgressTipController.closeDialog();
             }
         });
-        JobPipeline jobPipeline = RuntimeContext.getBean(JobManager.class).getPipeLine(ParamKeys.GRR_REFRESH_JOB_PIPELINE);
+        JobPipeline jobPipeline = this.jobManager.getPipeLine(ParamKeys.GRR_REFRESH_JOB_PIPELINE);
         jobPipeline.setCompleteHandler(new AbstractBasicJobHandler() {
             @Override
             public void doJob(JobContext context) {
@@ -243,7 +274,7 @@ public class GrrResultController implements Initializable {
                         setAnalysisItemResultData(grrDetailDto);
                     } else {
                         enableSubResultOperator(false);
-                        RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
+                        iMessageManager.showWarnMsg(
                                 GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
                                 GrrFxmlAndLanguageUtils.getString("EXCEPTION_GRR_NO_ANALYSIS_RESULT"));
                     }
@@ -264,14 +295,14 @@ public class GrrResultController implements Initializable {
                 windowProgressTipController.closeDialog();
             }
         });
-        RuntimeContext.getBean(JobManager.class).fireJobASyn(jobPipeline, context);
+        this.jobManager.fireJobASyn(jobPipeline, context);
 
     }
 
     private void analyzeGrrSubResult(TestItemWithTypeDto testItemDto, String tolerance) {
         this.removeSubResultData();
         this.setToleranceValue(tolerance);
-        JobContext context = RuntimeContext.getBean(JobFactory.class).createJobContext();
+        JobContext context = this.jobFactory.createJobContext();
         WindowProgressTipController windowProgressTipController = WindowMessageFactory.createWindowProgressTip();
         context.put(ParamKeys.SEARCH_GRR_CONDITION_DTO, buildSearchConditionDto(testItemDto));
         context.put(ParamKeys.SEARCH_VIEW_DATA_FRAME, grrMainController.getGrrDataFrame());
@@ -294,14 +325,14 @@ public class GrrResultController implements Initializable {
                 context.interruptBeforeNextJobHandler();
             });
         }
-        JobPipeline jobPipeline = RuntimeContext.getBean(JobManager.class).getPipeLine(ParamKeys.GRR_DETAIL_ANALYSIS_JOB_PIPELINE);
+        JobPipeline jobPipeline = this.jobManager.getPipeLine(ParamKeys.GRR_DETAIL_ANALYSIS_JOB_PIPELINE);
         jobPipeline.setCompleteHandler(new AbstractBasicJobHandler() {
             @Override
             public void doJob(JobContext context) {
                 GrrDetailDto grrDetailDto = context.getParam(ParamKeys.GRR_DETAIL_DTO, GrrDetailDto.class);
                 if (grrDetailDto == null) {
                     enableSubResultOperator(false);
-                    RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
+                    iMessageManager.showWarnMsg(
                             GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
                             GrrFxmlAndLanguageUtils.getString("EXCEPTION_GRR_NO_ANALYSIS_RESULT"));
                 } else {
@@ -324,7 +355,7 @@ public class GrrResultController implements Initializable {
                 windowProgressTipController.updateFailProgress(context.getError().toString());
             }
         });
-        RuntimeContext.getBean(JobManager.class).fireJobASyn(jobPipeline, context);
+        this.jobManager.fireJobASyn(jobPipeline, context);
     }
 
     private SearchConditionDto buildSearchConditionDto(TestItemWithTypeDto testItemDto) {
@@ -433,7 +464,7 @@ public class GrrResultController implements Initializable {
     private void setAnalysisItemResultData(GrrDetailDto grrDetailDto) {
         if (grrDetailDto == null) {
             enableSubResultOperator(false);
-            RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
+            this.iMessageManager.showWarnMsg(
                     GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
                     GrrFxmlAndLanguageUtils.getString("EXCEPTION_GRR_NO_ANALYSIS_RESULT"));
             return;
@@ -1102,7 +1133,7 @@ public class GrrResultController implements Initializable {
         if (!validGrr) {
             removeSubResultData();
             enableSubResultOperator(false);
-            RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
+            this.iMessageManager.showWarnMsg(
                     GrrFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
                     GrrFxmlAndLanguageUtils.getString("EXCEPTION_GRR_NO_ANALYSIS_RESULT"));
             return;

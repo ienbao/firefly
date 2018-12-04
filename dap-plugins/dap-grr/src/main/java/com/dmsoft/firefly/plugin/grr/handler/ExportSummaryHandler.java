@@ -6,6 +6,7 @@ import com.dmsoft.firefly.plugin.grr.service.GrrExportService;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.job.core.AbstractBasicJobHandler;
 import com.dmsoft.firefly.sdk.job.core.JobContext;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
@@ -15,6 +16,9 @@ import java.util.List;
  * @author Can Guan, Cherry Peng
  */
 public class ExportSummaryHandler extends AbstractBasicJobHandler {
+
+    @Autowired
+    private GrrExportService grrExportService;
     /**
      * constructor
      */
@@ -27,7 +31,7 @@ public class ExportSummaryHandler extends AbstractBasicJobHandler {
     public void doJob(JobContext context) {
         List<GrrSummaryDto> summaryDtoList = (List<GrrSummaryDto>) context.get(ParamKeys.GRR_SUMMARY_DTO_LIST);
         GrrExportConfigDto grrExportConfigDto = context.getParam(ParamKeys.GRR_EXPORT_CONFIG_DTO, GrrExportConfigDto.class);
-        String path = RuntimeContext.getBean(GrrExportService.class).exportGrrSummary(grrExportConfigDto, summaryDtoList);
+        String path = this.grrExportService.exportGrrSummary(grrExportConfigDto, summaryDtoList);
         context.put(ParamKeys.EXPORT_PATH, path);
     }
 }

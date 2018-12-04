@@ -9,6 +9,7 @@ import com.dmsoft.firefly.sdk.dai.dto.TemplateSettingDto;
 import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
 import com.dmsoft.firefly.sdk.job.core.AbstractBasicJobHandler;
 import com.dmsoft.firefly.sdk.job.core.JobContext;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * view data handler
@@ -16,6 +17,9 @@ import com.dmsoft.firefly.sdk.job.core.JobContext;
  * @author Can Guan, Cherry Peng
  */
 public class ViewDataHandler extends AbstractBasicJobHandler {
+
+    @Autowired
+    private GrrFilterService grrFilterService;
     /**
      * constructor
      */
@@ -31,7 +35,7 @@ public class ViewDataHandler extends AbstractBasicJobHandler {
         SearchConditionDto searchConditionDto = context.getParam(ParamKeys.SEARCH_GRR_CONDITION_DTO, SearchConditionDto.class);
 
         // progress
-        GrrFilterService grrFilterService = RuntimeContext.getBean(GrrFilterService.class);
+//        GrrFilterService grrFilterService = RuntimeContext.getBean(GrrFilterService.class);
         GrrDataFrameDto grrDataFrameDto = grrFilterService.getGrrViewData(dataFrame, grrConfigDto, templateSettingDto, searchConditionDto);
         context.put(ParamKeys.SEARCH_VIEW_DATA_FRAME, grrDataFrameDto);
     }
