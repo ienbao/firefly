@@ -1,17 +1,24 @@
 package com.dmsoft.firefly.gui.components.window;
 
 import com.dmsoft.firefly.gui.components.utils.CommonResourceMassages;
-import com.dmsoft.firefly.gui.components.utils.FxmlAndLanguageUtils;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
+import com.dmsoft.firefly.sdk.dai.service.LanguageService;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.net.URL;
+import java.util.ResourceBundle;
 
 /**
  * Created by Julia on 2018/03/09.
  */
-public class WindowMessageController {
+@Component
+public class WindowMessageController implements Initializable {
     private Button okBtn, cancelBtn;
     @FXML
     private GridPane btnPane;
@@ -21,8 +28,11 @@ public class WindowMessageController {
     private Label smLbl;
     private WindowCustomListener windowCustomListener;
 
-    @FXML
-    private void initialize(){
+    @Autowired
+    private LanguageService languageService;
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
         iconLbl.getStyleClass().addAll("icon_error_svg");
         okBtn = new Button();
         okBtn.setFocusTraversable(false);
@@ -85,7 +95,7 @@ public class WindowMessageController {
     }
 
     private void initOKBtn() {
-        okBtn.setText(FxmlAndLanguageUtils.getString("GLOBAL_BTN_OK"));
+        okBtn.setText(languageService.getResourceBundle().getString("GLOBAL_BTN_OK"));
         okBtn.setOnAction(event -> {
             okEvent();
         });
@@ -100,9 +110,11 @@ public class WindowMessageController {
     }
 
     private void initCancelBtn() {
-        cancelBtn.setText(FxmlAndLanguageUtils.getString("GLOBAL_BTN_CANCEL"));
+        cancelBtn.setText(languageService.getResourceBundle().getString("GLOBAL_BTN_CANCEL"));
         cancelBtn.setOnAction(event -> {
             closeDialog();
         });
     }
+
+
 }
