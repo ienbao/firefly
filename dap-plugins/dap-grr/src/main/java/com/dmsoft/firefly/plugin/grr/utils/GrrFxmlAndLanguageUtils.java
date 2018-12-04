@@ -4,6 +4,7 @@
 package com.dmsoft.firefly.plugin.grr.utils;
 
 import com.dmsoft.firefly.gui.components.utils.ModuleType;
+import com.dmsoft.firefly.plugin.grr.service.GrrFxmlLoadService;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.plugin.PluginContext;
@@ -12,6 +13,8 @@ import javafx.fxml.FXMLLoader;
 
 import java.text.MessageFormat;
 import java.util.ResourceBundle;
+import javafx.scene.Node;
+import org.springframework.context.ApplicationContext;
 
 /**
  * Created by Ethan.Yang on 2018/2/11.
@@ -20,8 +23,18 @@ public class GrrFxmlAndLanguageUtils {
 
     public static boolean isDebug = false;
 
+    private static ApplicationContext context;
+
+    public static ApplicationContext getContext() {
+        return context;
+    }
+
+    public static void setContext(ApplicationContext context) {
+        GrrFxmlAndLanguageUtils.context = context;
+    }
+
     private static ResourceBundle getResourceBundle() {
-        LanguageType languageType = RuntimeContext.getBean(EnvService.class).getLanguageType();
+        LanguageType languageType = context.getBean(EnvService.class).getLanguageType();
         if (languageType == null) {
             languageType = LanguageType.EN;
         }
@@ -33,19 +46,24 @@ public class GrrFxmlAndLanguageUtils {
         return ResourceBundle.getBundle(bundleKey);
     }
 
-    /**
-     * get loaderFxml
-     *
-     * @param res the path of fxml
-     * @return loader
-     */
-    public static FXMLLoader getLoaderFXML(String res) {
-        FXMLLoader fxmlLoader = new FXMLLoader(GrrFxmlAndLanguageUtils.class.getClassLoader().getResource(res), getResourceBundle());
-        if (isDebug == false) {
-            fxmlLoader.setClassLoader(RuntimeContext.getBean(PluginContext.class).getDAPClassLoader("com.dmsoft.dap.GrrPlugin"));
-        }
+//    /**
+//     * get loaderFxml
+//     *
+//     * @param res the path of fxml
+//     * @return loader
+//     */
+//    public static FXMLLoader getLoaderFXML(String res) {
+//        FXMLLoader fxmlLoader = new FXMLLoader(GrrFxmlAndLanguageUtils.class.getClassLoader().getResource(res), getResourceBundle());
+//        if (isDebug == false) {
+//            fxmlLoader.setClassLoader(RuntimeContext.getBean(PluginContext.class).getDAPClassLoader("com.dmsoft.dap.GrrPlugin"));
+//        }
+//
+//        return fxmlLoader;
+//    }
 
-        return fxmlLoader;
+    public static Node load(String fileFxml){
+
+        return context.getBean(GrrFxmlLoadService.class).loadFxml(fileFxml);
     }
 
     public static String getString(String key) {

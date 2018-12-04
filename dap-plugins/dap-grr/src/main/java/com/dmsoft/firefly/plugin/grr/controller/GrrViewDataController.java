@@ -21,12 +21,14 @@ import javafx.scene.control.TableView;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
+import org.springframework.stereotype.Component;
 
 /**
  * grr view data controller
  *
  * @author Can Guan
  */
+@Component
 public class GrrViewDataController implements Initializable {
     @FXML
     private TextFieldFilter analysisFilterLB;

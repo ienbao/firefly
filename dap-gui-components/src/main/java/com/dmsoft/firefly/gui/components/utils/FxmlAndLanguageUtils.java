@@ -3,6 +3,7 @@
  */
 package com.dmsoft.firefly.gui.components.utils;
 
+import com.dmsoft.firefly.core.utils.DapLanguageUtils;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.plugin.PluginContext;
@@ -21,6 +22,7 @@ import java.util.ResourceBundle;
 public class FxmlAndLanguageUtils {
     private static final Logger LOGGER = LoggerFactory.getLogger(FxmlAndLanguageUtils.class);
     private static boolean IS_DEBUG = false;
+
 
     private static ResourceBundle getResourceBundle() {
         return FxmlAndLanguageUtils.getBundle(ModuleType.COM);
@@ -81,7 +83,7 @@ public class FxmlAndLanguageUtils {
     public static ResourceBundle getBundle(ModuleType moduleKey) {
         LanguageType languageType = null;
         if (IS_DEBUG == false) {
-            languageType = RuntimeContext.getBean(EnvService.class).getLanguageType();
+            languageType = DapLanguageUtils.getLanguageType();
         }
         if (languageType == null) {
             languageType = LanguageType.EN;

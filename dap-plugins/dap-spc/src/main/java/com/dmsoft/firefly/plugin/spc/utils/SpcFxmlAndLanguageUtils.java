@@ -3,6 +3,7 @@
  */
 package com.dmsoft.firefly.plugin.spc.utils;
 
+import com.dmsoft.firefly.core.utils.DapLanguageUtils;
 import com.dmsoft.firefly.gui.components.utils.ModuleType;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
@@ -20,7 +21,7 @@ public class SpcFxmlAndLanguageUtils {
     public static boolean isDebug = false;
 
     private static ResourceBundle getResourceBundle() {
-        LanguageType languageType = RuntimeContext.getBean(EnvService.class).getLanguageType();
+        LanguageType languageType = DapLanguageUtils.getLanguageType();
         if (languageType == null) {
             languageType = LanguageType.EN;
         }

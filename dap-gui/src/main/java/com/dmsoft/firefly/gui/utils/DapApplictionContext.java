@@ -19,6 +19,9 @@ public class DapApplictionContext {
     this.context = applicationContext;
   }
 
+  public ApplicationContext getContext() {
+    return context;
+  }
 
   public static synchronized DapApplictionContext getInstance(){
     if(instance == null){

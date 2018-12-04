@@ -20,13 +20,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import org.springframework.stereotype.Service;
 
 /**
  * impl class for grr analysis
  *
  * @author Can Guan
  */
-@Analysis
+@Service
 public class GrrAnalysisServiceImpl implements IAnalysis, GrrAnalysisService {
     private static final double NDC_RATE = 1.4;
     private static Logger logger = LoggerFactory.getLogger(GrrAnalysisServiceImpl.class);
