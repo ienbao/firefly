@@ -24,7 +24,6 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.Map;
 
-
 public class YieldExportViewDataModel implements TableModel {
     private SearchDataFrame dataFrame;
     private List<String> searchConditions;
