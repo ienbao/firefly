@@ -4,6 +4,7 @@ package com.dmsoft.firefly.gui.service;
 import com.dmsoft.firefly.core.sdkimpl.dai.SpringFxmlLoader;
 import com.dmsoft.firefly.sdk.dai.service.FxmlLoadService;
 import com.dmsoft.firefly.sdk.dai.service.LanguageService;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -25,5 +26,10 @@ public class GuiFxmlLoadServiceImpl implements FxmlLoadService {
   @Override
   public <T extends Node> T loadFxml(String fxmlFile) {
     return new SpringFxmlLoader().load(languageService.getResourceBundle(), context, this.getClass().getClassLoader(), fxmlFile);
+  }
+
+  @Override
+  public FXMLLoader getFxmlLoader(String fxmlFile) {
+    return new SpringFxmlLoader(context,languageService,fxmlFile);
   }
 }

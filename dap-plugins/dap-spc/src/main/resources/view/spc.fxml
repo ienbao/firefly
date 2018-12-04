@@ -30,8 +30,8 @@
                 <fx:include fx:id="statisticalResult" source="statistical_result.fxml" />
                     <SplitPane dividerPositions="0.5033557046979866" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                         <items>
-                            <fx:include fx:id="chartResult" source="chart_result.fxml" />
-                            <fx:include fx:id="viewData" source="view_data.fxml" />
+                            <fx:include fx:id="chartResult" source="/view/chart_result.fxml" />
+                            <fx:include fx:id="viewData" source="/view/view_data.fxml" />
                         </items>
                     </SplitPane>
             </SplitPane>

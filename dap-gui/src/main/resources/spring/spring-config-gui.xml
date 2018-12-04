@@ -8,6 +8,7 @@
   http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd" >
 
   <import resource="spring-config-core.xml"  />
+  <import resource="spring-config-gui-component.xml" />
   <import resource="spring-config-spc.xml" />
   <import resource="spring-config-grr.xml" />
   <import resource="spring-config-gui-component.xml" />
