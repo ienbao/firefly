@@ -15,7 +15,7 @@ import static com.google.common.io.Resources.getResource;
 public class StageSwitchDialog {
 
     public static void buildProcessorBarDialog() {
-        Pane root = DapUtils.loadFxml("/view/system_processor_bar.fxml");
+        Pane root = DapUtils.loadFxml("view/system_processor_bar.fxml");
         Stage stage = new Stage();
         Scene tempScene = new Scene(root);
         tempScene.setFill(Color.TRANSPARENT);//设置阴影

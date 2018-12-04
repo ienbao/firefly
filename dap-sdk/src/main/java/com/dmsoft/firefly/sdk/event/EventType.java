@@ -18,6 +18,12 @@ public enum EventType {
     PLATFORM_PROCESS_CLOSE,//关闭加载进度
     PLATFORM_RESET_MAIN,//重置主窗体
     UPDATA_PROGRESS,//更新进度条
+    SYSTEM_CHANGE_PASSWORD_FAILE,//修改密码失败
+    SYSTEM_OLDPASSWORD_NOT_CORRECT,//old密码不正确
+    SYSTEM_CHANGE_PASSWORD_SUCCESS
+
+
+
 
 
 

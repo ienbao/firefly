@@ -31,13 +31,15 @@ import javafx.scene.shape.Line;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-import java.awt.*;
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 
+@Component
 public class YieldChartResultController implements Initializable {
     private YieldMainController yieldMainController;
     @FXML
@@ -50,8 +52,14 @@ public class YieldChartResultController implements Initializable {
     private GridPane YieldGridPane;
     @FXML
     private ComboBox resultNTFNum;
-    private EnvService envService = RuntimeContext.getBean(EnvService.class);
-    private UserPreferenceService userPreferenceService = RuntimeContext.getBean(UserPreferenceService.class);
+
+    @Autowired
+    private EnvService envService;
+    @Autowired
+    private UserPreferenceService userPreferenceService;
+    @Autowired
+    private IMessageManager iMessageManager;
+
     private JsonMapper mapper = JsonMapper.defaultMapper();
     private String[] yieldBarChartLabel;
     private List<YieldNTFChartDto> yieldNTFChartDtos;
@@ -148,7 +156,7 @@ public class YieldChartResultController implements Initializable {
     private void setAnalysisBarChartResultItemData(YieldResultDto yieldResultDto) {
         if (yieldResultDto == null) {
             enableSubResultOperator(false);
-            RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
+            this.iMessageManager.showWarnMsg(
                     YieldFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
                     YieldFxmlAndLanguageUtils.getString("EXCEPTION_GRR_NO_ANALYSIS_RESULT"));
             return;
@@ -162,7 +170,7 @@ public class YieldChartResultController implements Initializable {
     private void setAnalysisBarChartResultData(YieldChartResultAlermDto yieldChartResultAlermDto) {
         if (yieldChartResultAlermDto == null) {
             enableSubResultOperator(false);
-            RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
+            this.iMessageManager.showWarnMsg(
                     YieldFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
                     YieldFxmlAndLanguageUtils.getString("EXCEPTION_GRR_NO_ANALYSIS_RESULT"));
             return;

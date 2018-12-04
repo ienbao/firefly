@@ -10,6 +10,7 @@ import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
 import com.dmsoft.firefly.sdk.exception.ApplicationException;
 import com.dmsoft.firefly.sdk.job.core.AbstractBasicJobHandler;
 import com.dmsoft.firefly.sdk.job.core.JobContext;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.LinkedList;
 
@@ -19,6 +20,9 @@ import java.util.LinkedList;
  * @author Can Guan, Cherry Peng
  */
 public class ValidateParamHandler extends AbstractBasicJobHandler {
+
+    @Autowired
+    private GrrFilterService grrFilterService;
     /**
      * constructor
      */
@@ -32,7 +36,7 @@ public class ValidateParamHandler extends AbstractBasicJobHandler {
         SearchConditionDto searchConditionDto = context.getParam(ParamKeys.SEARCH_GRR_CONDITION_DTO, SearchConditionDto.class);
 
         // progress
-        GrrFilterService grrFilterService = RuntimeContext.getBean(GrrFilterService.class);
+//        GrrFilterService grrFilterService = RuntimeContext.getBean(GrrFilterService.class);
 
         GrrParamDto grrParamDto = grrFilterService.validateGrrParam(dataFrame, searchConditionDto);
         if (grrParamDto.getErrors() == null || grrParamDto.getErrors().isEmpty()) {

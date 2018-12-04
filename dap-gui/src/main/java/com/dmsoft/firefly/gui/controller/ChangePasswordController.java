@@ -6,24 +6,26 @@ import com.dmsoft.firefly.gui.model.UserModel;
 import com.dmsoft.firefly.gui.utils.GuiFxmlAndLanguageUtils;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.service.UserService;
+import com.dmsoft.firefly.sdk.event.EventContext;
+import com.dmsoft.firefly.sdk.event.EventType;
+import com.dmsoft.firefly.sdk.event.PlatformEvent;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
  * Created by Julia.Zhou on 2018/2/11.
  */
-@Component
 public class ChangePasswordController {
 
     private static String errorStyle = "text-field-error";
 
-    @Autowired
-    private UserService userService;
+    private UserService userService = RuntimeContext.getBean(UserService.class);
 
     @FXML
     private TextField txtOldPassword;
@@ -46,21 +48,37 @@ public class ChangePasswordController {
     }
 
     private void initEvent() {
+        EventContext eventContext = RuntimeContext.getBean(EventContext.class);
         UserModel userModel = UserModel.getInstance();
+        //old密码错误
+        eventContext.addEventListener(EventType.SYSTEM_OLDPASSWORD_NOT_CORRECT,event -> {
+            WindowMessageFactory.createWindowMessageHasOk(GuiFxmlAndLanguageUtils.getString("CHANGE_PASSWORD"), GuiFxmlAndLanguageUtils.getString("CHANGE_PASSWORD_CHECK_PASSWORD"));
+        });
+        //修改密码失败
+        eventContext.addEventListener(EventType.SYSTEM_OLDPASSWORD_NOT_CORRECT,event -> {
+            WindowMessageFactory.createWindowMessageHasOk(GuiFxmlAndLanguageUtils.getString("CHANGE_PASSWORD"), GuiFxmlAndLanguageUtils.getString("CHANGE_PASSWORD_FAIL"));
+        });
+        //修改密码成功
+        eventContext.addEventListener(EventType.SYSTEM_CHANGE_PASSWORD_SUCCESS,event -> {
+            GuiFxmlAndLanguageUtils.buildChangePasswordBackDialog();
+        });
         btnOK.setOnAction(event -> {
-            if (txtOldPassword.getStyleClass().contains(errorStyle)
-                    || txtNewPassword.getStyleClass().contains(errorStyle)
-                    || txtConfirmPassword.getStyleClass().contains(errorStyle)) {
+            if (txtOldPassword.getStyleClass().contains(errorStyle) || txtNewPassword.getStyleClass().contains(errorStyle) || txtConfirmPassword.getStyleClass().contains(errorStyle)) {
                 return;
             }
             try {
+                //校验用户名，oldPassword，newPassword
                 if (userService.updatePassword(userModel.getUser().getUserName(), txtOldPassword.getText(), txtNewPassword.getText())) {
-                    GuiFxmlAndLanguageUtils.buildChangePasswordBackDialog();
+                    //修改密码成功
+                    eventContext.pushEvent(new PlatformEvent(EventType.SYSTEM_CHANGE_PASSWORD_SUCCESS,null));
+
                 } else {
-                    WindowMessageFactory.createWindowMessageHasOk(GuiFxmlAndLanguageUtils.getString("CHANGE_PASSWORD"), GuiFxmlAndLanguageUtils.getString("CHANGE_PASSWORD_CHECK_PASSWORD"));
+                    //old密码错误
+                    eventContext.pushEvent(new PlatformEvent(EventType.SYSTEM_OLDPASSWORD_NOT_CORRECT,null));
                 }
             } catch (Exception e) {
-                WindowMessageFactory.createWindowMessageHasOk(GuiFxmlAndLanguageUtils.getString("CHANGE_PASSWORD"), GuiFxmlAndLanguageUtils.getString("CHANGE_PASSWORD_FAIL"));
+                //修改密码失败
+                eventContext.pushEvent(new PlatformEvent(EventType.SYSTEM_CHANGE_PASSWORD_FAILE,null));
             }
         });
 
@@ -99,7 +117,7 @@ public class ChangePasswordController {
         } else {
             TooltipUtil.uninstallWarnTooltip(node);
             node.getStyleClass().removeAll(errorStyle);
-            if (DAPStringUtils.isNotBlank(msg) && (msg.length() < 6 || msg.length() >= 13)) {
+            if (DAPStringUtils.isNotBlank(msg) && (msg.length() < 6 || msg.length() > 12)) {
                 node.getStyleClass().add(errorStyle);
                 TooltipUtil.installWarnTooltip(node, GuiFxmlAndLanguageUtils.getString("CHANGE_PASSWORD_VALIDATE_LENGTH"));
             } else {
@@ -108,13 +126,14 @@ public class ChangePasswordController {
             }
         }
     }
-
     private void validateConfirm(String newPassword, String confirmPassword, Node node) {
-        if (DAPStringUtils.isBlank(newPassword) && DAPStringUtils.isBlank(confirmPassword)) {
+       boolean newPWDIsBlank =  DAPStringUtils.isBlank(newPassword);
+       boolean configPWSIsBlank = DAPStringUtils.isBlank(confirmPassword);
+
+        if (newPWDIsBlank && configPWSIsBlank) {
             node.getStyleClass().add(errorStyle);
             TooltipUtil.installWarnTooltip(node, GuiFxmlAndLanguageUtils.getString("CHANGE_PASSWORD_VALIDATE_EMPTY"));
-        } else if (DAPStringUtils.isNotBlank(newPassword) && DAPStringUtils.isNotBlank(confirmPassword) && (newPassword.length() < 6
-                || newPassword.length() >= 13) && (confirmPassword.length() < 6 || confirmPassword.length() >= 13)) {
+        } else if ( (newPassword.length() < 6 || newPassword.length() > 12) && (confirmPassword.length() < 6 || confirmPassword.length() > 12)) {
             node.getStyleClass().add(errorStyle);
             TooltipUtil.installWarnTooltip(node, GuiFxmlAndLanguageUtils.getString("CHANGE_PASSWORD_VALIDATE_LENGTH"));
         } else if (!newPassword.equals(confirmPassword)) {

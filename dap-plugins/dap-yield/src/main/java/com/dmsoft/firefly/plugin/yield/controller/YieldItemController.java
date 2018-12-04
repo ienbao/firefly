@@ -49,11 +49,14 @@ import javafx.util.Callback;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.net.URL;
 import java.util.*;
 
+@Component
 public class YieldItemController implements Initializable {
     private static final String STICKY_ON_TOP_CODE = "stick_on_top";
     private static final Double D20 = 20.0d;
@@ -85,6 +88,21 @@ public class YieldItemController implements Initializable {
 
     @FXML
     private SplitPane split;
+
+    @Autowired
+    private EnvService envService;
+    @Autowired
+    private UserPreferenceService userPreferenceService;
+    @Autowired
+    private IMessageManager iMessageManager;
+    @Autowired
+    private EventContext eventContext;
+    @Autowired
+    private JobFactory jobFactory;
+    @Autowired
+    private JobManager jobManager;
+
+
     private SearchTab searchTab;
     private CheckBox box;
     private ObservableList<ItemTableModel> items = FXCollections.observableArrayList();
@@ -94,9 +112,8 @@ public class YieldItemController implements Initializable {
     private YieldResultDataController yieldResultDataController;
     private ContextMenu pop;
     private boolean isFilterUslOrLsl = false;
-    private EnvService envService = RuntimeContext.getBean(EnvService.class);
+
     private YieldLeftConfigServiceImpl leftConfigService = new YieldLeftConfigServiceImpl();
-    private UserPreferenceService userPreferenceService = RuntimeContext.getBean(UserPreferenceService.class);
     private JsonMapper mapper = JsonMapper.defaultMapper();
     // cached items for user preference
     private List<String> stickyOnTopItems = Lists.newArrayList();
@@ -399,7 +416,7 @@ public class YieldItemController implements Initializable {
             itemTable.refresh();
         });
         MenuItem setting = new MenuItem(YieldFxmlAndLanguageUtils.getString(ResourceMassages.SPECIFICATION_SETTING));
-        setting.setOnAction(event -> RuntimeContext.getBean(EventContext.class).pushEvent(new PlatformEvent(null, "Template_Show")));
+        setting.setOnAction(event -> this.eventContext.pushEvent(new PlatformEvent(null, "Template_Show")));
         right.getItems().addAll(top, setting);
         return right;
     }
@@ -571,11 +588,11 @@ public class YieldItemController implements Initializable {
         List<TestItemWithTypeDto> selectedItemDto = this.initSelectedItemDto();
         if (selectedItemDto.size() == 0) {
             if (itemTab.isSelected()) {
-                RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
+                this.iMessageManager.showWarnMsg(
                         YieldFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
                         YieldFxmlAndLanguageUtils.getString("UI_YIELD_ANALYSIS_ITEM_EMPTY"));
             } else {
-                RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
+                this.iMessageManager.showWarnMsg(
                         YieldFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
                         YieldFxmlAndLanguageUtils.getString("UI_YIELD_ANALYSIS_ITEM_EMPTY"),
                         YieldFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_LOCATION, new String[]{YieldFxmlAndLanguageUtils.getString("TEST_ITEM_TAB")}), yieldItemEvent());
@@ -584,11 +601,11 @@ public class YieldItemController implements Initializable {
         }
         if (isConfigError()) {
             if (configTab.isSelected()) {
-                RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
+                this.iMessageManager.showWarnMsg(
                         YieldFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
                         YieldFxmlAndLanguageUtils.getString("UI_YIELD_CONFIGURATION_INVALIDATE"));
             } else {
-                RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
+                this.iMessageManager.showWarnMsg(
                         YieldFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
                         YieldFxmlAndLanguageUtils.getString("UI_YIELD_CONFIGURATION_INVALIDATE"),
                         YieldFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_LOCATION, new String[]{YieldFxmlAndLanguageUtils.getString("YIELD_CONFIG_TAB")}), yieldConfigEvent());
@@ -628,7 +645,7 @@ public class YieldItemController implements Initializable {
         this.updateYieldConfigPreference(yieldAnalysisConfigDto);
         WindowProgressTipController windowProgressTipController = WindowMessageFactory.createWindowProgressTip();
         windowProgressTipController.setAutoHide(false);
-        JobContext context = RuntimeContext.getBean(JobFactory.class).createJobContext();
+        JobContext context = this.jobFactory.createJobContext();
         context.put(ParamKeys.PROJECT_NAME_LIST, projectNameList);
         context.put(ParamKeys.SEARCH_CONDITION_DTO_LIST, searchConditionDtoList);
         context.put(ParamKeys.YIELD_ANALYSIS_CONFIG_DTO, yieldAnalysisConfigDto);
@@ -652,7 +669,7 @@ public class YieldItemController implements Initializable {
                 windowProgressTipController.setCancelingText();
             });
         }
-        JobPipeline jobPipeline = RuntimeContext.getBean(JobManager.class).getPipeLine(ParamKeys.YIELD_ANALYSIS_JOB_PIPELINE);
+        JobPipeline jobPipeline = this.jobManager.getPipeLine(ParamKeys.YIELD_ANALYSIS_JOB_PIPELINE);
         jobPipeline.setCompleteHandler(new AbstractBasicJobHandler() {
             @Override
             public void doJob(JobContext context) {
@@ -695,7 +712,7 @@ public class YieldItemController implements Initializable {
             }
         });
         logger.info("Start analysis Yield.");
-        RuntimeContext.getBean(JobManager.class).fireJobASyn(jobPipeline, context);
+        this.jobManager.fireJobASyn(jobPipeline, context);
     }
 
 
@@ -869,7 +886,7 @@ public class YieldItemController implements Initializable {
                 searchTab.getGroup1().setValue(yieldLeftConfigDto.getAutoGroup1());
                 searchTab.getGroup2().setValue(yieldLeftConfigDto.getAutoGroup2());
             } else {
-                RuntimeContext.getBean(IMessageManager.class).showWarnMsg(
+                this.iMessageManager.showWarnMsg(
                         YieldFxmlAndLanguageUtils.getString(UIConstant.UI_MESSAGE_TIP_WARNING_TITLE),
                         YieldFxmlAndLanguageUtils.getString("IMPORT_EXCEPTION"));
             }

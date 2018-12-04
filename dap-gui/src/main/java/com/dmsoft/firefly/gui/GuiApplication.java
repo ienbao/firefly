@@ -1,6 +1,7 @@
 package com.dmsoft.firefly.gui;
 
 import com.dmsoft.firefly.core.DAPApplication;
+import com.dmsoft.firefly.core.utils.PluginXMLParser;
 import com.dmsoft.firefly.gui.components.utils.NodeMap;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
@@ -11,8 +12,12 @@ import com.dmsoft.firefly.sdk.dai.service.UserService;
 import com.dmsoft.firefly.sdk.event.EventContext;
 import com.dmsoft.firefly.sdk.event.EventType;
 import com.dmsoft.firefly.sdk.event.PlatformEvent;
+import com.dmsoft.firefly.sdk.plugin.PluginContext;
+import com.dmsoft.firefly.sdk.plugin.PluginInfo;
 import com.dmsoft.firefly.sdk.utils.enums.LanguageType;
 import de.codecentric.centerdevice.javafxsvg.SvgImageLoaderFactory;
+import java.util.ArrayList;
+import java.util.List;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.layout.Pane;
@@ -34,6 +39,8 @@ public class GuiApplication extends Application {
   private UserService userService;
   private EventContext eventContext;
   private EnvService envService;
+  private PluginContext pluginContext;
+
 
   /**
    * main method
@@ -53,6 +60,7 @@ public class GuiApplication extends Application {
     this.userService = applictionContext.getBean(UserService.class);
     this.eventContext = applictionContext.getBean(EventContext.class);
     this.envService = applictionContext.getBean(EnvService.class);
+    this.pluginContext = applictionContext.getBean(PluginContext.class);
 
     DAPApplication.initEnv();
     registEvent();
@@ -64,19 +72,20 @@ public class GuiApplication extends Application {
     }
 
     MenuFactory.initMenu();
+    this.loadingPlugin(DapUtils.loadActivePluginList());
+
 
     LanguageType languageType = this.envService.getLanguageType();
     if (languageType != null) {
       this.envService.setLanguageType(languageType);
     }
 
-    Pane root = DapUtils.loadFxml("/view/app_menu.fxml");
-    Pane main = DapUtils.loadFxml("/view/main.fxml");
+    Pane root = DapUtils.loadFxml("view/app_menu.fxml");
+    Pane main = DapUtils.loadFxml("view/main.fxml");
 
     StageMap.setPrimaryStage(GuiConst.PLARTFORM_STAGE_MAIN, WindowFactory.createFullWindow(GuiConst.PLARTFORM_STAGE_MAIN, root, main,
         getClass().getClassLoader().getResource("css/platform_app.css").toExternalForm()));
     NodeMap.addNode(GuiConst.PLARTFORM_NODE_MAIN, main);
-
 
     Runtime.getRuntime().addShutdownHook(new Thread() {
       @Override
@@ -98,6 +107,22 @@ public class GuiApplication extends Application {
         EventType.PLATFORM_TEMPLATE_SHOW,
         event -> { GuiFxmlAndLanguageUtils.buildTemplateDialog(); });
   }
+
+
+  private void loadingPlugin(List<String> activePluginList){
+    List<String> urlList = new ArrayList<>();
+//    urlList.add(this.getClass().getClassLoader().getResource("plugins/am-plugin.xml").getFile());
+//    urlList.add(this.getClass().getClassLoader().getResource("plugins/grr-plugin.xml").getFile());
+    urlList.add(this.getClass().getClassLoader().getResource("plugins/spc-plugin.xml").getFile());
+//    urlList.add(this.getClass().getClassLoader().getResource("plugins/tm-plugin.xml").getFile());
+//    urlList.add(this.getClass().getClassLoader().getResource("plugins/yeild-plugin.xml").getFile());
+
+    List<PluginInfo> scannedPlugins = PluginXMLParser.parseXML(urlList);
+    this.pluginContext.installPlugin(scannedPlugins);
+    this.pluginContext.enablePlugin(activePluginList);
+    this.pluginContext.startPlugin(activePluginList);
+  }
+
 
   private void showMain(){
     if (!userService.findLegal()) {

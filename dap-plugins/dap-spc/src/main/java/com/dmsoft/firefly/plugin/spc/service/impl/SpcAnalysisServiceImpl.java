@@ -20,13 +20,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import org.springframework.stereotype.Component;
 
 /**
  * impl class for spc analysis
  *
  * @author Can Guan
  */
-@Analysis
+@Component
 public class SpcAnalysisServiceImpl implements SpcAnalysisService, IAnalysis {
     private static Logger logger = LoggerFactory.getLogger(SpcAnalysisServiceImpl.class);
     private Rengine privateEngine = null;

@@ -34,10 +34,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Set;
+import org.springframework.stereotype.Component;
 
 /**
  * Created by Ethan.Yang on 2018/2/2.
  */
+@Component
 public class SpcMainController implements Initializable {
 
     private static Logger logger = LoggerFactory.getLogger(SpcMainController.class);

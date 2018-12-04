@@ -11,6 +11,7 @@ import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
 import com.dmsoft.firefly.sdk.job.core.AbstractBasicJobHandler;
 import com.dmsoft.firefly.sdk.job.core.JobContext;
 import com.google.common.collect.Lists;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
@@ -20,6 +21,9 @@ import java.util.List;
  * @author Can Guan, Cherry Peng
  */
 public class RefreshHandler extends AbstractBasicJobHandler {
+
+    @Autowired
+    private GrrService grrService;
     /**
      * constructor
      */
@@ -40,7 +44,7 @@ public class RefreshHandler extends AbstractBasicJobHandler {
             testItemWithTypeDto = (TestItemWithTypeDto) context.get(ParamKeys.TEST_ITEM_WITH_TYPE_DTO);
         }
 
-        GrrService grrService = RuntimeContext.getBean(GrrService.class);
+//        GrrService grrService = RuntimeContext.getBean(GrrService.class);
         List<GrrSummaryDto> summaryDtos = grrService.getSummaryResult(grrDataFrameDto.getDataFrame(),
                 itemWithTypeDtos,
                 includeRows,

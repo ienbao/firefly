@@ -19,12 +19,15 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.TableView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
 
+@Component
 public class OverViewController implements Initializable {
     private final Logger logger = LoggerFactory.getLogger(OverViewController.class);
 
@@ -33,11 +36,17 @@ public class OverViewController implements Initializable {
     @FXML
     private TableView overViewResultTb;
 
+    @Autowired
+    private EnvService envService;
+    @Autowired
+    private JobFactory jobFactory;
+    @Autowired
+    private JobManager jobManager;
+
     private YieldMainController yieldMainController;
     private ViewDataController viewDataController;
     private YieldItemController yieldItemController;
     private List<SearchConditionDto> OverViewConditionDtoList;
-    private EnvService envService = RuntimeContext.getBean(EnvService.class);
 
     private OverViewTableModel overViewTableModel;
     private List<String> selectOverViewResultName = Lists.newArrayList();
@@ -120,7 +129,7 @@ public class OverViewController implements Initializable {
             selectSearchConditionDtoList.get(0).setYieldType(YieldType.TOTAL);
         }
 
-        JobContext context = RuntimeContext.getBean(JobFactory.class).createJobContext();
+        JobContext context = this.jobFactory.createJobContext();
         context.put(ParamKeys.PROJECT_NAME_LIST, projectNameList);
         context.put(ParamKeys.SEARCH_DATA_FRAME, dataFrame);
         context.put(ParamKeys.VIEW_SEARCH_CONDITION_DTO_LIST, selectSearchConditionDtoList);
@@ -128,7 +137,7 @@ public class OverViewController implements Initializable {
         context.put(ParamKeys.YIELD_ANALYSIS_CONFIG_DTO, yieldAnalysisConfigDto);
 
 
-        JobPipeline jobPipeline = RuntimeContext.getBean(JobManager.class).getPipeLine(ParamKeys.YIELD_VIEW_DATA_JOB_PIPELINE);
+        JobPipeline jobPipeline = this.jobManager.getPipeLine(ParamKeys.YIELD_VIEW_DATA_JOB_PIPELINE);
         jobPipeline.setCompleteHandler(new AbstractBasicJobHandler() {
             @Override
             public void doJob(JobContext context) {
@@ -164,7 +173,7 @@ public class OverViewController implements Initializable {
             }
         });
         logger.info("ViewData Yield.");
-        RuntimeContext.getBean(JobManager.class).fireJobASyn(jobPipeline, context);
+        this.jobManager.fireJobASyn(jobPipeline, context);
 
     }
 

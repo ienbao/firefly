@@ -11,6 +11,7 @@ import com.dmsoft.firefly.sdk.job.core.AbstractBasicJobHandler;
 import com.dmsoft.firefly.sdk.job.core.JobContext;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 import java.util.Set;
@@ -21,6 +22,9 @@ import java.util.Set;
  * @author Can Guan, Cherry Peng
  */
 public class FindExportDetailHandler extends AbstractBasicJobHandler {
+
+    @Autowired
+    private GrrService grrService;
     /**
      * constructor
      */
@@ -43,7 +47,7 @@ public class FindExportDetailHandler extends AbstractBasicJobHandler {
             appraisers.add(grrViewDataDto.getOperator());
         });
         searchConditionDto.setAppraisers(Lists.newArrayList(appraisers));
-        GrrService grrService = RuntimeContext.getBean(GrrService.class);
+//        GrrService grrService = RuntimeContext.getBean(GrrService.class);
 
         List<GrrExportDetailDto> grrDetailDtos = Lists.newArrayList();
         for (TestItemWithTypeDto item : itemWithTypeDtos) {

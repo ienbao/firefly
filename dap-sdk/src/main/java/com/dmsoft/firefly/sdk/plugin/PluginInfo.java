@@ -127,4 +127,23 @@ public class PluginInfo {
     public void setPluginObject(Plugin pluginObject) {
         this.pluginObject = pluginObject;
     }
+
+    @Override
+    public String toString() {
+        return "PluginInfo{" +
+            "id='" + id + '\'' +
+            ", name='" + name + '\'' +
+            ", version='" + version + '\'' +
+            ", author='" + author + '\'' +
+            ", description='" + description + '\'' +
+            ", scanPath='" + scanPath + '\'' +
+            ", runtimePath='" + runtimePath + '\'' +
+            ", pluginClassName='" + pluginClassName + '\'' +
+            ", requirements=" + requirements +
+            ", config=" + config +
+            ", folderPath='" + folderPath + '\'' +
+            ", status=" + status +
+            ", pluginObject=" + pluginObject +
+            '}';
+    }
 }

@@ -1,5 +1,6 @@
 package com.dmsoft.firefly.plugin.grr.handler;
 
+import com.dmsoft.firefly.plugin.grr.service.GrrService;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.RowDataDto;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
@@ -7,6 +8,7 @@ import com.dmsoft.firefly.sdk.dai.service.SourceDataService;
 import com.dmsoft.firefly.sdk.job.core.AbstractBasicJobHandler;
 import com.dmsoft.firefly.sdk.job.core.JobContext;
 import com.google.common.collect.Lists;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
@@ -16,6 +18,9 @@ import java.util.List;
  * @author Can Guan
  */
 public class FindTestDataHandler extends AbstractBasicJobHandler {
+
+    @Autowired
+    private SourceDataService sourceDataService;
     /**
      * constructor
      */
@@ -32,7 +37,7 @@ public class FindTestDataHandler extends AbstractBasicJobHandler {
         for (TestItemWithTypeDto testItemWithTypeDto : testItemWithTypeDtoList) {
             testItemNames.add(testItemWithTypeDto.getTestItemName());
         }
-        SourceDataService sourceDataService = RuntimeContext.getBean(SourceDataService.class);
+//        SourceDataService sourceDataService = RuntimeContext.getBean(SourceDataService.class);
         List<RowDataDto> dataDtoList = sourceDataService.findTestData(projectNameList, testItemNames);
         context.put(ParamKeys.ROW_DATA_DTO_LIST, dataDtoList);
     }

@@ -8,6 +8,7 @@ import com.dmsoft.firefly.sdk.dataframe.DataFrameFactory;
 import com.dmsoft.firefly.sdk.dataframe.SearchDataFrame;
 import com.dmsoft.firefly.sdk.job.core.AbstractBasicJobHandler;
 import com.dmsoft.firefly.sdk.job.core.JobContext;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
@@ -17,6 +18,9 @@ import java.util.List;
  * @author Can Guan
  */
 public class DataFrameHandler extends AbstractBasicJobHandler {
+
+    @Autowired
+    private DataFrameFactory dataFrameFactory;
     /**
      * constructor
      */
@@ -31,7 +35,7 @@ public class DataFrameHandler extends AbstractBasicJobHandler {
         SearchConditionDto searchConditionDto = context.getParam(ParamKeys.SEARCH_GRR_CONDITION_DTO, SearchConditionDto.class);
 
         // progress
-        DataFrameFactory dataFrameFactory = RuntimeContext.getBean(DataFrameFactory.class);
+//        DataFrameFactory dataFrameFactory = RuntimeContext.getBean(DataFrameFactory.class);
 
         SearchDataFrame dataFrame = dataFrameFactory.
                 createSearchDataFrame((List<TestItemWithTypeDto>) context.get(ParamKeys.TEST_ITEM_WITH_TYPE_DTO_LIST), rowDataDtoList);

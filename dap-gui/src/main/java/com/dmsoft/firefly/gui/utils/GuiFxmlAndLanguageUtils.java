@@ -6,16 +6,10 @@ package com.dmsoft.firefly.gui.utils;
 import com.dmsoft.firefly.gui.components.utils.ModuleType;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
-import com.dmsoft.firefly.gui.controller.SpringFxmlLoader;
-import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
-import com.dmsoft.firefly.sdk.event.EventContext;
 import com.dmsoft.firefly.sdk.utils.enums.LanguageType;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.text.MessageFormat;
 import java.util.ResourceBundle;
@@ -100,7 +94,7 @@ public class GuiFxmlAndLanguageUtils {
     public static void buildLoginDialog() {
         Pane root = null;
         try {
-            root = DapUtils.loadFxml("/view/login.fxml");
+            root = DapUtils.loadFxml("view/login.fxml");
             Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel(GuiConst.PLARTFORM_STAGE_LOGIN, "", root, getResource("css/platform_app.css").toExternalForm());
             stage.setResizable(false);
             stage.toFront();
@@ -116,7 +110,7 @@ public class GuiFxmlAndLanguageUtils {
     public static void buildChangePasswordDialog() {
         Pane root = null;
         try {
-            root = DapUtils.loadFxml("/view/change_password.fxml");
+            root = DapUtils.loadFxml("view/change_password.fxml");
             Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel(GuiConst.PLARTFORM_STAGE_CHANGE_PASSWORD,
                     GuiFxmlAndLanguageUtils.getString("CHANGE_PASSWORD"), root, getResource("css/platform_app.css").toExternalForm());
             stage.setResizable(false);
@@ -133,7 +127,7 @@ public class GuiFxmlAndLanguageUtils {
     public static void buildLegalDialog() {
         Pane root = null;
         try {
-            root = DapUtils.loadFxml("/view/legal_notice.fxml");
+            root = DapUtils.loadFxml("view/legal_notice.fxml");
             Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel(GuiConst.PLARTFORM_STAGE_LEGAL,
                     GuiFxmlAndLanguageUtils.getString(ResourceMassages.MENU_LEGAL_NOTICE), root, getResource("css/platform_app.css").toExternalForm());
             stage.setResizable(false);
@@ -205,7 +199,7 @@ public class GuiFxmlAndLanguageUtils {
     public static void buildSelectDataSource() {
         Pane root = null;
         try {
-            root = DapUtils.loadFxml("/view/data_source.fxml");
+            root = DapUtils.loadFxml("view/data_source.fxml");
             Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("dataSource",
                     GuiFxmlAndLanguageUtils.getString(ResourceMassages.DATA_SOURCE), root, getResource("css/platform_app.css").toExternalForm());
             stage.toFront();

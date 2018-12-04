@@ -10,6 +10,7 @@ import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
 import com.dmsoft.firefly.sdk.job.core.AbstractBasicJobHandler;
 import com.dmsoft.firefly.sdk.job.core.JobContext;
 import com.google.common.collect.Lists;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
@@ -19,6 +20,9 @@ import java.util.List;
  * @author Can Guan, Cherry Peng
  */
 public class DetailResultHandler extends AbstractBasicJobHandler {
+
+    @Autowired
+    private GrrService grrService;
     /**
      * constructor
      */
@@ -37,7 +41,7 @@ public class DetailResultHandler extends AbstractBasicJobHandler {
         List<String> includeRows = Lists.newLinkedList();
         grrDataFrameDto.getIncludeDatas().forEach(grrViewDataDto -> includeRows.add(grrViewDataDto.getRowKey()));
 
-        GrrService grrService = RuntimeContext.getBean(GrrService.class);
+//        GrrService grrService = RuntimeContext.getBean(GrrService.class);
         String itemName = itemWithTypeDtos.get(0).getTestItemName();
         GrrDetailDto grrDetailDto = grrService.getDetailResult(grrDataFrameDto.getDataFrame().getDataColumn(itemName, null),
                 itemWithTypeDtos.get(0),
