@@ -9,6 +9,7 @@ import com.dmsoft.firefly.core.utils.DataFormat;
 import com.dmsoft.firefly.gui.components.service.GuiComponentFxmlLoadService;
 import com.dmsoft.firefly.gui.components.utils.*;
 import com.dmsoft.firefly.gui.components.window.*;
+import com.dmsoft.firefly.gui.controller.NewNameController;
 import com.dmsoft.firefly.gui.event.DataSourceCellEvent;
 import com.dmsoft.firefly.gui.model.ChooseTableRowData;
 import com.dmsoft.firefly.gui.utils.DapUtils;
@@ -94,6 +95,8 @@ public class DataSourceController implements Initializable {
     private LanguageService languageService;
     @Autowired
     private GuiComponentFxmlLoadService guiComponentFxmlLoadService;
+    @Autowired
+    private FxmlLoadService fxmlLoadService;
 
     private EventHandler eventHandler;
 
@@ -122,40 +125,41 @@ public class DataSourceController implements Initializable {
                             super.setGraphic(null);
                         } else {
                             try {
+                                //TODO td 在DataSourceController中操作其他controller
                                 DataSourceTableCell dataSourceTableCell = new DataSourceTableCell(item);
                                 dataSourceTableCell.addEventHandler(DataSourceCellEvent.RENAME, event -> {
-//                                    Pane root = null;
-//                                    Stage renameStage = null;
-//                                    NewNameController renameTemplateController = null;
-//                                    try {
-//                                        FXMLLoader loader = this.fxmlLoadService.loadFxml("view/new_template.fxml");
-//                                        root = loader.load();
-//                                        renameTemplateController = loader.getController();
-//                                        renameTemplateController.setPaneName("renameProject");
-//                                        renameTemplateController.setInitName(item.getValue());
-//
-//                                        NewNameController finalRenameTemplateController = renameTemplateController;
-//                                        renameTemplateController.getOk().setOnAction(renameEvent -> {
-//                                            if (finalRenameTemplateController.isError()) {
-//                                                //WindowMessageFactory.createWindowMessageHasOk(GuiFxmlAndLanguageUtils.getString(ResourceMassages.WARN_HEADER), GuiFxmlAndLanguageUtils.getString(ResourceMassages.TEMPLATE_NAME_EMPTY_WARN));
-//                                                return;
-//                                            }
-//                                            TextField n = finalRenameTemplateController.getName();
-//                                            if (StringUtils.isNotEmpty(n.getText()) && !n.getText().equals(item.getValue().toString())) {
-//                                                String newString = DAPStringUtils.filterSpeChars4Mongo(n.getText());
-//                                                sourceDataService.renameProject(item.getValue(), newString);
-//                                                item.setValue(newString);
-//                                                dataSourceTable.refresh();
-//                                                updateProjectOrder();
-//                                            }
-//                                            StageMap.closeStage("renameProject");
-//                                        });
-//                                        renameStage = WindowFactory.createOrUpdateSimpleWindowAsModel("renameProject", GuiFxmlAndLanguageUtils.getString("RENAME_DATA_SOURCE"), root);
-//                                        renameTemplateController.getName().setText(item.getValue());
-//                                        renameStage.toFront();
-//                                        renameStage.show();
-//                                    } catch (Exception ignored) {
-//                                    }
+                                    Pane root = null;
+                                    Stage renameStage = null;
+                                    NewNameController renameTemplateController = null;
+                                    try {
+                                        FXMLLoader loader = fxmlLoadService.getFxmlLoader("view/new_template.fxml");
+                                        root = loader.load();
+                                        renameTemplateController = loader.getController();
+                                        renameTemplateController.setPaneName("renameProject");
+                                        renameTemplateController.setInitName(item.getValue());
+                                        NewNameController finalRenameTemplateController = renameTemplateController;
+                                        renameTemplateController.getOk().setOnAction(renameEvent -> {
+                                            if (finalRenameTemplateController.isError()) {
+                                                //WindowMessageFactory.createWindowMessageHasOk(GuiFxmlAndLanguageUtils.getString(ResourceMassages.WARN_HEADER), GuiFxmlAndLanguageUtils.getString(ResourceMassages.TEMPLATE_NAME_EMPTY_WARN));
+                                                return;
+                                            }
+                                            TextField n = finalRenameTemplateController.getName();
+                                            if (StringUtils.isNotEmpty(n.getText()) && !n.getText().equals(item.getValue().toString())) {
+                                                String newString = DAPStringUtils.filterSpeChars4Mongo(n.getText());
+                                                sourceDataService.renameProject(item.getValue(), newString);
+                                                item.setValue(newString);
+                                                dataSourceTable.refresh();
+                                                updateProjectOrder();
+                                            }
+                                            StageMap.closeStage("renameProject");
+                                        });
+                                        renameStage = WindowFactory.createOrUpdateSimpleWindowAsModel("renameProject", GuiFxmlAndLanguageUtils.getString("RENAME_DATA_SOURCE"), root);
+                                        renameTemplateController.getName().setText(item.getValue());
+                                        renameStage.toFront();
+                                        renameStage.show();
+                                    } catch (Exception ignored) {
+                                        ignored.printStackTrace();
+                                    }
                                 });
 
                                 dataSourceTableCell.addEventHandler(DataSourceCellEvent.DELETE,event -> {

@@ -22,17 +22,25 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  * spc plugin
  */
+@Component
 public class AMCsvResolverPlugin extends Plugin {
     private static final Logger logger = LoggerFactory.getLogger(AMCsvResolverPlugin.class);
 
+    @Autowired
+    private PluginImageContext pluginImageContext;
+    @Autowired
+    private PluginUIContext pluginUIContext;
+
     @Override
     public void initialize(InitModel model) {
-        RuntimeContext.getBean(PluginImageContext.class).registerPluginInstance("com.dmsoft.dap.AMCsvResolverPlugin", "com.dmsoft.firefly.plugin.am.csvresolver.service.CsvResolverService", new CsvResolverService());
-        RuntimeContext.getBean(PluginImageContext.class).registerPluginInstance("com.dmsoft.dap.AMCsvResolverPlugin", "com.dmsoft.firefly.plugin.am.csvresolver.service.CsvConfigService", new CsvConfigService());
+        this.pluginImageContext.registerPluginInstance("com.dmsoft.dap.AMCsvResolverPlugin", "com.dmsoft.firefly.plugin.am.csvresolver.service.CsvResolverService", new CsvResolverService());
+        this.pluginImageContext.registerPluginInstance("com.dmsoft.dap.AMCsvResolverPlugin", "com.dmsoft.firefly.plugin.am.csvresolver.service.CsvConfigService", new CsvConfigService());
 
         logger.info("Plugin-CsvResolver Initialized.");
     }
@@ -44,7 +52,7 @@ public class AMCsvResolverPlugin extends Plugin {
         menuItem.setId("amcsvResolver");
         menuItem.setOnAction(event -> build());
 
-        RuntimeContext.getBean(PluginUIContext.class).registerMenu(new MenuBuilder("com.dmsoft.dap.AMCsvResolverPlugin",
+        this.pluginUIContext.registerMenu(new MenuBuilder("com.dmsoft.dap.AMCsvResolverPlugin",
                 MenuBuilder.MenuType.MENU_ITEM, "amcsvResolver", MenuBuilder.MENU_PREFERENCE).addMenu(menuItem));
 
         logger.debug("Plugin-AM-CsvResolver UI register done.");

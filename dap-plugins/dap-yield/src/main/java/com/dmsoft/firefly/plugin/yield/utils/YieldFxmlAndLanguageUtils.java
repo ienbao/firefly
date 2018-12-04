@@ -14,6 +14,7 @@ public class YieldFxmlAndLanguageUtils {
     public static boolean isDebug = false;
 
     private static ResourceBundle getResourceBundle() {
+        DapLanguageUtils a;
         LanguageType languageType = RuntimeContext.getBean(EnvService.class).getLanguageType();
         if (languageType == null) {
             languageType = LanguageType.EN;

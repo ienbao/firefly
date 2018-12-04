@@ -118,7 +118,7 @@ public class GuiApplication extends Application {
     urlList.add(this.getClass().getClassLoader().getResource("plugins/grr-plugin.xml").getFile());
 //    urlList.add(this.getClass().getClassLoader().getResource("plugins/spc-plugin.xml").getFile());
 //    urlList.add(this.getClass().getClassLoader().getResource("plugins/tm-plugin.xml").getFile());
-//    urlList.add(this.getClass().getClassLoader().getResource("plugins/yeild-plugin.xml").getFile());
+    urlList.add(this.getClass().getClassLoader().getResource("plugins/yeild-plugin.xml").getFile());
 
     List<PluginInfo> scannedPlugins = PluginXMLParser.parseXML(urlList);
     this.pluginContext.installPlugin(scannedPlugins);

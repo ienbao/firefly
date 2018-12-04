@@ -13,6 +13,8 @@
   <import resource="spring-config-grr.xml" />
   <import resource="spring-config-gui-component.xml" />
   <import resource="spring-config-yield.xml"/>
+  <import resource="spring-config-am-csv-resolver.xml"/>
+  <!--<import resource="spring-config-tm-csv-resolver.xml"/>-->
 
   <context:component-scan base-package="com.dmsoft.firefly.gui" />
 

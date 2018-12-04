@@ -68,7 +68,6 @@ public class YieldPlugin extends Plugin {
             @Override
             public Pane getNewPane() {
                 FXMLLoader fxmlLoader = YieldFxmlAndLanguageUtils.getLoaderFXML(ViewResource.Yield_VIEW_RES);
-                //FXMLLoader fxmlLoader = SpcFxmlAndLanguageUtils.getInstance().getLoaderFXML("view/spc.fxml");
                 Pane root = null;
                 try {
                     root = fxmlLoader.load();
