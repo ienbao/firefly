@@ -1,5 +1,6 @@
 package com.dmsoft.firefly.plugin.spc.service;
 
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 
 /**
@@ -10,4 +11,5 @@ public interface SpcFxmlLoadService {
 
   <T extends Node> T loadFxml(String fxmlFile);
 
+  FXMLLoader getFxmlLoader(String fxmlFile);
 }

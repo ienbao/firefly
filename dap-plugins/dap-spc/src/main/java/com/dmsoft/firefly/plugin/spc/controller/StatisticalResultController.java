@@ -41,6 +41,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import static java.util.Arrays.asList;
@@ -64,8 +65,10 @@ public class StatisticalResultController implements Initializable {
     private StatisticalTableModel statisticalTableModel;
 
     private List<String> selectStatisticalResultName = Lists.newArrayList();
-    private EnvService envService = RuntimeContext.getBean(EnvService.class);
-    private UserPreferenceService userPreferenceService = RuntimeContext.getBean(UserPreferenceService.class);
+    @Autowired
+    private EnvService envService ;
+    @Autowired
+    private UserPreferenceService userPreferenceService ;
     private JsonMapper mapper = JsonMapper.defaultMapper();
 
     @Override

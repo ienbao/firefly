@@ -1,5 +1,6 @@
 package com.dmsoft.firefly.plugin.yield.utils;
 
+import com.dmsoft.firefly.core.utils.DapLanguageUtils;
 import com.dmsoft.firefly.gui.components.utils.ModuleType;
 import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
@@ -14,8 +15,7 @@ public class YieldFxmlAndLanguageUtils {
     public static boolean isDebug = false;
 
     private static ResourceBundle getResourceBundle() {
-        DapLanguageUtils a;
-        LanguageType languageType = RuntimeContext.getBean(EnvService.class).getLanguageType();
+        LanguageType languageType = DapLanguageUtils.getLanguageType();
         if (languageType == null) {
             languageType = LanguageType.EN;
         }
