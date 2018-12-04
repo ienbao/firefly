@@ -21,8 +21,7 @@ public class TestTest extends Application {
         Pane root = null;
         try {
 
-            FXMLLoader fxmlLoader = GrrFxmlAndLanguageUtils.getLoaderFXML("view/grr_setting.fxml");
-            root = fxmlLoader.load();
+            root = (Pane) GrrFxmlAndLanguageUtils.load("view/grr_setting.fxml");
 
         } catch (Exception ex) {
             ex.printStackTrace();

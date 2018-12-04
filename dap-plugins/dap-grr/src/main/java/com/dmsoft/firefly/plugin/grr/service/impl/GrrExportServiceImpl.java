@@ -26,10 +26,12 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import org.springframework.stereotype.Service;
 
 /**
  * Created by Garen.Pang on 2018/3/15.
  */
+@Service
 public class GrrExportServiceImpl implements GrrExportService {
 
     private Logger logger = LoggerFactory.getLogger(GrrExportServiceImpl.class);

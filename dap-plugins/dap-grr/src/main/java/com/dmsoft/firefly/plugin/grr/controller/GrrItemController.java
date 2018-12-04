@@ -59,11 +59,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.io.File;
 import java.net.URL;
 import java.util.*;
+import org.springframework.stereotype.Component;
 
 /**
  * Created by Ethan.Yang on 2018/2/6.
  * Updated by Can Guan on 2018/3/23
  */
+@Component
 public class GrrItemController implements Initializable {
 
     private Logger logger = LoggerFactory.getLogger(GrrItemController.class);

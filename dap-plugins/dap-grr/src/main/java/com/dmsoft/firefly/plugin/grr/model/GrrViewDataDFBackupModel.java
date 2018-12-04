@@ -22,6 +22,7 @@ import javafx.scene.control.*;
 
 import java.util.List;
 import java.util.Map;
+import org.springframework.stereotype.Component;
 
 /**
  * basic class for grr view data back up model
