@@ -109,7 +109,7 @@ public class AppController {
             menuLoginOut = new MenuItem(GuiFxmlAndLanguageUtils.getString("MENU_LOGIN_OUT"));
             menuChangePassword = new MenuItem(GuiFxmlAndLanguageUtils.getString("MENU_CHANGE_PASSWORD"));
             menuBtn.getItems().addAll(menuChangePassword, menuLoginOut);
-            
+            initEvent();
         }
     }
 
