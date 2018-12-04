@@ -56,7 +56,7 @@ public class SpcMainController implements Initializable {
     @FXML
     private StatisticalResultController statisticalResultController;
     @FXML
-    private ViewDataController viewDataController;
+    private SpcViewDataController spcViewDataController;
     @FXML
     private ChartResultController chartResultController;
     private SearchDataFrame dataFrame;
@@ -74,7 +74,7 @@ public class SpcMainController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         this.spcItemController.init(this);
         this.statisticalResultController.init(this);
-        this.viewDataController.init(this);
+        this.spcViewDataController.init(this);
         this.chartResultController.init(this);
         this.initBtnIcon();
         this.initComponentEvent();
@@ -153,7 +153,7 @@ public class SpcMainController implements Initializable {
     public void setTimerViewData(List<SearchConditionDto> chartSearchConditionDtoList, List<SearchConditionDto> statisticalSearchConditionDtoList) {
         //set view data
         SearchDataFrame viewDataFrame = buildSubSearchDataFrame(chartSearchConditionDtoList);
-        viewDataController.setViewData(viewDataFrame, viewDataFrame.getSearchedRowKey(), statisticalSearchConditionDtoList, true);
+        spcViewDataController.setViewData(viewDataFrame, viewDataFrame.getSearchedRowKey(), statisticalSearchConditionDtoList, true);
 
     }
 
@@ -185,7 +185,7 @@ public class SpcMainController implements Initializable {
      */
     public void clearAnalysisSubShowData() {
         chartResultController.clearChartData();
-        viewDataController.clearViewData();
+        spcViewDataController.clearViewData();
         unSelectRowKeyList.clear();
         lastViewDataRowKeyList = null;
     }
@@ -231,7 +231,7 @@ public class SpcMainController implements Initializable {
      * @param rowKey row key
      */
     public void setViewDataFocusRowData(String rowKey) {
-        viewDataController.setFocusRowData(rowKey);
+        spcViewDataController.setFocusRowData(rowKey);
     }
 
     private void initComponentEvent() {
@@ -341,7 +341,7 @@ public class SpcMainController implements Initializable {
 
     private void refreshEvent() {
         List<String> currentStatisticalSelectRowKeyList = statisticalResultController.getSelectStatisticalRowKey();
-        List<String> currentViewDataSelectRowKeyList = viewDataController.getSelectedRowKeys();
+        List<String> currentViewDataSelectRowKeyList = spcViewDataController.getSelectedRowKeys();
         List<String> statisticalModifyRowKeyList = statisticalResultController.getEidtStatisticalRowKey();
 
         SpcRefreshJudgeUtil spcRefreshJudgeUtil = SpcRefreshJudgeUtil.newInstance();
@@ -354,7 +354,7 @@ public class SpcMainController implements Initializable {
                         SpcFxmlAndLanguageUtils.getString("EXCEPTION_SPC_NO_REFRESH_RESULT"));
                 if (currentStatisticalSelectRowKeyList.size() == 0) {
                     chartResultController.clearChartData();
-                    viewDataController.clearViewData();
+                    spcViewDataController.clearViewData();
                     lastViewDataRowKeyList = null;
                     spcRefreshJudgeUtil.setViewDataIsBlank(true);
                     spcRefreshJudgeUtil.setStatisticalSelectRowKeyListCache(currentStatisticalSelectRowKeyList);
@@ -500,7 +500,7 @@ public class SpcMainController implements Initializable {
         List<String> viewDataSelectRowKeyListCache = spcRefreshJudgeUtil.getViewDataSelectRowKeyListCache();
         if (currentStatisticalSelectRowKeyList.size() == 0) {
             chartResultController.clearChartData();
-            viewDataController.clearViewData();
+            spcViewDataController.clearViewData();
             lastViewDataRowKeyList = null;
             spcRefreshJudgeUtil.setViewDataIsBlank(true);
         }
@@ -543,7 +543,7 @@ public class SpcMainController implements Initializable {
                 if (editRowDataList != null && editRowDataList.size() != 0) {
                     List<SpcStatisticalResultAlarmDto> allRowDataList = statisticalResultController.getAllRowStatsData();
                     List<SearchConditionDto> statisticalSearchConditionDtoList = buildRefreshSearchConditionData(allRowDataList);
-                    viewDataController.updateStatisticalSearchCondition(statisticalSearchConditionDtoList);
+                    spcViewDataController.updateStatisticalSearchCondition(statisticalSearchConditionDtoList);
                 }
                 windowProgressTipController.closeDialog();
                 logger.info("Refresh Spc statistical data finish.");
@@ -640,7 +640,7 @@ public class SpcMainController implements Initializable {
                     List<SpcStatisticalResultAlarmDto> allRowDataList = statisticalResultController.getAllRowStatsData();
                     List<SearchConditionDto> statisticalSearchConditionDtoList = buildRefreshSearchConditionData(allRowDataList);
 
-                    viewDataController.setViewData(viewDataFrame, subDataFrame.getAllRowKeys(), statisticalSearchConditionDtoList, spcItemController.isTimer());
+                    spcViewDataController.setViewData(viewDataFrame, subDataFrame.getAllRowKeys(), statisticalSearchConditionDtoList, spcItemController.isTimer());
                     spcRefreshJudgeUtil.setStatisticalSelectRowKeyListCache(currentStatisticalSelectRowKeyList);
                     spcRefreshJudgeUtil.setViewDataSelectRowKeyListCache(subDataFrame.getAllRowKeys());
 
@@ -678,7 +678,7 @@ public class SpcMainController implements Initializable {
                 unSelectRowKeyList.remove(rowKey);
             }
         }
-        List<String> unSelectedRowKeyList = viewDataController.getUnSelectedRowKeys();
+        List<String> unSelectedRowKeyList = spcViewDataController.getUnSelectedRowKeys();
         if (unSelectedRowKeyList != null) {
             for (String rowKey : unSelectedRowKeyList) {
                 if (!unSelectRowKeyList.contains(rowKey)) {
@@ -800,7 +800,7 @@ public class SpcMainController implements Initializable {
 //                lastViewDataRowKeyList = viewDataFrame.getAllRowKeys();
 ////                List<String> countViewDataRowKeyList = currentViewDataSelectRowKeyList == null ? viewDataFrame.getAllRowKeys() : currentViewDataSelectRowKeyList;
 //                spcRefreshJudgeUtil.setViewDataSelectRowKeyListCache(selectRowKeyList);
-                viewDataController.setViewData(viewDataFrame, chartDataFrame.getAllRowKeys(), statisticalSearchConditionDtoList, spcItemController.isTimer());
+                spcViewDataController.setViewData(viewDataFrame, chartDataFrame.getAllRowKeys(), statisticalSearchConditionDtoList, spcItemController.isTimer());
                 spcRefreshJudgeUtil.setViewDataSelectRowKeyListCache(chartDataFrame.getAllRowKeys());
                 spcRefreshJudgeUtil.setStatisticalSelectRowKeyListCache(currentStatisticalSelectRowKeyList);
                 logger.info("refresh Spc data finish.");

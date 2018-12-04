@@ -30,6 +30,7 @@ import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 /**
@@ -47,6 +48,8 @@ public class GrrPlugin extends Plugin {
     private static final Double D100 = 100.0;
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GrrPlugin.class);
+
+
 
     @Autowired
     private GrrServiceImpl grrService;
@@ -67,6 +70,14 @@ public class GrrPlugin extends Plugin {
 
     @Autowired
     private PluginUIContext pluginUIContext;
+    @Autowired
+    private JobManager jobManager;
+    @Autowired
+    private JobFactory jobFactory;
+    @Autowired
+    private GrrFxmlLoadService grrFxmlLoadService;
+    @Autowired
+    private ApplicationContext context;
 
     @Override
     public void initialize(InitModel model) {
@@ -91,6 +102,8 @@ public class GrrPlugin extends Plugin {
 //        RuntimeContext.getBean(PluginImageContext.class).registerPluginInstance(GRR_PLUGIN_ID, GRR_SERVICE_PACKAGE + GRR_SERVICE_RESULT_NAME, grrService);
 //        RuntimeContext.getBean(PluginImageContext.class).registerPluginInstance(GRR_PLUGIN_ID, GRR_SERVICE_PACKAGE + GRR_SERVICE_ANALYSIS_NAME, grrAnalysisService);
 //        RuntimeContext.getBean(PluginImageContext.class).registerPluginInstance(GRR_PLUGIN_ID, GRR_SERVICE_PACKAGE + GRR_SERVICE_FILTER, grrFilterService);
+
+        GrrFxmlAndLanguageUtils.setContext(this.context);
         LOGGER.info("Plugin-GRR Initialized.");
     }
 
@@ -102,8 +115,9 @@ public class GrrPlugin extends Plugin {
                 SvgImageLoaderFactory.install();
                 Pane root = null;
                 try {
-                    FXMLLoader fxmlLoader = GrrFxmlAndLanguageUtils.getLoaderFXML("view/grr.fxml");
-                    root = fxmlLoader.load();
+//                    FXMLLoader fxmlLoader = GrrFxmlAndLanguageUtils.getLoaderFXML("view/grr.fxml");
+//                    root = fxmlLoader.load();
+                    root = grrFxmlLoadService.loadFxml("view/grr.fxml");
 //                    root.getStylesheets().add(getClass().getClassLoader().getResource("css/redfall/main.css").toExternalForm());
                     root.getStylesheets().add(getClass().getClassLoader().getResource("css/grr_app.css").toExternalForm());
                     root.getStylesheets().add(getClass().getClassLoader().getResource("css/grr_chart.css").toExternalForm());
@@ -126,9 +140,6 @@ public class GrrPlugin extends Plugin {
 
         this.pluginUIContext.registerMenu(new MenuBuilder("com.dmsoft.dap.GrrPlugin",
                 MenuBuilder.MenuType.MENU_ITEM, "Grr Settings", MenuBuilder.MENU_PREFERENCE).addMenu(menuItem));
-
-        JobManager jobManager = RuntimeContext.getBean(JobManager.class);
-        JobFactory jobFactory = RuntimeContext.getBean(JobFactory.class);
 
         jobManager.initializeJob(ParamKeys.GRR_DETAIL_ANALYSIS_JOB_PIPELINE, jobFactory.createJobPipeLine()
                 .addLast(new GrrConfigHandler())
@@ -178,8 +189,9 @@ public class GrrPlugin extends Plugin {
     private void build() {
         Pane root = null;
         try {
-            FXMLLoader fxmlLoader = GrrFxmlAndLanguageUtils.getLoaderFXML("view/grr_setting.fxml");
-            root = fxmlLoader.load();
+//            FXMLLoader fxmlLoader = GrrFxmlAndLanguageUtils.getLoaderFXML("view/grr_setting.fxml");
+//            root = fxmlLoader.load();
+            root = this.grrFxmlLoadService.loadFxml("view/grr_setting.fxml");
             Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("grrSetting", GrrFxmlAndLanguageUtils.getString("GRR_SETTINGS"), root, getClass().getClassLoader().getResource("css/grr_app.css").toExternalForm());
             stage.setResizable(false);
             stage.toFront();

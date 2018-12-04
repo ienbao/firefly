@@ -28,6 +28,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.dmsoft.firefly.plugin.tm.csvresolver.utils.DapAssert;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -49,8 +51,13 @@ import java.util.Map;
 @DataParser
 public class CsvResolverService implements IDataParser {
     private final Logger logger = LoggerFactory.getLogger(CsvResolverService.class);
-    private SourceDataService sourceDataService = RuntimeContext.getBean(SourceDataService.class);
-    private PluginContext pluginContext = RuntimeContext.getBean(PluginContext.class);
+
+    @Autowired
+    private SourceDataService sourceDataService;
+    @Autowired
+    private PluginContext pluginContext;
+    @Autowired
+    private JobManager jobManager;
     private String fileName = "TMCSVTemplate";
     private String pluginName = "TM CSV Resolver";
     private JsonMapper jsonMapper = JsonMapper.defaultMapper();
@@ -178,7 +185,7 @@ public class CsvResolverService implements IDataParser {
     }
 
     private void pushProgress(int progress) {
-        JobContext context = RuntimeContext.getBean(JobManager.class).findJobContext(Thread.currentThread());
+        JobContext context = this.jobManager.findJobContext(Thread.currentThread());
         if (context != null) {
             context.pushEvent(new JobEvent("CsvResolverService", progress + 0.0, null));
         }

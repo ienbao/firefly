@@ -25,11 +25,12 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Map;
+import org.springframework.stereotype.Service;
 
 /**
  * impl class for grr service
  */
-@OpenService
+@Service
 public class GrrServiceImpl implements GrrService {
     private static final String MAP_KEY_DATA = "data";
     private static final String MAP_KEY_COUNT = "count";

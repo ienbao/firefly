@@ -7,10 +7,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import org.springframework.stereotype.Service;
 
 /**
  * Created by Julia on 2018/3/18.
  */
+@Service
 public class GrrLeftConfigServiceImpl {
     private Logger logger = LoggerFactory.getLogger(GrrLeftConfigServiceImpl.class);
     private JsonMapper mapper = JsonMapper.defaultMapper();

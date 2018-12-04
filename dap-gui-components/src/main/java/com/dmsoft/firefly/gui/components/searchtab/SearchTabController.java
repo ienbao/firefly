@@ -1,12 +1,12 @@
 package com.dmsoft.firefly.gui.components.searchtab;
 
+import com.dmsoft.firefly.core.utils.DapApplicationContextUtils;
 import com.dmsoft.firefly.gui.components.searchcombobox.SearchComboBox;
 import com.dmsoft.firefly.gui.components.utils.CommonResourceMassages;
 import com.dmsoft.firefly.gui.components.utils.FxmlAndLanguageUtils;
 import com.dmsoft.firefly.gui.components.utils.ImageUtils;
 import com.dmsoft.firefly.gui.components.utils.TooltipUtil;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
-import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.dto.TestItemWithTypeDto;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.dai.service.SourceDataService;
@@ -58,8 +58,8 @@ public class SearchTabController {
 
     private ObservableList<String> groupItem = FXCollections.observableArrayList();
 
-    private EnvService envService = RuntimeContext.getBean(EnvService.class);
-    private SourceDataService dataService = RuntimeContext.getBean(SourceDataService.class);
+    private EnvService envService = DapApplicationContextUtils.getContext().getBean(EnvService.class);
+    private SourceDataService dataService = DapApplicationContextUtils.getContext().getBean(SourceDataService.class);
     private boolean isMulti = true;
 
     @FXML

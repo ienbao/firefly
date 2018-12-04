@@ -7,6 +7,7 @@ import com.dmsoft.firefly.plugin.yield.utils.FileUtils;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -17,6 +18,7 @@ import java.util.Map;
 /**
  * Created by GuangLi on 2018/3/7.
  */
+@Service
 public class YieldExportServiceImpl {
     private Logger logger = LoggerFactory.getLogger(YieldExportServiceImpl.class);
 

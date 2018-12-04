@@ -138,7 +138,7 @@ public class MenuCreation {
 
         AtomicBoolean result = new AtomicBoolean(false);
         if (StringUtils.isNotBlank(menu.getId()) && (menu.getId().equals(parentLocation) || (menu.getId().equals(platformParentLocation)))) {
-            menu.getItems().add(menuComponent.getMenu());
+//            menu.getItems().add(menuComponent.getMenu());
             result.set(true);
         } else {
             ObservableList<MenuItem> dd = menu.getItems();

@@ -22,17 +22,24 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  * spc plugin
  */
+@Component
 public class TMCsvResolverPlugin extends Plugin {
     private static final Logger logger = LoggerFactory.getLogger(TMCsvResolverPlugin.class);
 
+    @Autowired
+    private PluginImageContext pluginImageContext;
+    @Autowired
+    private PluginUIContext pluginUIContext;
     @Override
     public void initialize(InitModel model) {
-        RuntimeContext.getBean(PluginImageContext.class).registerPluginInstance("com.dmsoft.dap.TMCsvResolverPlugin", "com.dmsoft.firefly.plugin.tm.csvresolver.service.CsvResolverService", new CsvResolverService());
-        RuntimeContext.getBean(PluginImageContext.class).registerPluginInstance("com.dmsoft.dap.TMCsvResolverPlugin", "com.dmsoft.firefly.plugin.tm.csvresolver.service.CsvConfigService", new CsvConfigService());
+        this.pluginImageContext.registerPluginInstance("com.dmsoft.dap.TMCsvResolverPlugin", "com.dmsoft.firefly.plugin.tm.csvresolver.service.CsvResolverService", new CsvResolverService());
+        this.pluginImageContext.registerPluginInstance("com.dmsoft.dap.TMCsvResolverPlugin", "com.dmsoft.firefly.plugin.tm.csvresolver.service.CsvConfigService", new CsvConfigService());
 
         logger.info("Plugin-TM-CsvResolver Initialized.");
     }
@@ -44,7 +51,7 @@ public class TMCsvResolverPlugin extends Plugin {
         menuItem.setId("tmcsvResolver");
         menuItem.setOnAction(event -> build());
 
-        RuntimeContext.getBean(PluginUIContext.class).registerMenu(new MenuBuilder("com.dmsoft.dap.TMCsvResolverPlugin",
+        this.pluginUIContext.registerMenu(new MenuBuilder("com.dmsoft.dap.TMCsvResolverPlugin",
                 MenuBuilder.MenuType.MENU_ITEM, "tmcsvResolver", MenuBuilder.MENU_PREFERENCE).addMenu(menuItem));
 
         logger.debug("Plugin-TM-CsvResolver UI register done.");

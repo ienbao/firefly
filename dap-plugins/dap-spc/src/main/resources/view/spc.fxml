@@ -27,17 +27,17 @@
                 </right>
             </BorderPane>
             <SplitPane dividerPositions="0.5072083879423329" layoutY="28.0" orientation="VERTICAL" VBox.vgrow="ALWAYS">
-                <fx:include fx:id="statisticalResult" source="statistical_result.fxml" />
+                <fx:include fx:id="statisticalResult" source="/view/statistical_result.fxml" />
                     <SplitPane dividerPositions="0.5033557046979866" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                         <items>
-                            <fx:include fx:id="chartResult" source="chart_result.fxml" />
-                            <fx:include fx:id="viewData" source="view_data.fxml" />
+                            <fx:include fx:id="chartResult" source="/view/chart_result.fxml" />
+                            <fx:include fx:id="viewData" source="/view/view_data.fxml" />
                         </items>
                     </SplitPane>
             </SplitPane>
         </VBox>
         <VBox minWidth="180.0" prefWidth="180.0" SplitPane.resizableWithParent="false">
-            <fx:include fx:id="spcItem" source="spc_item.fxml" VBox.vgrow="ALWAYS" />
+            <fx:include fx:id="spcItem" source="/view/spc_item.fxml" VBox.vgrow="ALWAYS" />
         </VBox>
     </SplitPane>
 </AnchorPane>

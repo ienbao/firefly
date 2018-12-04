@@ -1,4 +1,4 @@
-package com.dmsoft.firefly.gui.controller.template;
+package com.dmsoft.firefly.gui.controller;
 
 
 import com.dmsoft.firefly.gui.components.utils.*;
@@ -6,11 +6,13 @@ import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import org.springframework.stereotype.Controller;
 
 
 /**
  * Created by GuangLi on 2018/2/28.
  */
+@Controller
 public class NewNameController {
     @FXML
     private Button ok, cancel;

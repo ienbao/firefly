@@ -4,6 +4,7 @@ package com.dmsoft.firefly.core.sdkimpl.dai;
 import com.dmsoft.firefly.sdk.dai.service.LanguageService;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -23,6 +24,18 @@ public class SpringFxmlLoader extends FXMLLoader {
 
   public SpringFxmlLoader(){
     super();
+  }
+
+  public SpringFxmlLoader(ApplicationContext context, LanguageService languageService, String url){
+    super();
+    URL fileUrl = getClassLoader().getResource(url);
+    super.setLocation(fileUrl);
+    super.setResources(languageService.getResourceBundle());
+    super.setControllerFactory(new Callback<Class<?>, Object>() {
+      @Override
+      public Object call(Class<?> clazz) {
+        return context.getBean(clazz);
+      }});
   }
 
   public  <T extends Node> T  load(ResourceBundle resourceBundle, ApplicationContext context, ClassLoader classLoader, String url) {

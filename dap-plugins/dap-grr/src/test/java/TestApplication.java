@@ -56,8 +56,7 @@ public class TestApplication extends Application {
         RuntimeContext.registerBean(DataFrameFactory.class, dataFrameFactory);
 
 
-        FXMLLoader fxmlLoader = GrrFxmlAndLanguageUtils.getLoaderFXML("view/grr.fxml");
-        Parent root = fxmlLoader.load();
+        Parent root = (Parent) GrrFxmlAndLanguageUtils.load("view/grr.fxml");
 
 
         Scene scene = new Scene(root, 1000, 704);

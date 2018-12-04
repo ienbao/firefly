@@ -12,6 +12,7 @@ import com.dmsoft.firefly.core.sdkimpl.plugin.PluginImageContextImpl;
 import com.dmsoft.firefly.core.sdkimpl.plugin.PluginProxyMethodFactoryImpl;
 import com.dmsoft.firefly.core.sdkimpl.plugin.PluginUIContextImpl;
 import com.dmsoft.firefly.core.utils.ApplicationPathUtil;
+import com.dmsoft.firefly.core.utils.DapLanguageUtils;
 import com.dmsoft.firefly.core.utils.PluginScanner;
 import com.dmsoft.firefly.core.utils.PropertiesUtils;
 import com.dmsoft.firefly.sdk.RuntimeContext;
@@ -26,6 +27,7 @@ import com.dmsoft.firefly.sdk.ui.PluginUIContext;
 import com.dmsoft.firefly.sdk.utils.DAPStringUtils;
 import com.dmsoft.firefly.sdk.utils.PropertyConfig;
 import com.dmsoft.firefly.sdk.utils.enums.InitModel;
+import com.dmsoft.firefly.sdk.utils.enums.LanguageType;
 import com.google.common.collect.Lists;
 import com.mongodb.MongoClient;
 import org.slf4j.Logger;
@@ -44,6 +46,7 @@ import java.util.Properties;
 public class DAPApplication {
 
     private static Logger logger = LoggerFactory.getLogger(DAPApplication.class);
+
 
     /**
      * methdod to init env
@@ -86,7 +89,15 @@ public class DAPApplication {
 //    }
 
 
+    /**
+     * 初始化全局语言类
+     *
+     * @param languageType
+     */
+    public static void initLanguage(LanguageType languageType){
 
+        DapLanguageUtils.setLanguageType(languageType);
+    }
 
     /**
      * main method

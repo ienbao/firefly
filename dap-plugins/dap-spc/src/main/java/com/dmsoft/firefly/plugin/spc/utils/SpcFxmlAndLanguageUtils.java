@@ -3,15 +3,18 @@
  */
 package com.dmsoft.firefly.plugin.spc.utils;
 
+import com.dmsoft.firefly.core.utils.DapLanguageUtils;
 import com.dmsoft.firefly.gui.components.utils.ModuleType;
+import com.dmsoft.firefly.plugin.spc.service.SpcFxmlLoadService;
 import com.dmsoft.firefly.sdk.RuntimeContext;
-import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.plugin.PluginContext;
 import com.dmsoft.firefly.sdk.utils.enums.LanguageType;
-import javafx.fxml.FXMLLoader;
 
 import java.text.MessageFormat;
 import java.util.ResourceBundle;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import org.springframework.context.ApplicationContext;
 
 /**
  * Created by Ethan.Yang on 2018/2/11.
@@ -19,8 +22,18 @@ import java.util.ResourceBundle;
 public class SpcFxmlAndLanguageUtils {
     public static boolean isDebug = false;
 
+    private static ApplicationContext context;
+
+    public static ApplicationContext getContext() {
+        return context;
+    }
+
+    public static void setContext(ApplicationContext context) {
+        SpcFxmlAndLanguageUtils.context = context;
+    }
+
     private static ResourceBundle getResourceBundle() {
-        LanguageType languageType = RuntimeContext.getBean(EnvService.class).getLanguageType();
+        LanguageType languageType = DapLanguageUtils.getLanguageType();
         if (languageType == null) {
             languageType = LanguageType.EN;
         }
@@ -39,11 +52,13 @@ public class SpcFxmlAndLanguageUtils {
      * @return loader
      */
     public static FXMLLoader getLoaderFXML(String res) {
-        FXMLLoader fxmlLoader = new FXMLLoader(SpcFxmlAndLanguageUtils.class.getClassLoader().getResource(res), getResourceBundle());
-        if (isDebug == false) {
-            fxmlLoader.setClassLoader(RuntimeContext.getBean(PluginContext.class).getDAPClassLoader("com.dmsoft.dap.SpcPlugin"));
-        }
+        FXMLLoader fxmlLoader = context.getBean(SpcFxmlLoadService.class).getFxmlLoader(res);
         return fxmlLoader;
+    }
+
+    public static Node load(String fileFxml){
+
+        return context.getBean(SpcFxmlLoadService.class).loadFxml(fileFxml);
     }
 
     public static String getString(String key) {

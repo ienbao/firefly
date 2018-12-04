@@ -29,6 +29,8 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
@@ -53,6 +55,9 @@ public class ViewDataModel implements TableModel {
     private boolean isTimer = false;
     private int i = 0;
     private String primKey;
+
+    @Autowired
+    private SourceDataService sourceDataService;
 
     /**
      * constructor
@@ -143,7 +148,7 @@ public class ViewDataModel implements TableModel {
             public void handleAction(String rowKey, ActionEvent event) {
                 rowKeyArray.remove(rowKey);
                 checkValueMap.put(rowKey, new SimpleObjectProperty<>(false));
-                RuntimeContext.getBean(SourceDataService.class).changeRowDataInUsed(Lists.newArrayList(rowKey), false);
+                sourceDataService.changeRowDataInUsed(Lists.newArrayList(rowKey), false);
                 dataFrame.removeRows(Lists.newArrayList(rowKey));
                 tableView.refresh();
             }

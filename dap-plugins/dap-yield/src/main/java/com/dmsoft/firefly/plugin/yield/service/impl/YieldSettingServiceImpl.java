@@ -18,17 +18,21 @@ import com.google.common.collect.Maps;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.util.List;
 import java.util.Map;
 
-@Config
+@Service
 public class YieldSettingServiceImpl implements YieldSettingService, IConfig {
 
     private final Logger logger = LoggerFactory.getLogger(YieldSettingServiceImpl.class);
     private JsonMapper jsonMapper = JsonMapper.defaultMapper();
-    private PluginContext pluginContext = RuntimeContext.getBean(PluginContext.class);
+
+    @Autowired
+    private PluginContext pluginContext;
 
 
     @Override

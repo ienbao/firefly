@@ -21,6 +21,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -28,6 +30,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
 
+@Component
 public class YieldResultDataController implements Initializable {
     private final Logger logger = LoggerFactory.getLogger(YieldResultDataController.class);
     @FXML
@@ -56,7 +59,14 @@ public class YieldResultDataController implements Initializable {
     private ViewDataController viewDataController;
     private YieldItemController yieldItemController;
     private YieldMainController yieldMainController;
-    private EnvService envService = RuntimeContext.getBean(EnvService.class);
+
+    @Autowired
+    private EnvService envService;
+    @Autowired
+    private JobFactory jobFactory;
+    @Autowired
+    private JobManager jobManager;
+
     private SearchDataFrame dataFrame;
     private List<TestItemWithTypeDto> testItemWithTypeDto ;
     public static final String Yield_PLUGIN_NAME = "com.dmsoft.firefly.plugin.yield.controller.YieldResultDataController";
@@ -149,14 +159,14 @@ public class YieldResultDataController implements Initializable {
                 searchConditionDtoList.get(0).setYieldType(YieldType.TOTAL);
             }
 
-            JobContext context = RuntimeContext.getBean(JobFactory.class).createJobContext();
+            JobContext context = this.jobFactory.createJobContext();
             context.put(ParamKeys.PROJECT_NAME_LIST, projectNameList);
             context.put(ParamKeys.SEARCH_DATA_FRAME, dataFrame);
             context.put(ParamKeys.SEARCH_CONDITION_DTO_LIST, searchConditionDtoList);
             context.put(ParamKeys.YIELD_ANALYSIS_CONFIG_DTO, yieldAnalysisConfigDto);
 
 
-            JobPipeline jobPipeline = RuntimeContext.getBean(JobManager.class).getPipeLine(ParamKeys.YIELD_RESULT_DATA_JOB_PIPELINE);
+            JobPipeline jobPipeline = this.jobManager.getPipeLine(ParamKeys.YIELD_RESULT_DATA_JOB_PIPELINE);
             jobPipeline.setCompleteHandler(new AbstractBasicJobHandler() {
                 @Override
                 public void doJob(JobContext context) {
@@ -193,7 +203,7 @@ public class YieldResultDataController implements Initializable {
                 }
             });
                 logger.info("ViewData Yield.");
-            RuntimeContext.getBean(JobManager.class).fireJobASyn(jobPipeline, context);
+            this.jobManager.fireJobASyn(jobPipeline, context);
         }
         else{
 

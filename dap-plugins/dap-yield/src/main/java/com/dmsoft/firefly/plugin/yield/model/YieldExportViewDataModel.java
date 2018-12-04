@@ -18,6 +18,8 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Map;
@@ -28,6 +30,9 @@ public class YieldExportViewDataModel implements TableModel {
     private ObservableList<String> headerArray;
     private ObservableList<String> rowKeyArray;
     private Map<String, TestItemWithTypeDto> testItemDtoMap;
+
+    @Autowired
+    private EnvService envService;
 
     /**
      * constructor
@@ -56,7 +61,7 @@ public class YieldExportViewDataModel implements TableModel {
             }
             this.rowKeyArray.addAll(searchedRowKeys);
         }
-        testItemDtoMap = Maps.newHashMap(RuntimeContext.getBean(EnvService.class).findTestItemsMap());
+        testItemDtoMap = Maps.newHashMap(this.envService.findTestItemsMap());
     }
 
     @Override

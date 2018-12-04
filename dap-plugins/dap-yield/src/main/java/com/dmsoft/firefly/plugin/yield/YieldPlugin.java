@@ -3,6 +3,7 @@ package com.dmsoft.firefly.plugin.yield;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
 import com.dmsoft.firefly.plugin.yield.controller.YieldSettingController;
+import com.dmsoft.firefly.plugin.yield.service.YieldFxmlLoadService;
 import com.dmsoft.firefly.plugin.yield.service.YieldService;
 import com.dmsoft.firefly.plugin.yield.service.YieldSettingService;
 import com.dmsoft.firefly.plugin.yield.service.impl.YieldServiceImpl;
@@ -29,36 +30,49 @@ import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component
 public class YieldPlugin extends Plugin {
     public static final String Yield_PLUGIN_NAME = "com.dmsoft.dap.YieldPlugin";
     private static final Logger LOGGER = LoggerFactory.getLogger(YieldPlugin.class);
     private static final Double D100 = 100.0;
     private YieldSettingController yieldSettingController;
 
+    @Autowired
+    private YieldServiceImpl yieldService;
+    @Autowired
+    private YieldSettingService yieldSettingService;
+    @Autowired
+    private PluginImageContext pluginImageContext;
+    @Autowired
+    private PluginUIContext pluginUIContext;
+    @Autowired
+    private JobFactory jobFactory;
+    @Autowired
+    private JobManager jobManager;
+    @Autowired
+    private YieldFxmlLoadService yieldFxmlLoadService;
+
     @Override
     public void initialize(InitModel model) {
-        YieldServiceImpl yieldService = new YieldServiceImpl();
-        YieldSettingService yieldSettingService = new YieldSettingServiceImpl();
-        RuntimeContext.registerBean(YieldService.class, yieldService);
-        RuntimeContext.registerBean(YieldSettingService.class, yieldSettingService);
-        RuntimeContext.getBean(PluginImageContext.class).registerPluginInstance(Yield_PLUGIN_NAME,
+
+        this.pluginImageContext.registerPluginInstance(Yield_PLUGIN_NAME,
                 "com.dmsoft.firefly.plugin.yield.service.impl.YieldServiceImpl", yieldService);
-        RuntimeContext.getBean(PluginImageContext.class).registerPluginInstance(Yield_PLUGIN_NAME,
+        this.pluginImageContext.registerPluginInstance(Yield_PLUGIN_NAME,
                 "com.dmsoft.firefly.plugin.yield.service.impl.YieldSettingServiceImpl", yieldSettingService);
         LOGGER.info("Plugin-Yield Initialized.");
     }
 
     @Override
     public void start() {
-        RuntimeContext.getBean(PluginUIContext.class).registerMainBody("Yield", new IMainBodyPane() {
+        this.pluginUIContext.registerMainBody("Yield", new IMainBodyPane() {
             @Override
             public Pane getNewPane() {
-                FXMLLoader fxmlLoader = YieldFxmlAndLanguageUtils.getLoaderFXML(ViewResource.Yield_VIEW_RES);
-                //FXMLLoader fxmlLoader = SpcFxmlAndLanguageUtils.getInstance().getLoaderFXML("view/spc.fxml");
                 Pane root = null;
                 try {
-                    root = fxmlLoader.load();
+                    root = yieldFxmlLoadService.loadFxml("view/yield.fxml");
                     root.getStylesheets().addAll(WindowFactory.checkStyles());
                     root.getStylesheets().add(getClass().getClassLoader().getResource("css/yield_app.css").toExternalForm());
                     root.getStylesheets().add(getClass().getClassLoader().getResource("css/charts.css").toExternalForm());
@@ -88,11 +102,9 @@ public class YieldPlugin extends Plugin {
                 StageMap.showStage(StateKey.YIELD_SETTING);
             }
         });
-        RuntimeContext.getBean(PluginUIContext.class).registerMenu(new MenuBuilder("com.dmsoft.dap.YieldPlugin",
+        this.pluginUIContext.registerMenu(new MenuBuilder("com.dmsoft.dap.YieldPlugin",
                 MenuBuilder.MenuType.MENU_ITEM, "Spc Settings", MenuBuilder.MENU_PREFERENCE).addMenu(menuItem));
 
-        JobManager jobManager = RuntimeContext.getBean(JobManager.class);
-        JobFactory jobFactory = RuntimeContext.getBean(JobFactory.class);
         jobManager.initializeJob(ParamKeys.YIELD_ANALYSIS_JOB_PIPELINE, jobFactory.createJobPipeLine()
                 .addLast(new FindYieldSettingDataHandler())
                 .addLast(new FindTestDataHandler().setWeight(D100))

@@ -1,6 +1,7 @@
 package com.dmsoft.firefly.plugin.grr.service.impl;
 
 import com.dmsoft.bamboo.common.utils.mapper.JsonMapper;
+import com.dmsoft.firefly.core.utils.DapApplicationContextUtils;
 import com.dmsoft.firefly.gui.components.utils.JsonFileUtil;
 import com.dmsoft.firefly.plugin.grr.dto.GrrConfigDto;
 import com.dmsoft.firefly.plugin.grr.service.GrrConfigService;
@@ -16,15 +17,15 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.Map;
+import org.springframework.stereotype.Service;
 
 /**
  * Created by GuangLi on 2018/3/7.
  */
-@Config
+@Service
 public class GrrConfigServiceImpl implements GrrConfigService, IConfig {
     private final Logger logger = LoggerFactory.getLogger(GrrConfigServiceImpl.class);
 
-    private PluginContext pluginContext = RuntimeContext.getBean(PluginContext.class);
     private String fileName = "grrSetting";
     private JsonMapper jsonMapper = JsonMapper.defaultMapper();
 
@@ -53,6 +54,7 @@ public class GrrConfigServiceImpl implements GrrConfigService, IConfig {
     @ExcludeMethod
     @Override
     public void saveGrrConfig(GrrConfigDto grrConfigDto) {
+        PluginContext pluginContext = DapApplicationContextUtils.getContext().getBean(PluginContext.class);
         String path = pluginContext.getEnabledPluginInfo("com.dmsoft.dap.GrrPlugin").getFolderPath() + File.separator + "config";
         String json = JsonFileUtil.readJsonFile(path, fileName);
         if (json == null) {
@@ -66,6 +68,7 @@ public class GrrConfigServiceImpl implements GrrConfigService, IConfig {
     @ExcludeMethod
     @Override
     public void saveGrrExportConfig(Map<String, Boolean> export) {
+        PluginContext pluginContext = DapApplicationContextUtils.getContext().getBean(PluginContext.class);
         String path = pluginContext.getEnabledPluginInfo("com.dmsoft.dap.GrrPlugin").getFolderPath() + File.separator + "config";
         String json = JsonFileUtil.readJsonFile(path, fileName);
         if (json == null) {
@@ -79,6 +82,7 @@ public class GrrConfigServiceImpl implements GrrConfigService, IConfig {
     @ExcludeMethod
     @Override
     public GrrConfigDto findGrrConfig() {
+        PluginContext pluginContext = DapApplicationContextUtils.getContext().getBean(PluginContext.class);
         String path = pluginContext.getEnabledPluginInfo("com.dmsoft.dap.GrrPlugin").getFolderPath() + File.separator + "config";
         String json = JsonFileUtil.readJsonFile(path, fileName);
         if (json == null) {
@@ -94,6 +98,7 @@ public class GrrConfigServiceImpl implements GrrConfigService, IConfig {
 
     @Override
     public Map<String, Boolean> findGrrExportConfig() {
+        PluginContext pluginContext = DapApplicationContextUtils.getContext().getBean(PluginContext.class);
         String path = pluginContext.getEnabledPluginInfo("com.dmsoft.dap.GrrPlugin").getFolderPath() + File.separator + "config";
         String json = JsonFileUtil.readJsonFile(path, fileName);
         if (json == null) {
@@ -110,6 +115,7 @@ public class GrrConfigServiceImpl implements GrrConfigService, IConfig {
 
     @Override
     public void restoreConfig() {
+        PluginContext pluginContext = DapApplicationContextUtils.getContext().getBean(PluginContext.class);
         String path = pluginContext.getEnabledPluginInfo("com.dmsoft.dap.GrrPlugin").getFolderPath() + File.separator + "config";
         String defaultParentPath = pluginContext.getEnabledPluginInfo("com.dmsoft.dap.GrrPlugin").getFolderPath() + File.separator + "default";
         FileUtils.delFolder(path);

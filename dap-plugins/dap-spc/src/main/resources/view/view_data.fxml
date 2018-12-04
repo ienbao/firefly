@@ -6,7 +6,7 @@
 <?import javafx.scene.image.ImageView?>
 <AnchorPane minHeight="110.0" minWidth="180.0"
             xmlns="http://javafx.com/javafx/8.0.76-ea" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.dmsoft.firefly.plugin.spc.controller.ViewDataController">
+            fx:controller="com.dmsoft.firefly.plugin.spc.controller.SpcViewDataController">
     <TabPane tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0"
              AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0"
              styleClass="spc-chart-tab">
