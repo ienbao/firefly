@@ -25,14 +25,14 @@
                     </HBox>
                     <SplitPane styleClass="yield-split-pane" dividerPositions="0.35181975736568455, 0.6825633383010432" layoutY="28.0" VBox.vgrow="ALWAYS">
                         <items>
-                            <fx:include fx:id="yieldResult" source="yield_result_chart.fxml"/>
-                            <fx:include fx:id="overView" source="over_view.fxml"/>
-                            <fx:include fx:id="viewData" source="view_data.fxml"/>
+                            <fx:include fx:id="yieldResult" source="/view/yield_result_chart.fxml"/>
+                            <fx:include fx:id="overView" source="/view/over_view.fxml"/>
+                            <fx:include fx:id="viewData" source="/view/view_data.fxml"/>
                         </items>
                     </SplitPane>
                 </VBox>
                 <VBox styleClass="yield-split-pane-v-box"  SplitPane.resizableWithParent="false">
-                    <fx:include fx:id="yieldItem" source="yield_item.fxml" VBox.vgrow="ALWAYS"/>
+                    <fx:include fx:id="yieldItem" source="/view/yield_item.fxml" VBox.vgrow="ALWAYS"/>
                 </VBox>
             </items>
         </SplitPane>

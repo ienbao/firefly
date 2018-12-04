@@ -3,6 +3,7 @@ package com.dmsoft.firefly.plugin.yield;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
 import com.dmsoft.firefly.gui.components.window.WindowFactory;
 import com.dmsoft.firefly.plugin.yield.controller.YieldSettingController;
+import com.dmsoft.firefly.plugin.yield.service.YieldFxmlLoadService;
 import com.dmsoft.firefly.plugin.yield.service.YieldService;
 import com.dmsoft.firefly.plugin.yield.service.YieldSettingService;
 import com.dmsoft.firefly.plugin.yield.service.impl.YieldServiceImpl;
@@ -51,6 +52,8 @@ public class YieldPlugin extends Plugin {
     private JobFactory jobFactory;
     @Autowired
     private JobManager jobManager;
+    @Autowired
+    private YieldFxmlLoadService yieldFxmlLoadService;
 
     @Override
     public void initialize(InitModel model) {
@@ -67,10 +70,9 @@ public class YieldPlugin extends Plugin {
         this.pluginUIContext.registerMainBody("Yield", new IMainBodyPane() {
             @Override
             public Pane getNewPane() {
-                FXMLLoader fxmlLoader = YieldFxmlAndLanguageUtils.getLoaderFXML(ViewResource.Yield_VIEW_RES);
                 Pane root = null;
                 try {
-                    root = fxmlLoader.load();
+                    root = yieldFxmlLoadService.loadFxml("view/yield.fxml");
                     root.getStylesheets().addAll(WindowFactory.checkStyles());
                     root.getStylesheets().add(getClass().getClassLoader().getResource("css/yield_app.css").toExternalForm());
                     root.getStylesheets().add(getClass().getClassLoader().getResource("css/charts.css").toExternalForm());
