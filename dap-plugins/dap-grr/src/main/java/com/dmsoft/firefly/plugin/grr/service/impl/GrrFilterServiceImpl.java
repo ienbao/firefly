@@ -19,13 +19,14 @@ import org.slf4j.LoggerFactory;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
+import org.springframework.stereotype.Service;
 
 /**
  * impl class for grr filter service
  *
  * @author Julia
  */
-@OpenService
+@Service
 public class GrrFilterServiceImpl implements GrrFilterService {
     private static final String SORT_METHOD_APPRAISER = UIConstant.GRR_SETTING_SORT_BY_APPRAISERS;             //"Appraisers";
     private static final String SORT_METHOD_TRIAL = UIConstant.GRR_SETTING_SORT_BY_DEFAULT;                    //"Default";

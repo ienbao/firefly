@@ -1,6 +1,7 @@
 package com.dmsoft.firefly.gui;
 
 import com.dmsoft.firefly.core.DAPApplication;
+import com.dmsoft.firefly.core.utils.DapApplicationContextUtils;
 import com.dmsoft.firefly.core.utils.PluginXMLParser;
 import com.dmsoft.firefly.gui.components.utils.NodeMap;
 import com.dmsoft.firefly.gui.components.utils.StageMap;
@@ -63,6 +64,8 @@ public class GuiApplication extends Application {
     this.pluginContext = applictionContext.getBean(PluginContext.class);
 
     DAPApplication.initEnv();
+    DAPApplication.initLanguage(this.envService.getLanguageType());
+    DapApplicationContextUtils.setContext(applictionContext.getContext());
     registEvent();
 
     StageSwitchDialog.buildProcessorBarDialog();
@@ -112,8 +115,8 @@ public class GuiApplication extends Application {
   private void loadingPlugin(List<String> activePluginList){
     List<String> urlList = new ArrayList<>();
 //    urlList.add(this.getClass().getClassLoader().getResource("plugins/am-plugin.xml").getFile());
-//    urlList.add(this.getClass().getClassLoader().getResource("plugins/grr-plugin.xml").getFile());
-    urlList.add(this.getClass().getClassLoader().getResource("plugins/spc-plugin.xml").getFile());
+    urlList.add(this.getClass().getClassLoader().getResource("plugins/grr-plugin.xml").getFile());
+//    urlList.add(this.getClass().getClassLoader().getResource("plugins/spc-plugin.xml").getFile());
 //    urlList.add(this.getClass().getClassLoader().getResource("plugins/tm-plugin.xml").getFile());
 //    urlList.add(this.getClass().getClassLoader().getResource("plugins/yeild-plugin.xml").getFile());
 

@@ -22,6 +22,7 @@ import javafx.collections.transformation.FilteredList;
 import javafx.scene.control.*;
 
 import java.util.*;
+import org.springframework.stereotype.Component;
 
 /**
  * Created by cherry on 2018/3/22.

@@ -59,30 +59,32 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.net.URL;
 import java.util.*;
 import java.util.function.Function;
+import org.springframework.stereotype.Component;
 
 /**
  * Created by cherry on 2018/3/12.
  */
+@Component
 public class GrrResultController implements Initializable {
     private Set<String> parts = Sets.newLinkedHashSet();
     private Set<String> appraisers = Sets.newLinkedHashSet();
-//    private GrrSummaryModel summaryModel = new GrrSummaryModel();
-//    private ItemResultModel itemResultModel = new ItemResultModel();
-//    private GrrAnovaModel grrAnovaModel = new GrrAnovaModel();
-//    private GrrSourceModel grrSourceModel = new GrrSourceModel();
+    private GrrSummaryModel summaryModel = new GrrSummaryModel();
+    private ItemResultModel itemResultModel = new ItemResultModel();
+    private GrrAnovaModel grrAnovaModel = new GrrAnovaModel();
+    private GrrSourceModel grrSourceModel = new GrrSourceModel();
     private GrrMainController grrMainController;
-
-    @Autowired
-    private  GrrSummaryModel summaryModel;
-
-    @Autowired
-    private ItemResultModel itemResultModel;
-
-    @Autowired
-    private GrrAnovaModel grrAnovaModel;
-
-    @Autowired
-    private GrrSourceModel grrSourceModel;
+//
+//    @Autowired
+//    private  GrrSummaryModel summaryModel;
+//
+//    @Autowired
+//    private ItemResultModel itemResultModel;
+//
+//    @Autowired
+//    private GrrAnovaModel grrAnovaModel;
+//
+//    @Autowired
+//    private GrrSourceModel grrSourceModel;
 
     @Autowired
     private EnvService envService;
@@ -113,10 +115,10 @@ public class GrrResultController implements Initializable {
      */
     public void init(GrrMainController grrMainController) {
         this.grrMainController = grrMainController;
-        this.initData();
-        this.initComponentsRender();
-        this.initComponentEvents();
-        this.initPerformanceSelected();
+//        this.initData();
+//        this.initComponentsRender();
+//        this.initComponentEvents();
+//        this.initPerformanceSelected();
     }
 
     @Override

@@ -22,10 +22,12 @@ import org.slf4j.LoggerFactory;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
+import org.springframework.stereotype.Component;
 
 /**
  * Created by cherry on 2018/3/11.
  */
+@Component
 public class GrrMainController implements Initializable {
     private Logger logger = LoggerFactory.getLogger(GrrMainController.class);
     private GrrDataFrameDto grrDataFrame;
@@ -125,12 +127,11 @@ public class GrrMainController implements Initializable {
     private void getExportBtnEvent() {
         Pane root = null;
         try {
-            FXMLLoader fxmlLoader = GrrFxmlAndLanguageUtils.getLoaderFXML("view/grr_export.fxml");
-            root = fxmlLoader.load();
+//            root = GrrFxmlAndLanguageUtils.load("view/grr_export.fxml");
 
             Stage stage = WindowFactory.createOrUpdateSimpleWindowAsModel("grrExport", GrrFxmlAndLanguageUtils.getString("GRR_EXPORT"), root, getClass().getClassLoader().getResource("css/grr_app.css").toExternalForm());
             StageMap.addStage(UIConstant.GRR_EXPORT_STAGE, stage);
-            ((GrrExportController) fxmlLoader.getController()).initGrrExportLeftConfig(grrItemController.getGrrLeftConfigDto());
+//            ((GrrExportController) fxmlLoader.getController()).initGrrExportLeftConfig(grrItemController.getGrrLeftConfigDto());
             stage.setResizable(false);
             stage.toFront();
             stage.show();

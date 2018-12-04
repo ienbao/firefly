@@ -28,16 +28,16 @@
             <TabPane tabClosingPolicy="UNAVAILABLE">
                 <tabs>
                     <Tab fx:id="grrResultTab" text="%GRR">
-                        <fx:include fx:id="grrResult" source="grr_result.fxml"/>
+                        <fx:include fx:id="grrResult" source="/view/grr_result.fxml"/>
                     </Tab>
                     <Tab text="%VIEW_DATA">
-                        <fx:include fx:id="grrViewData" source="grr_view_data.fxml"/>
+                        <fx:include fx:id="grrViewData" source="/view/grr_view_data.fxml"/>
                     </Tab>
                 </tabs>
             </TabPane>
         </VBox>
         <VBox minWidth="180.0" prefWidth="180.0" SplitPane.resizableWithParent="false">
-            <fx:include fx:id="grrItem" source="grr_item.fxml" VBox.vgrow="ALWAYS"/>
+            <fx:include fx:id="grrItem" source="/view/grr_item.fxml" VBox.vgrow="ALWAYS"/>
         </VBox>
     </SplitPane>
 </AnchorPane>

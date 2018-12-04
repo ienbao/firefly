@@ -3,6 +3,7 @@
  */
 package com.dmsoft.firefly.gui.components.searchtab;
 
+import com.dmsoft.firefly.core.utils.DapApplicationContextUtils;
 import com.dmsoft.firefly.gui.components.searchcombobox.ISearchComboBoxController;
 import com.dmsoft.firefly.gui.components.searchcombobox.SearchComboBox;
 import com.dmsoft.firefly.gui.components.utils.ImageUtils;
@@ -28,8 +29,8 @@ import java.util.Set;
 public class BasicSearchPane extends VBox {
     private Button addSearch;
     private Label groupTitle;
-    private EnvService envService = RuntimeContext.getBean(EnvService.class);
-    private SourceDataService dataService = RuntimeContext.getBean(SourceDataService.class);
+    private EnvService envService = DapApplicationContextUtils.getContext().getBean(EnvService.class);
+    private SourceDataService dataService = DapApplicationContextUtils.getContext().getBean(SourceDataService.class);
     private List<String> timeKey;
     private String pattern;
     private boolean isMulti = true;
