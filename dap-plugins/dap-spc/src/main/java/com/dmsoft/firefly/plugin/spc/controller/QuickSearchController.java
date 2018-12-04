@@ -20,10 +20,12 @@ import javafx.stage.Stage;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import org.springframework.stereotype.Component;
 
 /**
  * Created by Ethan.Yang on 2018/2/11.
  */
+@Component
 public class QuickSearchController implements Initializable {
     @FXML
     private RadioButton allDataRadioBtn;

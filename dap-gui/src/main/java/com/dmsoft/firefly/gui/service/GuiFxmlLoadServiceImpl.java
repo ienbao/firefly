@@ -24,6 +24,6 @@ public class GuiFxmlLoadServiceImpl implements FxmlLoadService {
 
   @Override
   public <T extends Node> T loadFxml(String fxmlFile) {
-    return new SpringFxmlLoader().load(languageService, context, fxmlFile);
+    return new SpringFxmlLoader().load(languageService.getResourceBundle(), context, this.getClass().getClassLoader(), fxmlFile);
   }
 }

@@ -44,10 +44,12 @@ import java.net.URL;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
+import org.springframework.stereotype.Component;
 
 /**
  * Created by Ethan.Yang on 2018/3/13.
  */
+@Component
 public class SpcSettingController implements Initializable {
     private final Logger logger = LoggerFactory.getLogger(SpcSettingController.class);
     //    @FXML

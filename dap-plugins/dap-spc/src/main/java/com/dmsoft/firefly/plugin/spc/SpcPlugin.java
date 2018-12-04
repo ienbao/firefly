@@ -12,6 +12,7 @@ import com.dmsoft.firefly.plugin.spc.service.SpcAnalysisService;
 import com.dmsoft.firefly.plugin.spc.service.SpcService;
 import com.dmsoft.firefly.plugin.spc.service.SpcSettingService;
 import com.dmsoft.firefly.plugin.spc.service.impl.SpcAnalysisServiceImpl;
+import com.dmsoft.firefly.plugin.spc.service.impl.SpcFxmlLoadServiceImpl;
 import com.dmsoft.firefly.plugin.spc.service.impl.SpcServiceImpl;
 import com.dmsoft.firefly.plugin.spc.service.impl.SpcSettingServiceImpl;
 import com.dmsoft.firefly.plugin.spc.utils.SpcFxmlAndLanguageUtils;
@@ -63,6 +64,8 @@ public class SpcPlugin extends Plugin {
     private JobManager jobManager;
     @Autowired
     private JobFactory jobFactory;
+    @Autowired
+    private SpcFxmlLoadServiceImpl spcFxmlLoadService;
 
     @Override
     public void initialize(InitModel model) {
@@ -81,11 +84,10 @@ public class SpcPlugin extends Plugin {
             @Override
             public Pane getNewPane() {
                 SvgImageLoaderFactory.install();
-                FXMLLoader fxmlLoader = SpcFxmlAndLanguageUtils.getLoaderFXML(ViewResource.SPC_VIEW_RES);
-                //FXMLLoader fxmlLoader = SpcFxmlAndLanguageUtils.getInstance().getLoaderFXML("view/spc.fxml");
-                Pane root = null;
+//                FXMLLoader fxmlLoader = SpcFxmlAndLanguageUtils.getLoaderFXML(ViewResource.SPC_VIEW_RES);
+//                FXMLLoader fxmlLoader = SpcFxmlAndLanguageUtils.getInstance().getLoaderFXML("view/spc.fxml");
+                Pane root = spcFxmlLoadService.loadFxml("view/spc.fxml");
                 try {
-                    root = fxmlLoader.load();
                     root.getStylesheets().addAll(WindowFactory.checkStyles());
                     root.getStylesheets().add(getClass().getClassLoader().getResource("css/spc_app.css").toExternalForm());
                     root.getStylesheets().add(getClass().getClassLoader().getResource("css/charts.css").toExternalForm());

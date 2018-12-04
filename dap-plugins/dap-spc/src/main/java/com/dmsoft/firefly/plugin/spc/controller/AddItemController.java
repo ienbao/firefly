@@ -26,12 +26,14 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
+import org.springframework.stereotype.Component;
 
 import static com.dmsoft.firefly.plugin.spc.utils.StateKey.SPC_SETTING_ADD_ITEM;
 
 /**
  * Created by Ethan.Yang on 2018/3/15.
  */
+@Component
 public class AddItemController implements Initializable {
     @FXML
     private TextFieldFilter filterTf;

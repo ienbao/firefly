@@ -1,6 +1,5 @@
 package com.dmsoft.firefly.core.sdkimpl.dai;
 
-import com.dmsoft.firefly.sdk.RuntimeContext;
 import com.dmsoft.firefly.sdk.dai.service.EnvService;
 import com.dmsoft.firefly.sdk.dai.service.LanguageService;
 import com.dmsoft.firefly.sdk.utils.enums.LanguageType;
@@ -48,7 +47,7 @@ public class LanguageServiceImpl implements LanguageService {
   public ResourceBundle getBundle(com.dmsoft.firefly.core.sdkimpl.dai.ModuleType moduleKey) {
     LanguageType languageType = null;
     if (IS_DEBUG == false) {
-      languageType = RuntimeContext.getBean(EnvService.class).getLanguageType();
+      languageType = this.envService.getLanguageType();
     }
     if (languageType == null) {
       languageType = LanguageType.EN;
@@ -65,6 +64,7 @@ public class LanguageServiceImpl implements LanguageService {
     }
     return ResourceBundle.getBundle(bundleKey);
   }
+
 
 
 }

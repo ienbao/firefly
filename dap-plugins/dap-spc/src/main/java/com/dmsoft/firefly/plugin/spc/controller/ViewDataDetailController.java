@@ -14,12 +14,14 @@ import javafx.scene.control.TableView;
 import java.net.URL;
 import java.util.Map;
 import java.util.ResourceBundle;
+import org.springframework.stereotype.Component;
 
 /**
  * controller for view data detail dialog
  *
  * @author Can Guan
  */
+@Component
 public class ViewDataDetailController implements Initializable {
     @FXML
     private TableView<String> detailTB;
